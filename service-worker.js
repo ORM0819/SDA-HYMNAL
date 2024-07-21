@@ -5,8 +5,10 @@ const URLS_TO_CACHE = [
     'image.html',
     'styles.css',
     'manifest.json',
+    'src/Hymnal.XF/Resources/Assets/MusicSheets/' // Make sure to include the path where your images are stored
 ];
 
+// Install Event
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME)
@@ -17,6 +19,7 @@ self.addEventListener('install', (event) => {
     );
 });
 
+// Fetch Event
 self.addEventListener('fetch', (event) => {
     event.respondWith(
         caches.match(event.request)
@@ -35,6 +38,7 @@ self.addEventListener('fetch', (event) => {
     );
 });
 
+// Activate Event
 self.addEventListener('activate', (event) => {
     const cacheWhitelist = [CACHE_NAME];
     event.waitUntil(
