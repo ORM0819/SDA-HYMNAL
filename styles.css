@@ -6,12 +6,11 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center; /* Center content side-to-side */
-    justify-content: center; /* Center content vertically */
     min-height: 100vh; /* Ensure full viewport height */
     position: relative; /* Required for absolute positioning of the link */
 }
 
-/* Style for the search input */
+/* Style for the search input on the main page */
 #search {
     margin: 20px;
     padding: 10px;
@@ -21,7 +20,7 @@ body {
     border-radius: 5px;
 }
 
-/* Style for the song list */
+/* Style for the song list on the main page */
 #song-list {
     list-style: none;
     padding: 0;
@@ -47,4 +46,45 @@ body {
 
 #song-list li:hover {
     background-color: #f0f0f0;
+}
+
+/* Style for the image container on the image page */
+#image-container {
+    text-align: center;
+    margin: 20px;
+}
+
+/* Style for the image on the image page */
+img {
+    max-width: 90%;
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* Style for the link on the image page */
+a {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    text-decoration: none;
+    color: #007BFF;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 600px) {
+    #search {
+        width: calc(100% - 20px); /* Adjust for very small screens */
+    }
+
+    img {
+        max-width: 100%;
+    }
 }
