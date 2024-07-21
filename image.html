@@ -14,10 +14,11 @@
     </div>
 
     <script>
-        // Get the image URL and title from the URL parameters
+        // Get the image URL, title, and number from the URL parameters
         const params = new URLSearchParams(window.location.search);
         const imageUrl = params.get('image');
         const title = params.get('title');
+        const number = params.get('number');
         
         if (imageUrl) {
             document.getElementById('image').src = imageUrl;
@@ -25,8 +26,10 @@
             document.getElementById('image').alt = 'No image found';
         }
 
-        if (title) {
-            document.getElementById('title').textContent = decodeURIComponent(title);
+        if (title && number) {
+            const displayTitle = `${number} - ${decodeURIComponent(title)}`;
+            document.getElementById('title').textContent = displayTitle;
+            document.title = `SDA Hymnal - ${displayTitle}`;
         }
     </script>
 </body>
