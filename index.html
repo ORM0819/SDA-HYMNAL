@@ -14,10 +14,7 @@
     <h1>SDA Hymnal</h1>
     <input type="text" id="search" placeholder="Search by number or title">
     <ul id="song-list"></ul>
-    <div id="image-container">
-        <img id="song-image" src="" alt="" style="display: none;">
-    </div>
-    
+
     <script>
         // Function to load and display songs
         async function loadSongs() {
@@ -31,7 +28,7 @@
                 songs.forEach(song => {
                     const li = document.createElement('li');
                     const link = document.createElement('a');
-                    link.href = `image.html?songNumber=${song.number}`;
+                    link.href = `image.html?image=src/Hymnal.XF/Resources/Assets/MusicSheets/PianoSheet_NewHymnal_en_${song.number.padStart(3, '0')}.png&title=${encodeURIComponent(song.title)}&number=${song.number}`;
                     link.textContent = `${song.number} - ${song.title}`;
                     li.appendChild(link);
                     songList.appendChild(li);
@@ -71,6 +68,5 @@
             }
         });
     </script>
-    <script src="scripts.js"></script>
 </body>
 </html>
