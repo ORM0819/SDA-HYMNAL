@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search');
     const songList = document.getElementById('song-list');
+    const songImage = document.getElementById('song-image');
+    const imageContainer = document.getElementById('image-container');
 
     // Fetch the song data
     fetch('data/songs.json')
@@ -12,6 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 songs.forEach(song => {
                     const li = document.createElement('li');
                     li.textContent = `${song.number} - ${song.title}`;
+                    li.dataset.image = song.image; // Store the image filename in data attribute
+                    li.addEventListener('click', () => {
+                        // Show the image when a song item is clicked
+                        songImage.src = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
+                        songImage.style.display = 'block';
+                    });
                     songList.appendChild(li);
                 });
             }
