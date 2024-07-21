@@ -6,30 +6,56 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="theme-color" content="#ffffff">
-    <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="styles.css">
     <title>SDA Hymnal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
 </head>
 <body>
-    <input type="text" id="search-bar" placeholder="Search by song number or title...">
+    <h1>SDA Hymnal</h1>
+    <input type="text" id="search" placeholder="Search by number or title">
     <ul id="song-list"></ul>
-
-    <script src="songs.json"></script> <!-- Corrected script tag -->
+    <div id="image-container">
+        <img id="song-image" src="" alt="" style="display: none;">
+    </div>
+    
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js') // Adjusted path
+        // Function to load and display songs
+        async function loadSongs() {
+            try {
+                const response = await fetch('songs.json');
+                const songs = await response.json();
+
+                const songList = document.getElementById('song-list');
+                songList.innerHTML = '';
+
+                songs.forEach(song => {
+                    const li = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.href = `image.html?songNumber=${song.number}`;
+                    link.textContent = `${song.number} - ${song.title}`;
+                    li.appendChild(link);
+                    songList.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Error loading songs:', error);
+            }
+        }
+
+        // Load songs when the page is loaded
+        window.addEventListener('load', () => {
+            loadSongs();
+
+            // Register the Service Worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('service-worker.js')
                     .then((registration) => {
                         console.log('Service Worker registered with scope:', registration.scope);
 
                         // Send image URLs to the Service Worker
-                        const songListItems = document.querySelectorAll('#song-list li');
+                        const songListItems = document.querySelectorAll('#song-list li a');
                         const imageUrls = [];
                         songListItems.forEach(item => {
-                            const img = item.querySelector('img');
-                            if (img) {
-                                imageUrls.push(img.src);
-                            }
+                            imageUrls.push(item.href);
                         });
 
                         if (navigator.serviceWorker.controller) {
@@ -42,8 +68,9 @@
                     .catch((error) => {
                         console.log('Service Worker registration failed:', error);
                     });
-            });
-        }
+            }
+        });
     </script>
+    <script src="scripts.js"></script>
 </body>
 </html>
