@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const imageContainer = document.getElementById('image-container');
 
     // Fetch the song data
-    fetch('data/songs.json')
+    fetch('songs.json')  // Updated path
         .then(response => response.json())
         .then(data => {
             // Populate the song list
