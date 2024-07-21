@@ -9,6 +9,34 @@
     <title>SDA Hymnal</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center; /* Centering content horizontally */
+            margin: 0;
+            padding: 0;
+        }
+        #song-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        #song-list li {
+            margin: 10px 0;
+        }
+        #song-list a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        #song-list a:hover {
+            text-decoration: underline;
+        }
+        input[type="text"] {
+            margin: 20px 0;
+            padding: 10px;
+            width: 80%;
+            max-width: 600px;
+        }
+    </style>
 </head>
 <body>
     <h1>SDA Hymnal</h1>
@@ -16,7 +44,6 @@
     <ul id="song-list"></ul>
 
     <script>
-        // Function to load and display songs
         async function loadSongs() {
             try {
                 const response = await fetch('songs.json');
@@ -28,7 +55,11 @@
                 songs.forEach(song => {
                     const li = document.createElement('li');
                     const link = document.createElement('a');
-                    link.href = `image.html?image=src/Hymnal.XF/Resources/Assets/MusicSheets/PianoSheet_NewHymnal_en_${song.number.padStart(3, '0')}.png&title=${encodeURIComponent(song.title)}&number=${song.number}`;
+
+                    // Construct the URL for the image
+                    const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/PianoSheet_NewHymnal_en_${song.number.padStart(3, '0')}.png`;
+                    link.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${encodeURIComponent(song.title)}&number=${song.number}`;
+                    
                     link.textContent = `${song.number} - ${song.title}`;
                     li.appendChild(link);
                     songList.appendChild(li);
@@ -38,7 +69,6 @@
             }
         }
 
-        // Load songs when the page is loaded
         window.addEventListener('load', () => {
             loadSongs();
 
