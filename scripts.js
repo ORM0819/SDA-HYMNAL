@@ -1,14 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search');
     const songList = document.getElementById('song-list');
-    const songImage = document.getElementById('song-image');
-    const imageContainer = document.getElementById('image-container');
 
     // Fetch the song data
-    fetch('songs.json')  // Updated path
+    fetch('songs.json')
         .then(response => response.json())
         .then(data => {
-            console.log('Data loaded:', data); // Debugging message
+            console.log('Data loaded:', data);
 
             // Populate the song list
             function populateList(songs) {
@@ -18,9 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     li.textContent = `${song.number} - ${song.title}`;
                     li.dataset.image = song.image; // Store the image filename in data attribute
                     li.addEventListener('click', () => {
-                        // Show the image when a song item is clicked
-                        songImage.src = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
-                        songImage.style.display = 'block';
+                        // Open the image in a new page
+                        const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
+                        window.open(`image.html?image=${encodeURIComponent(imageUrl)}`, '_blank');
                     });
                     songList.appendChild(li);
                 });
@@ -40,6 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         })
         .catch(error => {
-            console.error('Error loading songs.json:', error); // Debugging message
+            console.error('Error loading songs.json:', error);
         });
 });
