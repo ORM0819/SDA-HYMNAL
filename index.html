@@ -14,11 +14,11 @@
     <input type="text" id="search-bar" placeholder="Search by song number or title...">
     <ul id="song-list"></ul>
 
-    <script src="songs.js"></script>
+    <script src="songs.json"></script> <!-- Corrected script tag -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
+                navigator.serviceWorker.register('service-worker.js') // Adjusted path
                     .then((registration) => {
                         console.log('Service Worker registered with scope:', registration.scope);
 
