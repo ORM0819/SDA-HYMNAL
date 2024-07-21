@@ -2,19 +2,44 @@
 body {
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+/* Style for the search input */
+#search {
+    margin: 20px;
+    padding: 10px;
+    width: calc(100% - 40px); /* Adjust width for better fit */
+    max-width: 500px; /* Maximum width */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Style for the song list */
+#song-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Style for each song item */
+#song-list li {
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#song-list li:hover {
+    background-color: #f0f0f0;
 }
 
 /* Style for the image container */
 #image-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
+    text-align: center;
+    margin: 20px;
 }
 
 /* Style for the image */
@@ -24,27 +49,17 @@ img {
     border: 1px solid #ccc;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    /* Add padding to ensure image doesn't touch edges on very small screens */
     padding: 10px;
     box-sizing: border-box;
 }
 
-/* Style for the link */
-a {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    text-decoration: none;
-    color: #007BFF;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
 /* Media query for smaller screens */
 @media (max-width: 600px) {
+    #search {
+        width: calc(100% - 20px); /* Adjust for very small screens */
+    }
+
     img {
-        max-width: 95%; /* Slightly smaller max-width for very small screens */
+        max-width: 100%;
     }
 }
