@@ -1,66 +1,47 @@
-async function loadSongs() {
-    try {
-        const response = await fetch('songs.json');
-        const songs = await response.json();
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('search');
+    const songList = document.getElementById('song-list');
 
-        const songList = document.getElementById('song-list');
-        songList.innerHTML = '';
+    // Fetch the song data
+    fetch('songs.json')  // Updated path
+        .then(response => response.json())
+        .then(data => {
+            console.log('Data loaded:', data);
 
-        songs.forEach(song => {
-            const li = document.createElement('li');
-            const link = document.createElement('a');
-
-            // Construct the URL for the image
-            const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/PianoSheet_NewHymnal_en_${song.number.padStart(3, '0')}.png`;
-            link.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${encodeURIComponent(song.title)}&number=${song.number}`;
-            link.textContent = `${song.number} - ${song.title}`;
-            li.appendChild(link);
-            songList.appendChild(li);
-        });
-
-        // Add event listener for search input
-        document.getElementById('search').addEventListener('input', function() {
-            const searchValue = this.value.toLowerCase();
-            const items = songList.querySelectorAll('li');
-            items.forEach(item => {
-                const text = item.textContent.toLowerCase();
-                if (text.includes(searchValue)) {
-                    item.style.display = '';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        });
-    } catch (error) {
-        console.error('Error loading songs:', error);
-    }
-}
-
-window.addEventListener('load', () => {
-    loadSongs();
-
-    // Register the Service Worker
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('https://orm0819.github.io/SDA-HYMNAL/service-worker.js')
-            .then((registration) => {
-                console.log('Service Worker registered with scope:', registration.scope);
-
-                // Send image URLs to the Service Worker
-                const songListItems = document.querySelectorAll('#song-list li a');
-                const imageUrls = [];
-                songListItems.forEach(item => {
-                    imageUrls.push(item.href);
-                });
-
-                if (navigator.serviceWorker.controller) {
-                    navigator.serviceWorker.controller.postMessage({
-                        type: 'CACHE_IMAGES',
-                        imageUrls: imageUrls
+            // Populate the song list
+            function populateList(songs) {
+                songList.innerHTML = '';
+                songs.forEach(song => {
+                    const li = document.createElement('li');
+                    li.textContent = `${song.number} - ${song.title}`;
+                    li.dataset.image = song.image; // Store the image filename in data attribute
+                    li.dataset.title = song.title; // Store the title in data attribute
+                    li.dataset.number = song.number; // Store the number in data attribute
+                    li.addEventListener('click', () => {
+                        // Navigate to the image page with title, number, and image URL
+                        const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
+                        const title = encodeURIComponent(song.title);
+                        const number = encodeURIComponent(song.number);
+                        window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
                     });
-                }
-            })
-            .catch((error) => {
-                console.log('Service Worker registration failed:', error);
+                    songList.appendChild(li);
+                });
+            }
+
+            // Initial population
+            populateList(data);
+
+            // Search functionality
+            searchInput.addEventListener('input', () => {
+                const query = searchInput.value.toLowerCase();
+                const filteredSongs = data.filter(song => 
+                    song.number.toLowerCase().includes(query) || 
+                    song.title.toLowerCase().includes(query)
+                );
+                populateList(filteredSongs);
             });
-    }
+        })
+        .catch(error => {
+            console.error('Error loading songs.json:', error);
+        });
 });
