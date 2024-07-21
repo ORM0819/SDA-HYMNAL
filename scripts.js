@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('songs.json')  // Updated path
         .then(response => response.json())
         .then(data => {
+            console.log('Data loaded:', data); // Debugging message
+
             // Populate the song list
             function populateList(songs) {
                 songList.innerHTML = '';
@@ -36,5 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 );
                 populateList(filteredSongs);
             });
+        })
+        .catch(error => {
+            console.error('Error loading songs.json:', error); // Debugging message
         });
 });
