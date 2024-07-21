@@ -8,18 +8,25 @@
 </head>
 <body>
     <a href="index.html">Back to SDA Hymnal</a>
-    <h1>SDA Hymnal - Image Viewer</h1>
-    <img id="image" src="" alt="Image">
+    <h1 id="title">SDA Hymnal - Image Viewer</h1>
+    <div id="image-container">
+        <img id="image" src="" alt="Image">
+    </div>
 
     <script>
-        // Get the image URL from the URL parameters
+        // Get the image URL and title from the URL parameters
         const params = new URLSearchParams(window.location.search);
         const imageUrl = params.get('image');
+        const title = params.get('title');
         
         if (imageUrl) {
             document.getElementById('image').src = imageUrl;
         } else {
             document.getElementById('image').alt = 'No image found';
+        }
+
+        if (title) {
+            document.getElementById('title').textContent = decodeURIComponent(title);
         }
     </script>
 </body>
