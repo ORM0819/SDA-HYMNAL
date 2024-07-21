@@ -9,7 +9,46 @@
     <link rel="manifest" href="manifest.json">
     <title>SDA Hymnal - Image Viewer</title>
     <link rel="stylesheet" href="styles.css">
-   
+    <script>
+        // Register the Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('https://orm0819.github.io/SDA-HYMNAL/service-worker.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
+    <style>
+        /* Centering the content */
+        body {
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        #image-container {
+            max-width: 100%;
+            max-height: 80vh;
+            margin: 0 auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+    </style>
 </head>
 <body>
     <h1 id="title">SDA Hymnal - Image Viewer</h1>
