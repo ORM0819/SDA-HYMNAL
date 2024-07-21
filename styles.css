@@ -15,11 +15,14 @@ body {
 
 /* Style for the image */
 img {
-    max-width: 90%;
+    max-width: 100%;
     height: auto;
     border: 1px solid #ccc;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* Add padding to ensure image doesn't touch edges on very small screens */
+    padding: 10px;
+    box-sizing: border-box;
 }
 
 /* Style for the link */
@@ -33,4 +36,11 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 600px) {
+    img {
+        max-width: 95%; /* Slightly smaller max-width for very small screens */
+    }
 }
