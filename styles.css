@@ -20,6 +20,9 @@ body {
     list-style: none;
     padding: 0;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* Style for each song item */
@@ -30,6 +33,9 @@ body {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+    width: 100%; /* Full width of container */
+    max-width: 500px; /* Maximum width */
+    text-align: center; /* Center text */
 }
 
 #song-list li:hover {
