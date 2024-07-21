@@ -10,6 +10,7 @@ body {
     justify-content: center;
     min-height: 100vh;
     text-align: center;
+    position: relative; /* Required for absolute positioning of the link */
 }
 
 /* Style for the image */
@@ -21,10 +22,11 @@ img {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Optional: style for the link */
+/* Style for the link */
 a {
-    display: block;
-    margin-top: 20px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
     text-decoration: none;
     color: #007BFF;
 }
