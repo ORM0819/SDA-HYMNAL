@@ -1,27 +1,34 @@
+/* styles.css */
+
+/* General styles for the body */
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
 }
 
-#search {
-    margin: 20px;
-    padding: 10px;
-    width: 80%;
-    max-width: 600px;
+/* Style for the image */
+img {
+    max-width: 90%;
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-#song-list {
-    list-style-type: none;
-    padding: 0;
+/* Optional: style for the link */
+a {
+    display: block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #007BFF;
 }
 
-#song-list li {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-}
-
-#song-list li:hover {
-    background-color: #f0f0f0;
+a:hover {
+    text-decoration: underline;
 }
