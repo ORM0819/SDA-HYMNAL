@@ -1,5 +1,3 @@
-/* styles.css */
-
 /* General styles for the body */
 body {
     margin: 0;
@@ -10,12 +8,18 @@ body {
     justify-content: center;
     min-height: 100vh;
     text-align: center;
-    position: relative; /* Required for absolute positioning of the link */
+}
+
+/* Style for the image container */
+#image-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
 }
 
 /* Style for the image */
 img {
-    max-width: 100%;
+    max-width: 90%;
     height: auto;
     border: 1px solid #ccc;
     border-radius: 8px;
