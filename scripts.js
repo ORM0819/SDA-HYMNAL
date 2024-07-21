@@ -16,9 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     li.textContent = `${song.number} - ${song.title}`;
                     li.dataset.image = song.image; // Store the image filename in data attribute
                     li.addEventListener('click', () => {
-                        // Open the image in a new page
+                        // Navigate to the image page in the same tab
                         const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
-                        window.open(`image.html?image=${encodeURIComponent(imageUrl)}`, '_blank');
+                        window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}`;
                     });
                     songList.appendChild(li);
                 });
