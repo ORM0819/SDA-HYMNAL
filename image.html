@@ -26,9 +26,11 @@
         }
 
         if (title && number) {
-            const displayTitle = `${number} - ${decodeURIComponent(title)}`;
-            document.getElementById('title').textContent = displayTitle;
-            document.title = `SDA Hymnal - ${displayTitle}`;
+            // Set the heading to display only the song number
+            document.getElementById('title').textContent = `Song Number: ${number}`;
+            
+            // Set the browser's title to display only the song title
+            document.title = `SDA Hymnal - ${decodeURIComponent(title)}`;
         }
     </script>
 </body>
