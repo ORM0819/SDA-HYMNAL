@@ -1,11 +1,13 @@
 [
     {
         "number": "001",
-        "title": "Amazing Grace"
+        "title": "Amazing Grace",
+        "image": "PianoSheet_NewHymnal_en_001.png"
     },
     {
         "number": "002",
-        "title": "How Great Thou Art"
+        "title": "How Great Thou Art",
+        "image": "PianoSheet_NewHymnal_en_002.png"
     }
     // Add more songs here
 ]
