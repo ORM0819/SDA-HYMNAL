@@ -1,0 +1,27 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+#search {
+    margin: 20px;
+    padding: 10px;
+    width: 80%;
+    max-width: 600px;
+}
+
+#song-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+#song-list li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+#song-list li:hover {
+    background-color: #f0f0f0;
+}
