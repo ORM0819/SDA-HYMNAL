@@ -5,8 +5,6 @@ const URLS_TO_CACHE = [
     'image.html',
     'styles.css',
     'manifest.json',
-    // Add other assets you want to cache
-    'src/Hymnal.XF/Resources/Assets/MusicSheets/PianoSheet_NewHymnal_en_001.png'
 ];
 
 self.addEventListener('install', (event) => {
@@ -26,7 +24,13 @@ self.addEventListener('fetch', (event) => {
                 if (response) {
                     return response;
                 }
-                return fetch(event.request);
+                return fetch(event.request).then((networkResponse) => {
+                    // Cache the new response
+                    return caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, networkResponse.clone());
+                        return networkResponse;
+                    });
+                });
             })
     );
 });
@@ -44,4 +48,16 @@ self.addEventListener('activate', (event) => {
             );
         })
     );
+});
+
+// Handle messages from the main script to cache images
+self.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'CACHE_IMAGES') {
+        const imageUrls = event.data.imageUrls;
+        caches.open(CACHE_NAME).then((cache) => {
+            return cache.addAll(imageUrls);
+        }).then(() => {
+            console.log('Cached images:', imageUrls);
+        });
+    }
 });
