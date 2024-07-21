@@ -15,10 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     const li = document.createElement('li');
                     li.textContent = `${song.number} - ${song.title}`;
                     li.dataset.image = song.image; // Store the image filename in data attribute
+                    li.dataset.title = song.title; // Store the title in data attribute
                     li.addEventListener('click', () => {
-                        // Navigate to the image page in the same tab
+                        // Navigate to the image page with title and image URL
                         const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
-                        window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}`;
+                        const title = encodeURIComponent(song.title);
+                        window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}`;
                     });
                     songList.appendChild(li);
                 });
