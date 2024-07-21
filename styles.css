@@ -6,6 +6,9 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center; /* Center content side-to-side */
+    justify-content: center; /* Center content vertically */
+    min-height: 100vh; /* Ensure full viewport height */
+    position: relative; /* Required for absolute positioning of the link */
 }
 
 /* Style for the search input */
@@ -44,32 +47,4 @@ body {
 
 #song-list li:hover {
     background-color: #f0f0f0;
-}
-
-/* Style for the image container */
-#image-container {
-    text-align: center;
-    margin: 20px;
-}
-
-/* Style for the image */
-img {
-    max-width: 90%;
-    height: auto;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-    box-sizing: border-box;
-}
-
-/* Media query for smaller screens */
-@media (max-width: 600px) {
-    #search {
-        width: calc(100% - 20px); /* Adjust for very small screens */
-    }
-
-    img {
-        max-width: 100%;
-    }
 }
