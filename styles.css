@@ -8,6 +8,7 @@ body {
     align-items: center; /* Center content side-to-side */
     min-height: 100vh; /* Ensure full viewport height */
     position: relative; /* Required for absolute positioning of the link */
+    background-color: #f9f9f9; /* Background color for better visibility */
 }
 
 /* Style for the search input on the main page */
