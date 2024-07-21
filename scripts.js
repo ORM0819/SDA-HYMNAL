@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const songList = document.getElementById('song-list');
 
     // Fetch the song data
-    fetch('songs.json')
+    fetch('songs.json')  // Updated path
         .then(response => response.json())
         .then(data => {
             console.log('Data loaded:', data);
