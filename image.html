@@ -9,19 +9,7 @@
     <link rel="manifest" href="manifest.json">
     <title>SDA Hymnal - Image Viewer</title>
     <link rel="stylesheet" href="styles.css">
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('https://orm0819.github.io/SDA-HYMNAL/service-worker.js')
-                    .then((registration) => {
-                        console.log('Service Worker registered with scope:', registration.scope);
-                    })
-                    .catch((error) => {
-                        console.log('Service Worker registration failed:', error);
-                    });
-            });
-        }
-    </script>
+   
 </head>
 <body>
     <h1 id="title">SDA Hymnal - Image Viewer</h1>
