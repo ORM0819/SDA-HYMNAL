@@ -3,34 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>SDA Hymnal</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="styles.css">
-  <link rel="manifest" href="manifest.json">
-  <script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/service-worker.js')
-                .then((registration) => {
-                    console.log('Service Worker registered with scope:', registration.scope);
-                })
-                .catch((error) => {
-                    console.log('Service Worker registration failed:', error);
-                });
-        });
-    }
-</script>
-
+    <title>SDA Hymnal</title>
 </head>
 <body>
-    <h1>SDA Hymnal</h1>
-    <input type="text" id="search" placeholder="Search by number or title">
+    <input type="text" id="search-bar" placeholder="Search by song number or title...">
     <ul id="song-list"></ul>
-    <div id="image-container">
-        <img id="song-image" src="" alt="" style="display: none;">
-    </div>
-    <script src="scripts.js"></script>
+
+    <script src="songs.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+
+                        // Send image URLs to the Service Worker
+                        const songListItems = document.querySelectorAll('#song-list li');
+                        const imageUrls = [];
+                        songListItems.forEach(item => {
+                            const img = item.querySelector('img');
+                            if (img) {
+                                imageUrls.push(img.src);
+                            }
+                        });
+
+                        if (navigator.serviceWorker.controller) {
+                            navigator.serviceWorker.controller.postMessage({
+                                type: 'CACHE_IMAGES',
+                                imageUrls: imageUrls
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>
