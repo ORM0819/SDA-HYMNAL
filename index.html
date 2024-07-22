@@ -9,26 +9,41 @@
     <link rel="manifest" href="manifest.json">
     <title>SDA Hymnal</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Add styles for dropdown */
+        #language-dropdown {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
+        #dropdown-menu {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+        }
+    </style>
 </head>
 <body>
     <h1>SDA Hymnal</h1>
-    <div style="position: absolute; top: 0; left: 0;">
-        <label for="language-dropdown">Language:</label>
-        <select id="language-dropdown">
-            <option value="english">English</option>
-            <option value="spanish">Spanish</option>
-        </select>
-    </div>
-    <div style="position: absolute; top: 0; right: 0;">
-        <label for="dropdown-menu">Display:</label>
-        <select id="dropdown-menu">
-            <option value="music-score">Music Score and Lyrics</option>
-            <option value="lyrics">Lyrics Only</option>
-        </select>
-    </div>
     <input type="text" id="search" placeholder="Search by number or title">
     <ul id="song-list"></ul>
     <button id="start-cycle">Start Cycle</button>
+
+    <!-- Language Dropdown -->
+    <select id="language-dropdown">
+        <option value="english">English</option>
+        <option value="spanish">Spanish</option>
+        <option value="both">English & Spanish</option>
+    </select>
+
+    <!-- Display Option Dropdown -->
+    <select id="dropdown-menu">
+        <option value="music-score">Music Score and Lyrics</option>
+        <option value="lyrics">Lyrics Only</option>
+    </select>
+
     <script src="scripts.js"></script>
 </body>
 </html>
