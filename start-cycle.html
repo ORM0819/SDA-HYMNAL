@@ -19,6 +19,7 @@
                     // Retrieve the current index from localStorage or start from 0
                     let index = parseInt(localStorage.getItem('currentIndex')) || 0;
 
+                    // Function to go to the next song
                     const goToNextSong = () => {
                         if (index < data.length) {
                             const song = data[index];
@@ -26,25 +27,23 @@
                             const title = encodeURIComponent(song.title);
                             const number = encodeURIComponent(song.number);
                             window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
-                            // Update index in localStorage
-                            localStorage.setItem('currentIndex', index);
                         } else {
                             // Reset index if it goes past the last song
                             localStorage.removeItem('currentIndex');
+                            // Optionally redirect to a different page or show a message
                         }
                     };
 
-                    // Go to the next song
+                    // Call goToNextSong initially
                     goToNextSong();
 
-                    // Continue to the next song every 10 seconds
+                    // Set an interval to update and go to the next song
                     setInterval(() => {
-                        // Increment index and save in localStorage
+                        // Update the index
                         index = parseInt(localStorage.getItem('currentIndex')) || 0;
                         index++;
-                        localStorage.setItem('currentIndex', index);
-
                         if (index < data.length) {
+                            localStorage.setItem('currentIndex', index);
                             const song = data[index];
                             const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
                             const title = encodeURIComponent(song.title);
@@ -53,6 +52,7 @@
                         } else {
                             // Reset index if it goes past the last song
                             localStorage.removeItem('currentIndex');
+                            // Optionally redirect to a different page or show a message
                         }
                     }, 10000); // 10 seconds interval (adjust as needed)
                 })
