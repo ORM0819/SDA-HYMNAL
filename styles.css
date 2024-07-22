@@ -8,7 +8,6 @@ body {
     align-items: center; /* Center content side-to-side */
     min-height: 100vh; /* Ensure full viewport height */
     position: relative; /* Required for absolute positioning of the link */
-    background-color: #f9f9f9; /* Background color for better visibility */
 }
 
 /* Style for the search input on the main page */
@@ -77,6 +76,23 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+
+/* Style for the cycle button */
+#start-cycle-button {
+    margin: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#start-cycle-button:hover {
+    background-color: #0056b3;
 }
 
 /* Media query for smaller screens */
