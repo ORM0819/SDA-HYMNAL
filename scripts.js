@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else {
                         console.log('No songs data available'); // Debugging statement
                     }
-                }, 5000); // Change song every 5 seconds
+                }, 1000); // Change song every 1 second
             });
         })
         .catch(error => {
