@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const title = encodeURIComponent(song.title);
                         const number = encodeURIComponent(song.number);
                         window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
-                        
+
                         // Update the current index
                         currentIndex = (currentIndex + 1) % songsData.length;
                     } else {
