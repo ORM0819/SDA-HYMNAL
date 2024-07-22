@@ -37,8 +37,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch and display songs based on the selected language
     function loadSongs() {
-        fetch(getSongsUrl())
-            .then(response => response.json())
+        const url = getSongsUrl();
+        console.log(`Loading songs from: ${url}`);
+        
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.statusText}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 console.log('Data loaded:', data);
 
