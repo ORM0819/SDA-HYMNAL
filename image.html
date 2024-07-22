@@ -1,4 +1,3 @@
-<!-- image.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,6 +47,14 @@
             
             // Set the browser's title to display only the song title
             document.title = `SDA Hymnal - ${title}`;
+        }
+
+        // Check if the previous page was start-cycle.html
+        if (document.referrer.includes('start-cycle.html')) {
+            // Wait for a few seconds and then go back to start-cycle.html to continue the cycle
+            setTimeout(() => {
+                window.history.back();
+            }, 5000); // Wait for 5 seconds before going back
         }
     </script>
 </body>
