@@ -6,6 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="theme-color" content="#ffffff">
+    <link rel="manifest" href="manifest.json">
     <title>SDA Hymnal - Image Viewer</title>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -14,13 +15,13 @@
     <div id="image-container">
         <img id="image" src="" alt="Image">
     </div>
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const imageUrl = params.get('image');
             const title = params.get('title');
             const number = params.get('number');
+            const previousUrl = document.referrer;
 
             if (imageUrl) {
                 document.getElementById('image').src = imageUrl;
@@ -33,16 +34,11 @@
                 document.title = `SDA Hymnal - ${decodeURIComponent(title)}`;
             }
 
-            // Increment currentIndex if the referrer is start-cycle.html
-            if (document.referrer.includes('start-cycle.html')) {
-                let index = parseInt(localStorage.getItem('currentIndex')) || 0;
-                index++;
-                localStorage.setItem('currentIndex', index);
-
-                // Redirect to start-cycle.html after 100 milliseconds
+            // Redirect back to start-cycle.html if previous URL was start-cycle.html
+            if (previousUrl.includes('start-cycle.html')) {
                 setTimeout(() => {
                     window.location.href = 'start-cycle.html';
-                }, 100); // 100 milliseconds
+                }, 100);
             }
         });
     </script>
