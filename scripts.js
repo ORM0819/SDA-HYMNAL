@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search');
     const songList = document.getElementById('song-list');
     const dropdownMenu = document.getElementById('dropdown-menu');
+    const startCycleButton = document.getElementById('start-cycle');
 
     // Set the default dropdown value from local storage
     const savedDropdownValue = localStorage.getItem('dropdownValue') || 'music-score';
@@ -56,6 +57,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     song.title.toLowerCase().includes(query)
                 );
                 populateList(filteredSongs);
+            });
+
+            // Start Cycle Button Functionality
+            startCycleButton.addEventListener('click', () => {
+                localStorage.setItem('currentIndex', 0);
+                const firstSong = data[0];
+                const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${firstSong.image}`;
+                const title = encodeURIComponent(firstSong.title);
+                const number = encodeURIComponent(firstSong.number);
+                const content = encodeURIComponent(firstSong.content);
+
+                if (dropdownMenu.value === 'lyrics') {
+                    window.location.href = `start-cycle.html?content=${content}&title=${title}&number=${number}&index=0`;
+                } else {
+                    window.location.href = `start-cycle.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}&index=0`;
+                }
             });
         })
         .catch(error => {
