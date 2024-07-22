@@ -1,53 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>Start Cycle</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="manifest" href="manifest.json">
-</head>
-<body>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const index = parseInt(params.get('index'), 10);
-            const currentIndex = isNaN(index) ? 0 : index;
-            const songsJsonUrl = 'songs.json';
-            const dropdownValue = localStorage.getItem('dropdownValue') || 'music-score';
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('search');
+    const songList = document.getElementById('song-list');
+    const dropdownMenu = document.getElementById('dropdown-menu');
+    const startCycleButton = document.getElementById('start-cycle');
 
-            fetch(songsJsonUrl)
-                .then(response => response.json())
-                .then(data => {
-                    if (currentIndex >= data.length) {
-                        window.location.href = 'index.html';
-                        return;
-                    }
+    // Set the default dropdown value from local storage
+    const savedDropdownValue = localStorage.getItem('dropdownValue') || 'music-score';
+    dropdownMenu.value = savedDropdownValue;
 
-                    const song = data[currentIndex];
-                    const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
-                    const title = encodeURIComponent(song.title);
-                    const number = encodeURIComponent(song.number);
-                    const content = encodeURIComponent(song.content);
+    // Add event listener to save the dropdown value to local storage
+    dropdownMenu.addEventListener('change', () => {
+        localStorage.setItem('dropdownValue', dropdownMenu.value);
+    });
 
-                    const nextIndex = currentIndex + 1;
-                    let redirectUrl;
-                    
-                    if (dropdownValue === 'lyrics') {
-                        redirectUrl = `lyrics.html?content=${content}&title=${title}&number=${number}&index=${nextIndex}`;
-                    } else {
-                        redirectUrl = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}&index=${nextIndex}`;
-                    }
+    // Fetch the song data
+    fetch('songs.json')  // Updated path
+        .then(response => response.json())
+        .then(data => {
+            console.log('Data loaded:', data);
 
-                    // Redirect to the next song's page
-                    window.location.href = redirectUrl;
-                })
-                .catch(error => {
-                    console.error('Error fetching songs:', error);
+            // Populate the song list
+            function populateList(songs) {
+                songList.innerHTML = '';
+                songs.forEach(song => {
+                    const li = document.createElement('li');
+                    li.textContent = `${song.number} - ${song.title}`;
+                    li.dataset.image = song.image; // Store the image filename in data attribute
+                    li.dataset.title = song.title; // Store the title in data attribute
+                    li.dataset.number = song.number; // Store the number in data attribute
+                    li.dataset.content = song.content; // Store the content in data attribute
+                    li.addEventListener('click', () => {
+                        // Navigate to the appropriate page based on dropdown value
+                        const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
+                        const title = encodeURIComponent(song.title);
+                        const number = encodeURIComponent(song.number);
+                        const content = encodeURIComponent(song.content);
+
+                        if (dropdownMenu.value === 'lyrics') {
+                            window.location.href = `lyrics.html?content=${content}&title=${title}&number=${number}`;
+                        } else {
+                            window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
+                        }
+                    });
+                    songList.appendChild(li);
                 });
+            }
+
+            // Initial population
+            populateList(data);
+
+            // Search functionality
+            searchInput.addEventListener('input', () => {
+                const query = searchInput.value.toLowerCase();
+                const filteredSongs = data.filter(song => 
+                    song.number.toLowerCase().includes(query) || 
+                    song.title.toLowerCase().includes(query)
+                );
+                populateList(filteredSongs);
+            });
+
+            // Start Cycle Button Functionality
+            startCycleButton.addEventListener('click', () => {
+                localStorage.setItem('currentIndex', 0);
+                const firstSong = data[0];
+                const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${firstSong.image}`;
+                const title = encodeURIComponent(firstSong.title);
+                const number = encodeURIComponent(firstSong.number);
+                const content = encodeURIComponent(firstSong.content);
+
+                const redirectUrl = dropdownMenu.value === 'lyrics'
+                    ? `start-cycle.html?content=${content}&title=${title}&number=${number}&index=0`
+                    : `start-cycle.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}&index=0`;
+
+                window.location.href = redirectUrl;
+            });
+        })
+        .catch(error => {
+            console.error('Error loading songs.json:', error);
         });
-    </script>
-</body>
-</html>
+});
