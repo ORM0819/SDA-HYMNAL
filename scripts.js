@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Fetch the song data
-    fetch('songs.json')  // Updated path
+    fetch('songs.json')
         .then(response => response.json())
         .then(data => {
             console.log('Data loaded:', data);
@@ -25,12 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 songs.forEach(song => {
                     const li = document.createElement('li');
                     li.textContent = `${song.number} - ${song.title}`;
-                    li.dataset.image = song.image; // Store the image filename in data attribute
-                    li.dataset.title = song.title; // Store the title in data attribute
-                    li.dataset.number = song.number; // Store the number in data attribute
-                    li.dataset.content = song.content; // Store the content in data attribute
+                    li.dataset.image = song.image;
+                    li.dataset.title = song.title;
+                    li.dataset.number = song.number;
+                    li.dataset.content = song.content;
                     li.addEventListener('click', () => {
-                        // Navigate to the appropriate page based on dropdown value
                         const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
                         const title = encodeURIComponent(song.title);
                         const number = encodeURIComponent(song.number);
@@ -69,8 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const content = encodeURIComponent(firstSong.content);
 
                 const redirectUrl = dropdownMenu.value === 'lyrics'
-                    ? `start-cycle.html?content=${content}&title=${title}&number=${number}&index=0`
-                    : `start-cycle.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}&index=0`;
+                    ? `lyrics.html?content=${content}&title=${title}&number=${number}`
+                    : `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
 
                 window.location.href = redirectUrl;
             });
