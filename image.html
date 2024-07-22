@@ -10,17 +10,28 @@
     <title>SDA Hymnal - Image Viewer</title>
     <link rel="stylesheet" href="styles.css">
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('https://ormt03.github.io/SDA-HYMNAL/service-worker.js')
-                    .then((registration) => {
-                        console.log('Service Worker registered with scope:', registration.scope);
-                    })
-                    .catch((error) => {
-                        console.log('Service Worker registration failed:', error);
-                    });
-            });
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const imageUrl = params.get('image');
+            const title = params.get('title');
+            const number = params.get('number');
+            const previousPage = document.referrer;
+
+            if (imageUrl) {
+                document.getElementById('image').src = imageUrl;
+                document.getElementById('title').textContent = `Song Number: ${number}`;
+                document.title = `SDA Hymnal - ${decodeURIComponent(title)}`;
+            } else {
+                document.getElementById('image').alt = 'No image found';
+            }
+
+            // Redirect back if the previous page was start-cycle.html
+            if (previousPage.includes('start-cycle.html')) {
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000); // Adjust delay if needed
+            }
+        });
     </script>
 </head>
 <body>
@@ -28,23 +39,5 @@
     <div id="image-container">
         <img id="image" src="" alt="Image">
     </div>
-
-    <script>
-        const params = new URLSearchParams(window.location.search);
-        const imageUrl = params.get('image');
-        const title = params.get('title');
-        const number = params.get('number');
-        
-        if (imageUrl) {
-            document.getElementById('image').src = imageUrl;
-        } else {
-            document.getElementById('image').alt = 'No image found';
-        }
-
-        if (title && number) {
-            document.getElementById('title').textContent = `Song Number: ${number}`;
-            document.title = `SDA Hymnal - ${decodeURIComponent(title)}`;
-        }
-    </script>
 </body>
 </html>
