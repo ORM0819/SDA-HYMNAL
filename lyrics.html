@@ -5,41 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="theme-color" content="#ffffff">
     <link rel="manifest" href="manifest.json">
-    <title>SDA Hymnal - Lyrics</title>
+    <title>SDA Hymnal - Lyrics Viewer</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        #lyrics-container {
-            padding: 20px;
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
         }
-    </style>
+    </script>
 </head>
 <body>
-    <button id="back-button">Back</button>
-    <h1 id="title">Song Title</h1>
+    <h1 id="title">SDA Hymnal - Lyrics Viewer</h1>
     <div id="lyrics-container">
-        <pre id="lyrics">Lyrics will be displayed here.</pre>
+        <p id="lyrics"></p>
     </div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const content = params.get('content');
-            const title = params.get('title');
+        // Get the content, title, and number from the URL parameters
+        const params = new URLSearchParams(window.location.search);
+        const content = decodeURIComponent(params.get('content'));
+        const title = decodeURIComponent(params.get('title'));
+        const number = decodeURIComponent(params.get('number'));
+        
+        if (content) {
+            document.getElementById('lyrics').textContent = content;
+        } else {
+            document.getElementById('lyrics').textContent = 'No content found';
+        }
 
-            if (content) {
-                document.getElementById('lyrics').textContent = decodeURIComponent(content);
-            }
+        if (title && number) {
+            // Set the heading to display only the song number
+            document.getElementById('title').textContent = `Song Number: ${number}`;
+            
+            // Set the browser's title to display only the song title
+            document.title = `SDA Hymnal - ${title}`;
+        }
 
-            if (title) {
-                document.getElementById('title').textContent = `Song: ${decodeURIComponent(title)}`;
-                document.title = `SDA Hymnal - ${decodeURIComponent(title)}`;
-            }
-
-            document.getElementById('back-button').addEventListener('click', () => {
+        // Check if the previous page was start-cycle.html
+        if (document.referrer.includes('start-cycle.html')) {
+            // Wait for a few seconds and then go back to start-cycle.html to continue the cycle
+            setTimeout(() => {
                 window.history.back();
-            });
-        });
+            }, 5000); // Wait for 5 seconds before going back
+        }
     </script>
 </body>
 </html>
