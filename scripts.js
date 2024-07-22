@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Start cycle button functionality
             startCycleButton.addEventListener('click', () => {
+                console.log('Start Cycle button clicked'); // Debugging statement
                 if (cycleInterval) {
                     clearInterval(cycleInterval); // Clear any existing interval
                 }
@@ -56,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 cycleInterval = setInterval(() => {
                     if (songsData.length > 0) {
                         const song = songsData[currentIndex];
+                        console.log(`Navigating to song: ${song.title}`); // Debugging statement
                         const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
                         const title = encodeURIComponent(song.title);
                         const number = encodeURIComponent(song.number);
