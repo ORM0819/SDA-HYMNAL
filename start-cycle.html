@@ -5,47 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>Start Cycle</title>
-    <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="manifest.json">
+    <title>SDA Hymnal - Start Cycle</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('https://ormt03.github.io/SDA-HYMNAL/service-worker.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
 </head>
 <body>
+    <h1>Starting Cycle...</h1>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const index = parseInt(localStorage.getItem('currentIndex'), 10) || 0;
-            const dropdownValue = localStorage.getItem('dropdownValue') || 'music-score';
-            const songsJsonUrl = 'songs.json';
+        function cycleSongs() {
+            const currentIndex = parseInt(localStorage.getItem('currentIndex')) || 0;
+            const songsUrl = localStorage.getItem('languageValue') === 'spanish' ? 'songs_es.json' : 'songs.json';
 
-            fetch(songsJsonUrl)
+            fetch(songsUrl)
                 .then(response => response.json())
                 .then(data => {
-                    if (index >= data.length) {
-                        localStorage.removeItem('currentIndex');
+                    if (currentIndex >= data.length) {
                         window.location.href = 'index.html';
                         return;
                     }
 
-                    const song = data[index];
+                    const song = data[currentIndex];
                     const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
                     const title = encodeURIComponent(song.title);
                     const number = encodeURIComponent(song.number);
                     const content = encodeURIComponent(song.content);
 
-                    localStorage.setItem('currentIndex', index + 1);
+                    localStorage.setItem('currentIndex', currentIndex + 1);
 
-                    let redirectUrl;
-                    if (dropdownValue === 'lyrics') {
-                        redirectUrl = `lyrics.html?content=${content}&title=${title}&number=${number}`;
-                    } else {
-                        redirectUrl = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
-                    }
+                    const redirectUrl = localStorage.getItem('dropdownValue') === 'lyrics'
+                        ? `lyrics.html?content=${content}&title=${title}&number=${number}`
+                        : `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
 
                     window.location.href = redirectUrl;
                 })
                 .catch(error => {
-                    console.error('Error fetching songs:', error);
+                    console.error('Error loading songs:', error);
                 });
-        });
+        }
+
+        document.addEventListener('DOMContentLoaded', cycleSongs);
     </script>
 </body>
 </html>
