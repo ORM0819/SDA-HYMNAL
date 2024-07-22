@@ -5,26 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="manifest" href="manifest.json">
     <title>SDA Hymnal</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="manifest" href="manifest.json">
+    <style>
+        /* Add styles for dropdown */
+        #language-dropdown {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
+    </style>
 </head>
 <body>
-    <div id="header">
-        <h1>SDA Hymnal</h1>
-        <div id="dropdown-container">
-            <select id="dropdown-menu">
-                <option value="music-score">Music Score and Lyrics</option>
-                <option value="lyrics">Lyrics Only</option>
-            </select>
-        </div>
-    </div>
+    <h1>SDA Hymnal</h1>
     <input type="text" id="search" placeholder="Search by number or title">
     <ul id="song-list"></ul>
-    <div id="image-container">
-        <img id="song-image" src="" alt="" style="display: none;">
-    </div>
     <button id="start-cycle">Start Cycle</button>
+    
+    <!-- Language Dropdown -->
+    <select id="language-dropdown">
+        <option value="english">English</option>
+        <option value="spanish">Spanish</option>
+        <option value="both">English & Spanish</option>
+    </select>
+
     <script src="scripts.js"></script>
 </body>
 </html>
