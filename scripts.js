@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 cycleInterval = setInterval(() => {
                     if (songsData.length > 0) {
                         const song = songsData[currentIndex];
-                        console.log(`Navigating to song: ${song.title}`); // Debugging statement
+                        console.log(`Navigating to song: ${song.title}, Index: ${currentIndex}`); // Debugging statement
                         const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
                         const title = encodeURIComponent(song.title);
                         const number = encodeURIComponent(song.number);
@@ -65,6 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         // Update the current index
                         currentIndex = (currentIndex + 1) % songsData.length;
+                    } else {
+                        console.log('No songs data available'); // Debugging statement
                     }
                 }, 5000); // Change song every 5 seconds
             });
