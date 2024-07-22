@@ -5,10 +5,9 @@ const URLS_TO_CACHE = [
     'image.html',
     'styles.css',
     'manifest.json',
-    'songs.json' // Add your JSON file to the cache list
+    'songs.json'
 ];
 
-// Function to fetch the JSON and cache images
 async function cacheImages() {
     try {
         const response = await fetch('songs.json');
