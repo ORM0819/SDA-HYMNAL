@@ -17,7 +17,8 @@
                 .then(response => response.json())
                 .then(data => {
                     let index = 0;
-                    const cycleSongs = () => {
+                    
+                    const goToNextSong = () => {
                         if (index < data.length) {
                             const song = data[index];
                             const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
@@ -27,12 +28,14 @@
                             index++;
                         }
                     };
-                    cycleSongs(); // Start the cycle
 
-                    // Set interval for next song
+                    // Start the cycle and go to the first song
+                    goToNextSong();
+                    
+                    // Continue to next song every 10 seconds
                     setInterval(() => {
                         if (index < data.length) {
-                            cycleSongs();
+                            goToNextSong();
                         }
                     }, 10000); // 10 seconds interval (adjust as needed)
                 })
