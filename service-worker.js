@@ -5,10 +5,19 @@ const URLS_TO_CACHE = [
     'image.html',
     'styles.css',
     'manifest.json',
-    'src/Hymnal.XF/Resources/Assets/MusicSheets/' // Make sure to include the path where your images are stored
+    'songs.json' // Add your JSON file to the cache list
 ];
 
-// Install Event
+// Function to fetch the JSON and cache images
+async function cacheImages() {
+    const response = await fetch('songs.json');
+    const songs = await response.json();
+    const imageUrls = songs.map(song => `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`);
+    
+    const cache = await caches.open(CACHE_NAME);
+    return cache.addAll(imageUrls);
+}
+
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME)
@@ -16,10 +25,12 @@ self.addEventListener('install', (event) => {
                 console.log('Opened cache');
                 return cache.addAll(URLS_TO_CACHE);
             })
+            .then(() => {
+                return cacheImages();
+            })
     );
 });
 
-// Fetch Event
 self.addEventListener('fetch', (event) => {
     event.respondWith(
         caches.match(event.request)
@@ -28,7 +39,6 @@ self.addEventListener('fetch', (event) => {
                     return response;
                 }
                 return fetch(event.request).then((networkResponse) => {
-                    // Cache the new response
                     return caches.open(CACHE_NAME).then((cache) => {
                         cache.put(event.request, networkResponse.clone());
                         return networkResponse;
@@ -38,7 +48,6 @@ self.addEventListener('fetch', (event) => {
     );
 });
 
-// Activate Event
 self.addEventListener('activate', (event) => {
     const cacheWhitelist = [CACHE_NAME];
     event.waitUntil(
