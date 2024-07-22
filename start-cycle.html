@@ -27,12 +27,19 @@
     <script>
         function cycleSongs() {
             const currentIndex = parseInt(localStorage.getItem('currentIndex')) || 0;
-            const songsUrl = localStorage.getItem('languageValue') === 'spanish' ? 'songs_es.json' : 'songs.json';
+            const language = localStorage.getItem('languageValue') || 'english';
+            const dropdownValue = localStorage.getItem('dropdownValue') || 'music-score';
+            const songsUrl = language === 'spanish' ? 'songs_es.json' : 'songs.json';
+
+            console.log(`Fetching from: ${songsUrl}`);
+            console.log(`Current index: ${currentIndex}`);
+            console.log(`Dropdown value: ${dropdownValue}`);
 
             fetch(songsUrl)
                 .then(response => response.json())
                 .then(data => {
                     if (currentIndex >= data.length) {
+                        console.log('End of cycle. Redirecting to index.html.');
                         window.location.href = 'index.html';
                         return;
                     }
@@ -45,11 +52,15 @@
 
                     localStorage.setItem('currentIndex', currentIndex + 1);
 
-                    const redirectUrl = localStorage.getItem('dropdownValue') === 'lyrics'
+                    const redirectUrl = dropdownValue === 'lyrics'
                         ? `lyrics.html?content=${content}&title=${title}&number=${number}`
                         : `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
 
-                    window.location.href = redirectUrl;
+                    console.log(`Redirecting to: ${redirectUrl}`);
+                    
+                    setTimeout(() => {
+                        window.location.href = redirectUrl;
+                    }, 500); // Add a delay to ensure proper redirection
                 })
                 .catch(error => {
                     console.error('Error loading songs:', error);
