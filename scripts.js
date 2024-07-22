@@ -1,17 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search');
     const songList = document.getElementById('song-list');
-    const startCycleButton = document.getElementById('start-cycle-button');
-    let songsData = [];
-    let currentIndex = 0;
-    let cycleInterval;
+    const startCycleButton = document.getElementById('start-cycle');
 
     // Fetch the song data
     fetch('songs.json')
         .then(response => response.json())
         .then(data => {
-            console.log('Data loaded:', data);
-            songsData = data;
+            // Store song data in localStorage for the cycle
+            localStorage.setItem('totalSongs', data.length);
+            localStorage.setItem('imageUrls', JSON.stringify(data.map(song => `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`)));
+            localStorage.setItem('titles', JSON.stringify(data.map(song => song.title)));
+            localStorage.setItem('numbers', JSON.stringify(data.map(song => song.number)));
 
             // Populate the song list
             function populateList(songs) {
@@ -19,11 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 songs.forEach(song => {
                     const li = document.createElement('li');
                     li.textContent = `${song.number} - ${song.title}`;
-                    li.dataset.image = song.image; // Store the image filename in data attribute
-                    li.dataset.title = song.title; // Store the title in data attribute
-                    li.dataset.number = song.number; // Store the number in data attribute
+                    li.dataset.image = song.image;
+                    li.dataset.title = song.title;
+                    li.dataset.number = song.number;
                     li.addEventListener('click', () => {
-                        // Navigate to the image page with title, number, and image URL
                         const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
                         const title = encodeURIComponent(song.title);
                         const number = encodeURIComponent(song.number);
@@ -46,29 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 populateList(filteredSongs);
             });
 
-            // Start cycle button functionality
+            // Start cycle functionality
             startCycleButton.addEventListener('click', () => {
-                console.log('Start Cycle button clicked'); // Debugging statement
-                if (cycleInterval) {
-                    clearInterval(cycleInterval); // Clear any existing interval
-                }
-
-                // Set interval to cycle through songs
-                cycleInterval = setInterval(() => {
-                    if (songsData.length > 0) {
-                        const song = songsData[currentIndex];
-                        console.log(`Navigating to song: ${song.title}, Index: ${currentIndex}`); // Debugging statement
-                        const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
-                        const title = encodeURIComponent(song.title);
-                        const number = encodeURIComponent(song.number);
-                        window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
-
-                        // Update the current index
-                        currentIndex = (currentIndex + 1) % songsData.length;
-                    } else {
-                        console.log('No songs data available'); // Debugging statement
-                    }
-                }, 1000); // Change song every 1 second
+                localStorage.setItem('currentIndex', '0');
+                window.location.href = 'start-cycle.html';
             });
         })
         .catch(error => {
