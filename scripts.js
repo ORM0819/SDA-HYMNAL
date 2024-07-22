@@ -2,23 +2,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search');
     const songList = document.getElementById('song-list');
 
-    // Fetch the song data
-    fetch('songs.json')  // Ensure this path is correct relative to the `index.html` file
+    fetch('songs.json')
         .then(response => response.json())
         .then(data => {
             console.log('Data loaded:', data);
 
-            // Populate the song list
             function populateList(songs) {
                 songList.innerHTML = '';
                 songs.forEach(song => {
                     const li = document.createElement('li');
                     li.textContent = `${song.number} - ${song.title}`;
-                    li.dataset.image = song.image; // Store the image filename in data attribute
-                    li.dataset.title = song.title; // Store the title in data attribute
-                    li.dataset.number = song.number; // Store the number in data attribute
+                    li.dataset.image = song.image;
+                    li.dataset.title = song.title;
+                    li.dataset.number = song.number;
                     li.addEventListener('click', () => {
-                        // Navigate to the image page with title, number, and image URL
                         const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
                         const title = encodeURIComponent(song.title);
                         const number = encodeURIComponent(song.number);
@@ -28,10 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            // Initial population
             populateList(data);
 
-            // Search functionality
             searchInput.addEventListener('input', () => {
                 const query = searchInput.value.toLowerCase();
                 const filteredSongs = data.filter(song => 
