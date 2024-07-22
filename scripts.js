@@ -59,18 +59,22 @@ document.addEventListener('DOMContentLoaded', () => {
                         li.dataset.title = song.title;
                         li.dataset.number = song.number;
                         li.dataset.content = song.content;
+
                         li.addEventListener('click', () => {
                             const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
                             const title = encodeURIComponent(song.title);
                             const number = encodeURIComponent(song.number);
                             const content = encodeURIComponent(song.content);
 
+                            console.log(`Navigating to: ${dropdownMenu.value === 'lyrics' ? `lyrics.html?content=${content}&title=${title}&number=${number}` : `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`}`);
+                            
                             if (dropdownMenu.value === 'lyrics') {
                                 window.location.href = `lyrics.html?content=${content}&title=${title}&number=${number}`;
                             } else {
                                 window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
                             }
                         });
+
                         songList.appendChild(li);
                     });
                 }
@@ -97,6 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     const number = encodeURIComponent(firstSong.number);
                     const content = encodeURIComponent(firstSong.content);
 
+                    console.log(`Start Cycle Button Redirecting to: ${dropdownMenu.value === 'lyrics' ? `lyrics.html?content=${content}&title=${title}&number=${number}` : `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`}`);
+                    
                     const redirectUrl = dropdownMenu.value === 'lyrics'
                         ? `lyrics.html?content=${content}&title=${title}&number=${number}`
                         : `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
