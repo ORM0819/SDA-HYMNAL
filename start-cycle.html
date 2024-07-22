@@ -3,34 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Start Cycle</title>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const songList = params.get('songList'); // Pass the list of song URLs
-
-            if (songList) {
-                const songs = songList.split(',');
-                let currentIndex = 0;
-
-                function cycleSongs() {
-                    if (currentIndex < songs.length) {
-                        window.location.href = `image.html?image=${encodeURIComponent(songs[currentIndex])}&title=Title${currentIndex + 1}&number=${currentIndex + 1}`;
-                        currentIndex++;
-                        setTimeout(cycleSongs, 1000); // Wait 1 second before going to the next song
-                    } else {
-                        window.location.href = 'index.html'; // Go back to index.html when done
-                    }
-                }
-
-                cycleSongs();
-            } else {
-                window.location.href = 'index.html'; // Redirect to index if no songList is provided
-            }
-        });
-    </script>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#ffffff">
+    <title>SDA Hymnal - Start Cycle</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <p>Loading...</p>
+    <h1>SDA Hymnal - Start Cycle</h1>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('songs.json')
+                .then(response => response.json())
+                .then(data => {
+                    let index = 0;
+                    const cycleSongs = () => {
+                        if (index < data.length) {
+                            const song = data[index];
+                            const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
+                            const title = encodeURIComponent(song.title);
+                            const number = encodeURIComponent(song.number);
+                            window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
+                            index++;
+                        }
+                    };
+                    cycleSongs(); // Start the cycle
+
+                    // Set interval for next song
+                    setInterval(() => {
+                        if (index < data.length) {
+                            cycleSongs();
+                        }
+                    }, 10000); // 10 seconds interval (adjust as needed)
+                })
+                .catch(error => {
+                    console.error('Error loading songs.json:', error);
+                });
+        });
+    </script>
 </body>
 </html>
