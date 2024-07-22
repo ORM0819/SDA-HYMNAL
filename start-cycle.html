@@ -16,11 +16,9 @@
             fetch('songs.json')
                 .then(response => response.json())
                 .then(data => {
-                    // Retrieve the current index from localStorage or start from 0
                     let index = parseInt(localStorage.getItem('currentIndex')) || 0;
                     console.log('Starting cycle with index:', index);
 
-                    // Function to go to the next song
                     const goToNextSong = () => {
                         if (index < data.length) {
                             const song = data[index];
@@ -30,18 +28,13 @@
                             window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
                         } else {
                             console.log('Reached end of songs.');
-                            // Reset index if it goes past the last song
                             localStorage.removeItem('currentIndex');
-                            // Optionally redirect to a different page or show a message
                         }
                     };
 
-                    // Call goToNextSong initially
                     goToNextSong();
 
-                    // Set an interval to update and go to the next song
                     setInterval(() => {
-                        // Update the index
                         index = parseInt(localStorage.getItem('currentIndex')) || 0;
                         index++;
                         if (index < data.length) {
@@ -53,12 +46,10 @@
                             const number = encodeURIComponent(song.number);
                             window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
                         } else {
-                            // Reset index if it goes past the last song
                             localStorage.removeItem('currentIndex');
                             console.log('End of cycle.');
-                            // Optionally redirect to a different page or show a message
                         }
-                    }, 10000); // 10 seconds interval (adjust as needed)
+                    }, 10000); // Adjust time as needed
                 })
                 .catch(error => {
                     console.error('Error loading songs.json:', error);
