@@ -2,24 +2,12 @@ const CACHE_NAME = 'sda-hymnal-cache-v1';
 const URLS_TO_CACHE = [
     '/',
     'index.html',
+    'start-cycle.html',
     'image.html',
     'styles.css',
     'manifest.json',
-    'songs.json'
+    'songs.json',
 ];
-
-async function cacheImages() {
-    try {
-        const response = await fetch('songs.json');
-        const songs = await response.json();
-        const imageUrls = songs.map(song => `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`);
-        
-        const cache = await caches.open(CACHE_NAME);
-        return cache.addAll(imageUrls);
-    } catch (error) {
-        console.error('Failed to cache images:', error);
-    }
-}
 
 self.addEventListener('install', (event) => {
     event.waitUntil(
@@ -29,7 +17,16 @@ self.addEventListener('install', (event) => {
                 return cache.addAll(URLS_TO_CACHE);
             })
             .then(() => {
-                return cacheImages();
+                // Fetch and cache the songs data
+                fetch('songs.json')
+                    .then(response => response.json())
+                    .then(songs => {
+                        const imageUrls = songs.map(song => `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`);
+                        caches.open(CACHE_NAME)
+                            .then(cache => {
+                                return cache.addAll(imageUrls);
+                            });
+                    });
             })
     );
 });
@@ -42,6 +39,7 @@ self.addEventListener('fetch', (event) => {
                     return response;
                 }
                 return fetch(event.request).then((networkResponse) => {
+                    // Cache the new response
                     return caches.open(CACHE_NAME).then((cache) => {
                         cache.put(event.request, networkResponse.clone());
                         return networkResponse;
