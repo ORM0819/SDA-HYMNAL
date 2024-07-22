@@ -1,4 +1,3 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,44 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="theme-color" content="#ffffff">
     <link rel="manifest" href="manifest.json">
-    <title>SDA Hymnal</title>
+    <title>SDA Hymnal - Image Viewer</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Add styles for dropdown */
-        #language-dropdown {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 1000;
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('https://ormt03.github.io/SDA-HYMNAL/service-worker.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
         }
-        #dropdown-menu {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 1000;
-        }
-    </style>
+    </script>
 </head>
 <body>
-    <h1>SDA Hymnal</h1>
-    <input type="text" id="search" placeholder="Search by number or title">
-    <ul id="song-list"></ul>
-    <button id="start-cycle">Start Cycle</button>
+    <h1 id="title">SDA Hymnal - Image Viewer</h1>
+    <div id="image-container">
+        <img id="image" src="" alt="Image">
+    </div>
+    <script>
+        // Get the image URL, title, and number from the URL parameters
+        const params = new URLSearchParams(window.location.search);
+        const imageUrl = params.get('image');
+        const title = params.get('title');
+        const number = params.get('number');
+        
+        if (imageUrl) {
+            document.getElementById('image').src = decodeURIComponent(imageUrl);
+        } else {
+            document.getElementById('image').alt = 'No image found';
+        }
 
-    <!-- Language Dropdown -->
-    <select id="language-dropdown">
-        <option value="english">English</option>
-        <option value="spanish">Spanish</option>
-    </select>
-
-    <!-- Display Option Dropdown -->
-    <select id="dropdown-menu">
-        <option value="music-score">Music Score and Lyrics</option>
-        <option value="lyrics">Lyrics Only</option>
-    </select>
-
-    <script src="scripts.js"></script>
+        if (title && number) {
+            // Set the heading to display only the song number
+            document.getElementById('title').textContent = `Song Number: ${number}`;
+            
+            // Set the browser's title to display only the song title
+            document.title = `SDA Hymnal - ${decodeURIComponent(title)}`;
+        }
+    </script>
 </body>
 </html>
