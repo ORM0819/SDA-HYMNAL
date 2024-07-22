@@ -52,15 +52,18 @@
 
                     localStorage.setItem('currentIndex', currentIndex + 1);
 
-                    const redirectUrl = dropdownValue === 'lyrics'
-                        ? `lyrics.html?content=${content}&title=${title}&number=${number}`
-                        : `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
+                    let redirectUrl;
+                    if (dropdownValue === 'lyrics') {
+                        redirectUrl = `lyrics.html?content=${content}&title=${title}&number=${number}`;
+                    } else {
+                        redirectUrl = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
+                    }
 
                     console.log(`Redirecting to: ${redirectUrl}`);
                     
                     setTimeout(() => {
                         window.location.href = redirectUrl;
-                    }, 500); // Add a delay to ensure proper redirection
+                    }, 1000); // Increased delay for proper redirection
                 })
                 .catch(error => {
                     console.error('Error loading songs:', error);
