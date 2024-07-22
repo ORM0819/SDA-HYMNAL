@@ -21,7 +21,7 @@
             const imageUrl = params.get('image');
             const title = params.get('title');
             const number = params.get('number');
-            
+
             if (imageUrl) {
                 document.getElementById('image').src = imageUrl;
             } else {
@@ -33,12 +33,16 @@
                 document.title = `SDA Hymnal - ${decodeURIComponent(title)}`;
             }
 
-            // Check if the previous page was start-cycle.html
+            // Increment currentIndex if the referrer is start-cycle.html
             if (document.referrer.includes('start-cycle.html')) {
+                let index = parseInt(localStorage.getItem('currentIndex')) || 0;
+                index++;
+                localStorage.setItem('currentIndex', index);
+
+                // After a delay, go back to start-cycle.html
                 setTimeout(() => {
-                    // Navigate back to start-cycle.html
                     window.location.href = 'start-cycle.html';
-                }, 1000); // Go back after 1 second
+                }, 1000); // Adjust delay as needed
             }
         });
     </script>
