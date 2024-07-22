@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         li.dataset.number = song.number;
                         li.dataset.content = song.content;
                         li.addEventListener('click', () => {
-                            const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${encodeURIComponent(song.image)}`;
+                            const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
                             const title = encodeURIComponent(song.title);
                             const number = encodeURIComponent(song.number);
                             const content = encodeURIComponent(song.content);
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (dropdownMenu.value === 'lyrics') {
                                 window.location.href = `lyrics.html?content=${content}&title=${title}&number=${number}`;
                             } else {
-                                window.location.href = `image.html?image=${imageUrl}&title=${title}&number=${number}`;
+                                window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
                             }
                         });
                         songList.appendChild(li);
@@ -81,36 +81,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Start Cycle Button Functionality
                 startCycleButton.addEventListener('click', () => {
                     localStorage.setItem('currentIndex', 0);
-                    cycleSongs(data);
+                    const firstSong = data[0];
+                    const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${firstSong.image}`;
+                    const title = encodeURIComponent(firstSong.title);
+                    const number = encodeURIComponent(firstSong.number);
+                    const content = encodeURIComponent(firstSong.content);
+
+                    const redirectUrl = dropdownMenu.value === 'lyrics'
+                        ? `lyrics.html?content=${content}&title=${title}&number=${number}`
+                        : `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
+
+                    window.location.href = redirectUrl;
                 });
             })
             .catch(error => {
                 console.error('Error loading songs:', error);
             });
-    }
-
-    // Function to cycle through songs
-    function cycleSongs(songs) {
-        const currentIndex = parseInt(localStorage.getItem('currentIndex'), 10);
-        if (currentIndex < songs.length) {
-            const song = songs[currentIndex];
-            const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${encodeURIComponent(song.image)}`;
-            const title = encodeURIComponent(song.title);
-            const number = encodeURIComponent(song.number);
-            const content = encodeURIComponent(song.content);
-
-            localStorage.setItem('currentIndex', currentIndex + 1);
-            
-            const redirectUrl = dropdownMenu.value === 'lyrics'
-                ? `lyrics.html?content=${content}&title=${title}&number=${number}`
-                : `image.html?image=${imageUrl}&title=${title}&number=${number}`;
-
-            window.location.href = redirectUrl;
-        } else {
-            // Cycle completed, reset index and redirect to index.html
-            localStorage.removeItem('currentIndex');
-            window.location.href = 'index.html';
-        }
     }
 
     // Initial load
