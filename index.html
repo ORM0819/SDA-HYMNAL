@@ -14,23 +14,19 @@
     <h1>SDA Hymnal</h1>
     <input type="text" id="search" placeholder="Search by number or title">
     <ul id="song-list"></ul>
+    <button id="start-cycle">Start Cycle</button>
     <div id="image-container">
         <img id="song-image" src="" alt="" style="display: none;">
     </div>
-    <button id="start-cycle-button">Start Cycle</button>
     <script src="scripts.js"></script>
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('https://ormt03.github.io/SDA-HYMNAL/service-worker.js')
-                    .then((registration) => {
-                        console.log('Service Worker registered with scope:', registration.scope);
-                    })
-                    .catch((error) => {
-                        console.log('Service Worker registration failed:', error);
-                    });
-            });
-        }
+        document.getElementById('start-cycle').addEventListener('click', () => {
+            const songListItems = document.querySelectorAll('#song-list li');
+            const imageUrls = Array.from(songListItems).map(item => item.dataset.image);
+
+            // Redirect to start-cycle.html with the list of image URLs
+            window.location.href = `start-cycle.html?songList=${encodeURIComponent(imageUrls.join(','))}`;
+        });
     </script>
 </body>
 </html>
