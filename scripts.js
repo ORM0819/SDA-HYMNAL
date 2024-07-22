@@ -2,15 +2,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search');
     const songList = document.getElementById('song-list');
     const dropdownMenu = document.getElementById('dropdown-menu');
+    const languageDropdown = document.getElementById('language-dropdown');
     const startCycleButton = document.getElementById('start-cycle');
 
     // Set the default dropdown value from local storage
     const savedDropdownValue = localStorage.getItem('dropdownValue') || 'music-score';
     dropdownMenu.value = savedDropdownValue;
 
+    // Set the default language from local storage
+    const savedLanguageValue = localStorage.getItem('languageValue') || 'english';
+    languageDropdown.value = savedLanguageValue;
+
     // Add event listener to save the dropdown value to local storage
     dropdownMenu.addEventListener('change', () => {
         localStorage.setItem('dropdownValue', dropdownMenu.value);
+    });
+
+    // Add event listener to save the language value to local storage
+    languageDropdown.addEventListener('change', () => {
+        localStorage.setItem('languageValue', languageDropdown.value);
     });
 
     // Fetch the song data
