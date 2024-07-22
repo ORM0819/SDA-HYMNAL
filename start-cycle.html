@@ -34,9 +34,9 @@
 
                     goToNextSong();
 
+                    // Set an interval to continue the cycle
                     setInterval(() => {
                         index = parseInt(localStorage.getItem('currentIndex')) || 0;
-                        index++;
                         if (index < data.length) {
                             localStorage.setItem('currentIndex', index);
                             console.log('Updating index to:', index);
