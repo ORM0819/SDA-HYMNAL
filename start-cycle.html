@@ -8,13 +8,9 @@
 <body>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const totalSongs = localStorage.getItem('totalSongs') || 0;
+            const totalSongs = parseInt(localStorage.getItem('totalSongs'), 10) || 0;
             let currentIndex = parseInt(localStorage.getItem('currentIndex') || '0', 10);
 
-            // Increment index
-            currentIndex += 1;
-
-            // Check if we have gone through all songs
             if (currentIndex >= totalSongs) {
                 // Reset index and redirect to index.html
                 localStorage.removeItem('currentIndex');
@@ -22,8 +18,16 @@
             } else {
                 // Update currentIndex in localStorage and redirect to the next song
                 localStorage.setItem('currentIndex', currentIndex);
-                const nextSongUrl = `image.html?image=${encodeURIComponent(localStorage.getItem('imageUrls')[currentIndex])}&title=${encodeURIComponent(localStorage.getItem('titles')[currentIndex])}&number=${encodeURIComponent(localStorage.getItem('numbers')[currentIndex])}`;
-                
+                const imageUrls = JSON.parse(localStorage.getItem('imageUrls'));
+                const titles = JSON.parse(localStorage.getItem('titles'));
+                const numbers = JSON.parse(localStorage.getItem('numbers'));
+
+                const nextSongUrl = `image.html?image=${encodeURIComponent(imageUrls[currentIndex])}&title=${encodeURIComponent(titles[currentIndex])}&number=${encodeURIComponent(numbers[currentIndex])}`;
+
+                // Increment index
+                currentIndex += 1;
+                localStorage.setItem('currentIndex', currentIndex);
+
                 // Redirect after 100 milliseconds
                 setTimeout(() => {
                     window.location.href = nextSongUrl;
