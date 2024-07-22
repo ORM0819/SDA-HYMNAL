@@ -81,17 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Start Cycle Button Functionality
                 startCycleButton.addEventListener('click', () => {
                     localStorage.setItem('currentIndex', 0);
-                    const firstSong = data[0];
-                    const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${firstSong.image}`;
-                    const title = encodeURIComponent(firstSong.title);
-                    const number = encodeURIComponent(firstSong.number);
-                    const content = encodeURIComponent(firstSong.content);
-
-                    const redirectUrl = dropdownMenu.value === 'lyrics'
-                        ? `lyrics.html?content=${content}&title=${title}&number=${number}`
-                        : `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
-
-                    window.location.href = redirectUrl;
+                    window.location.href = 'start-cycle.html';
                 });
             })
             .catch(error => {
