@@ -12,36 +12,34 @@
 <body>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const index = parseInt(params.get('index'), 10);
-            const currentIndex = isNaN(index) ? 0 : index;
-            const songsJsonUrl = 'songs.json';
+            const index = parseInt(localStorage.getItem('currentIndex'), 10) || 0;
             const dropdownValue = localStorage.getItem('dropdownValue') || 'music-score';
+            const songsJsonUrl = 'songs.json';
 
             fetch(songsJsonUrl)
                 .then(response => response.json())
                 .then(data => {
-                    if (currentIndex >= data.length) {
+                    if (index >= data.length) {
+                        localStorage.removeItem('currentIndex');
                         window.location.href = 'index.html';
                         return;
                     }
 
-                    const song = data[currentIndex];
+                    const song = data[index];
                     const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
                     const title = encodeURIComponent(song.title);
                     const number = encodeURIComponent(song.number);
                     const content = encodeURIComponent(song.content);
 
-                    const nextIndex = currentIndex + 1;
+                    localStorage.setItem('currentIndex', index + 1);
+
                     let redirectUrl;
-                    
                     if (dropdownValue === 'lyrics') {
-                        redirectUrl = `lyrics.html?content=${content}&title=${title}&number=${number}&index=${nextIndex}`;
+                        redirectUrl = `lyrics.html?content=${content}&title=${title}&number=${number}`;
                     } else {
-                        redirectUrl = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}&index=${nextIndex}`;
+                        redirectUrl = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
                     }
 
-                    // Redirect to the next song's page
                     window.location.href = redirectUrl;
                 })
                 .catch(error => {
