@@ -24,21 +24,27 @@
             const previousUrl = document.referrer;
 
             if (imageUrl) {
-                document.getElementById('image').src = imageUrl;
+                const img = document.getElementById('image');
+                img.src = imageUrl;
+                img.onload = () => {
+                    if (previousUrl.includes('start-cycle.html')) {
+                        setTimeout(() => {
+                            window.location.href = 'start-cycle.html';
+                        }, 100);
+                    }
+                };
             } else {
                 document.getElementById('image').alt = 'No image found';
+                if (previousUrl.includes('start-cycle.html')) {
+                    setTimeout(() => {
+                        window.location.href = 'start-cycle.html';
+                    }, 100);
+                }
             }
 
             if (title && number) {
                 document.getElementById('title').textContent = `Song Number: ${number}`;
                 document.title = `SDA Hymnal - ${decodeURIComponent(title)}`;
-            }
-
-            // Redirect back to start-cycle.html if previous URL was start-cycle.html
-            if (previousUrl.includes('start-cycle.html')) {
-                setTimeout(() => {
-                    window.location.href = 'start-cycle.html';
-                }, 100);
             }
         });
     </script>
