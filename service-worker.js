@@ -65,15 +65,3 @@ self.addEventListener('activate', (event) => {
         })
     );
 });
-
-// Handle messages from the main script to cache images
-self.addEventListener('message', (event) => {
-    if (event.data && event.data.type === 'CACHE_IMAGES') {
-        const imageUrls = event.data.imageUrls;
-        caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(imageUrls);
-        }).then(() => {
-            console.log('Cached images:', imageUrls);
-        });
-    }
-});
