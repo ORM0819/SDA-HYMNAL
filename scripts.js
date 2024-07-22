@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 function populateList(songs) {
                     songList.innerHTML = '';
                     songs.forEach(song => {
+                        console.log('Processing song:', song); // Debugging log
                         const li = document.createElement('li');
                         li.textContent = `${song.number} - ${song.title}`;
                         li.dataset.image = song.image;
