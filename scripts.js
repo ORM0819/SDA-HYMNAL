@@ -27,12 +27,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     li.dataset.image = song.image; // Store the image filename in data attribute
                     li.dataset.title = song.title; // Store the title in data attribute
                     li.dataset.number = song.number; // Store the number in data attribute
+                    li.dataset.content = song.content; // Store the content in data attribute
                     li.addEventListener('click', () => {
-                        // Navigate to the image page with title, number, and image URL
+                        // Navigate to the appropriate page based on dropdown value
                         const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
                         const title = encodeURIComponent(song.title);
                         const number = encodeURIComponent(song.number);
-                        window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
+                        const content = encodeURIComponent(song.content);
+
+                        if (dropdownMenu.value === 'lyrics') {
+                            window.location.href = `lyrics.html?content=${content}&title=${title}&number=${number}`;
+                        } else {
+                            window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
+                        }
                     });
                     songList.appendChild(li);
                 });
