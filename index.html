@@ -10,9 +10,20 @@
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
-    <h1>SDA Hymnal</h1>
+    <div id="header">
+        <h1>SDA Hymnal</h1>
+        <div id="dropdown-container">
+            <select id="dropdown-menu">
+                <option value="lyrics">Lyrics Only</option>
+                <option value="music-score">Music Score and Lyrics</option>
+            </select>
+        </div>
+    </div>
     <input type="text" id="search" placeholder="Search by number or title">
     <ul id="song-list"></ul>
+    <div id="image-container">
+        <img id="song-image" src="" alt="" style="display: none;">
+    </div>
     <button id="start-cycle">Start Cycle</button>
     <script src="scripts.js"></script>
 </body>
