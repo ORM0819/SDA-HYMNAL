@@ -6,38 +6,40 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="theme-color" content="#ffffff">
-    <link rel="manifest" href="manifest.json">
     <title>SDA Hymnal - Image Viewer</title>
     <link rel="stylesheet" href="styles.css">
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const imageUrl = params.get('image');
-            const title = params.get('title');
-            const number = params.get('number');
-            const previousPage = document.referrer;
-
-            if (imageUrl) {
-                document.getElementById('image').src = imageUrl;
-                document.getElementById('title').textContent = `Song Number: ${number}`;
-                document.title = `SDA Hymnal - ${decodeURIComponent(title)}`;
-            } else {
-                document.getElementById('image').alt = 'No image found';
-            }
-
-            // Redirect back if the previous page was start-cycle.html
-            if (previousPage.includes('start-cycle.html')) {
-                setTimeout(() => {
-                    window.location.href = 'start-cycle.html';
-                }, 1000); // Adjust delay if needed
-            }
-        });
-    </script>
 </head>
 <body>
     <h1 id="title">SDA Hymnal - Image Viewer</h1>
     <div id="image-container">
         <img id="image" src="" alt="Image">
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const imageUrl = params.get('image');
+            const title = params.get('title');
+            const number = params.get('number');
+            
+            if (imageUrl) {
+                document.getElementById('image').src = imageUrl;
+            } else {
+                document.getElementById('image').alt = 'No image found';
+            }
+
+            if (title && number) {
+                document.getElementById('title').textContent = `Song Number: ${number}`;
+                document.title = `SDA Hymnal - ${decodeURIComponent(title)}`;
+            }
+
+            // Check if the previous page was start-cycle.html
+            if (document.referrer.includes('start-cycle.html')) {
+                setTimeout(() => {
+                    window.location.href = 'start-cycle.html';
+                }, 1000); // Go back after 1 second
+            }
+        });
+    </script>
 </body>
 </html>
