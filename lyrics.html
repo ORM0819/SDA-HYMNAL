@@ -7,42 +7,38 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="theme-color" content="#ffffff">
     <link rel="manifest" href="manifest.json">
-    <title>SDA Hymnal - Lyrics Viewer</title>
+    <title>SDA Hymnal - Lyrics</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        #lyrics-container {
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1 id="title">SDA Hymnal - Lyrics Viewer</h1>
+    <button id="back-button">Back</button>
+    <h1 id="title">Song Title</h1>
     <div id="lyrics-container">
-        <pre id="lyrics"></pre>
+        <pre id="lyrics">Lyrics will be displayed here.</pre>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const content = params.get('content');
             const title = params.get('title');
-            const number = params.get('number');
-            const previousUrl = document.referrer;
 
             if (content) {
                 document.getElementById('lyrics').textContent = decodeURIComponent(content);
-                if (previousUrl.includes('start-cycle.html')) {
-                    setTimeout(() => {
-                        window.location.href = 'start-cycle.html';
-                    }, 100);
-                }
-            } else {
-                document.getElementById('lyrics').textContent = 'No lyrics found';
-                if (previousUrl.includes('start-cycle.html')) {
-                    setTimeout(() => {
-                        window.location.href = 'start-cycle.html';
-                    }, 100);
-                }
             }
 
-            if (title && number) {
-                document.getElementById('title').textContent = `${number} - ${decodeURIComponent(title)}`;
-                document.title = `SDA Hymnal - ${number} - ${decodeURIComponent(title)}`;
+            if (title) {
+                document.getElementById('title').textContent = `Song: ${decodeURIComponent(title)}`;
+                document.title = `SDA Hymnal - ${decodeURIComponent(title)}`;
             }
+
+            document.getElementById('back-button').addEventListener('click', () => {
+                window.history.back();
+            });
         });
     </script>
 </body>
