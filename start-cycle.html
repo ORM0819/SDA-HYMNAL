@@ -16,7 +16,7 @@
             fetch('songs.json')
                 .then(response => response.json())
                 .then(data => {
-                    // Get current index from localStorage or start from 0
+                    // Retrieve the current index from localStorage or start from 0
                     let index = parseInt(localStorage.getItem('currentIndex')) || 0;
 
                     const goToNextSong = () => {
@@ -28,20 +28,31 @@
                             window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
                             // Update index in localStorage
                             localStorage.setItem('currentIndex', index);
-                            index++;
                         } else {
                             // Reset index if it goes past the last song
                             localStorage.removeItem('currentIndex');
                         }
                     };
 
-                    // Start the cycle and go to the first song
+                    // Go to the next song
                     goToNextSong();
-                    
-                    // Continue to next song every 10 seconds
+
+                    // Continue to the next song every 10 seconds
                     setInterval(() => {
+                        // Increment index and save in localStorage
+                        index = parseInt(localStorage.getItem('currentIndex')) || 0;
+                        index++;
+                        localStorage.setItem('currentIndex', index);
+
                         if (index < data.length) {
-                            goToNextSong();
+                            const song = data[index];
+                            const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
+                            const title = encodeURIComponent(song.title);
+                            const number = encodeURIComponent(song.number);
+                            window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
+                        } else {
+                            // Reset index if it goes past the last song
+                            localStorage.removeItem('currentIndex');
                         }
                     }, 10000); // 10 seconds interval (adjust as needed)
                 })
