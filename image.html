@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,57 +6,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#ffffff">
     <link rel="manifest" href="manifest.json">
-    <title>SDA Hymnal - Image Viewer</title>
+    <title>SDA Hymnal</title>
     <link rel="stylesheet" href="styles.css">
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
-                    .then((registration) => {
-                        console.log('Service Worker registered with scope:', registration.scope);
-                    })
-                    .catch((error) => {
-                        console.log('Service Worker registration failed:', error);
-                    });
-            });
+    <style>
+        /* Add styles for dropdown */
+        #language-dropdown {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
         }
-    </script>
+        #dropdown-menu {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+        }
+    </style>
 </head>
 <body>
-    <h1 id="title">SDA Hymnal - Image Viewer</h1>
-    <div id="image-container">
-        <img id="image" src="" alt="Image">
-    </div>
+    <h1>SDA Hymnal</h1>
+    <input type="text" id="search" placeholder="Search by number or title">
+    <ul id="song-list"></ul>
+    <button id="start-cycle">Start Cycle</button>
 
-    <script>
-        // Get the image URL, title, and number from the URL parameters
-        const params = new URLSearchParams(window.location.search);
-        const imageUrl = decodeURIComponent(params.get('image'));
-        const title = decodeURIComponent(params.get('title'));
-        const number = decodeURIComponent(params.get('number'));
-        
-        if (imageUrl) {
-            document.getElementById('image').src = imageUrl;
-        } else {
-            document.getElementById('image').alt = 'No image found';
-        }
+    <!-- Language Dropdown -->
+    <select id="language-dropdown">
+        <option value="english">English</option>
+        <option value="spanish">Spanish</option>
+    </select>
 
-        if (title && number) {
-            // Set the heading to display only the song number
-            document.getElementById('title').textContent = `Song Number: ${number}`;
-            
-            // Set the browser's title to display only the song title
-            document.title = `SDA Hymnal - ${title}`;
-        }
+    <!-- Display Option Dropdown -->
+    <select id="dropdown-menu">
+        <option value="music-score">Music Score and Lyrics</option>
+        <option value="lyrics">Lyrics Only</option>
+    </select>
 
-        // Check if the previous page was start-cycle.html
-        if (document.referrer.includes('start-cycle.html')) {
-            // Wait for a few seconds and then go back to start-cycle.html to continue the cycle
-            setTimeout(() => {
-                window.history.back();
-            }, 5000); // Wait for 5 seconds before going back
-        }
-    </script>
+    <script src="scripts.js"></script>
 </body>
 </html>
