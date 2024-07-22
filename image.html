@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <button id="back-button" style="position: absolute; top: 10px; left: 10px;">Back</button>
     <h1 id="title">SDA Hymnal - Image Viewer</h1>
     <div id="image-container">
         <img id="image" src="" alt="Image">
@@ -43,9 +44,14 @@
             }
 
             if (title && number) {
-                document.getElementById('title').textContent = `Song Number: ${number}`;
-                document.title = `SDA Hymnal - ${decodeURIComponent(title)}`;
+                document.getElementById('title').textContent = `Song Number: ${number} - ${decodeURIComponent(title)}`;
+                document.title = `SDA Hymnal - ${number} - ${decodeURIComponent(title)}`;
             }
+
+            const backButton = document.getElementById('back-button');
+            backButton.addEventListener('click', () => {
+                window.history.back();
+            });
         });
     </script>
 </body>
