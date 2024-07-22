@@ -1,3 +1,4 @@
+<!-- image.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,49 +6,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="theme-color" content="#ffffff">
     <link rel="manifest" href="manifest.json">
     <title>SDA Hymnal - Image Viewer</title>
     <link rel="stylesheet" href="styles.css">
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
 </head>
 <body>
-    <button id="back-button" onclick="history.back()">Back</button>
     <h1 id="title">SDA Hymnal - Image Viewer</h1>
     <div id="image-container">
         <img id="image" src="" alt="Image">
     </div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const imageUrl = params.get('image');
-            const title = params.get('title');
-            const number = params.get('number');
-            const previousUrl = document.referrer;
+        // Get the image URL, title, and number from the URL parameters
+        const params = new URLSearchParams(window.location.search);
+        const imageUrl = decodeURIComponent(params.get('image'));
+        const title = decodeURIComponent(params.get('title'));
+        const number = decodeURIComponent(params.get('number'));
+        
+        if (imageUrl) {
+            document.getElementById('image').src = imageUrl;
+        } else {
+            document.getElementById('image').alt = 'No image found';
+        }
 
-            if (imageUrl) {
-                const img = document.getElementById('image');
-                img.src = imageUrl;
-                img.onload = () => {
-                    if (previousUrl.includes('start-cycle.html')) {
-                        setTimeout(() => {
-                            window.location.href = 'start-cycle.html';
-                        }, 100);
-                    }
-                };
-            } else {
-                document.getElementById('image').alt = 'No image found';
-                if (previousUrl.includes('start-cycle.html')) {
-                    setTimeout(() => {
-                        window.location.href = 'start-cycle.html';
-                    }, 100);
-                }
-            }
-
-            if (title && number) {
-                document.getElementById('title').textContent = `${number} - ${decodeURIComponent(title)}`;
-                document.title = `SDA Hymnal - ${number} - ${decodeURIComponent(title)}`;
-            }
-        });
+        if (title && number) {
+            // Set the heading to display only the song number
+            document.getElementById('title').textContent = `Song Number: ${number}`;
+            
+            // Set the browser's title to display only the song title
+            document.title = `SDA Hymnal - ${title}`;
+        }
     </script>
 </body>
 </html>
