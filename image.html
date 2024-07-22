@@ -41,4 +41,16 @@
         }
 
         if (title && number) {
-            document.getElementById('title').textContent = `Song Number: ${
+            document.getElementById('title').textContent = `Song Number: ${number}; document.title = SDA Hymnal - ${decodeURIComponent(title)}`;
+}
+
+          // Check if the previous page was start-cycle.html
+    const referrer = document.referrer;
+    if (referrer.includes('start-cycle.html')) {
+        setTimeout(() => {
+            window.location.href = 'start-cycle.html';
+        }, 3000); // Adjust the delay as needed
+    }
+</script>
+</body>
+</html>
