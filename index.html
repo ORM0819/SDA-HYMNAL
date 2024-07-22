@@ -24,23 +24,6 @@
                 navigator.serviceWorker.register('https://ormt03.github.io/SDA-HYMNAL/service-worker.js')
                     .then((registration) => {
                         console.log('Service Worker registered with scope:', registration.scope);
-
-                        // Send image URLs to the Service Worker
-                        const songListItems = document.querySelectorAll('#song-list li');
-                        const imageUrls = [];
-                        songListItems.forEach(item => {
-                            const img = item.querySelector('img');
-                            if (img) {
-                                imageUrls.push(img.src);
-                            }
-                        });
-
-                        if (navigator.serviceWorker.controller) {
-                            navigator.serviceWorker.controller.postMessage({
-                                type: 'CACHE_IMAGES',
-                                imageUrls: imageUrls
-                            });
-                        }
                     })
                     .catch((error) => {
                         console.log('Service Worker registration failed:', error);
