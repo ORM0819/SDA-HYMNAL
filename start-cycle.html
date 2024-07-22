@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Cycle</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const songList = params.get('songList'); // Pass the list of song URLs
+
+            if (songList) {
+                const songs = songList.split(',');
+                let currentIndex = 0;
+
+                function cycleSongs() {
+                    if (currentIndex < songs.length) {
+                        window.location.href = `image.html?image=${encodeURIComponent(songs[currentIndex])}&title=Title${currentIndex + 1}&number=${currentIndex + 1}`;
+                        currentIndex++;
+                        setTimeout(cycleSongs, 1000); // Wait 1 second before going to the next song
+                    } else {
+                        window.location.href = 'index.html'; // Go back to index.html when done
+                    }
+                }
+
+                cycleSongs();
+            } else {
+                window.location.href = 'index.html'; // Redirect to index if no songList is provided
+            }
+        });
+    </script>
+</head>
+<body>
+    <p>Loading...</p>
+</body>
+</html>
