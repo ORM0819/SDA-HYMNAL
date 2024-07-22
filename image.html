@@ -30,7 +30,6 @@
     </div>
 
     <script>
-        // Get the image URL, title, and number from the URL parameters
         const params = new URLSearchParams(window.location.search);
         const imageUrl = params.get('image');
         const title = params.get('title');
@@ -43,10 +42,7 @@
         }
 
         if (title && number) {
-            // Set the heading to display the song number
             document.getElementById('title').textContent = `Song Number: ${number}`;
-            
-            // Set the browser's title to display the song title
             document.title = `SDA Hymnal - ${decodeURIComponent(title)}`;
         }
     </script>
