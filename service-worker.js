@@ -10,12 +10,16 @@ const URLS_TO_CACHE = [
 
 // Function to fetch the JSON and cache images
 async function cacheImages() {
-    const response = await fetch('songs.json');
-    const songs = await response.json();
-    const imageUrls = songs.map(song => `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`);
-    
-    const cache = await caches.open(CACHE_NAME);
-    return cache.addAll(imageUrls);
+    try {
+        const response = await fetch('songs.json');
+        const songs = await response.json();
+        const imageUrls = songs.map(song => `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`);
+        
+        const cache = await caches.open(CACHE_NAME);
+        return cache.addAll(imageUrls);
+    } catch (error) {
+        console.error('Failed to cache images:', error);
+    }
 }
 
 self.addEventListener('install', (event) => {
