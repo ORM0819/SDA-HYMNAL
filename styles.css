@@ -135,14 +135,3 @@ a:hover {
     border-radius: 5px;
     cursor: pointer;
 }
-
-/* Media query for smaller screens */
-@media (max-width: 600px) {
-    #search {
-        width: calc(100% - 20px); /* Adjust for very small screens */
-    }
-
-    img {
-        max-width: 100%;
-    }
-}
