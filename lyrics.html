@@ -23,23 +23,19 @@
     </script>
 </head>
 <body>
-    <button id="back-button" onclick="goBack()">Back</button>
     <h1 id="title">SDA Hymnal - Lyrics Viewer</h1>
     <div id="lyrics-container">
         <p id="lyrics"></p>
     </div>
+    <a href="index.html" id="back-button">Back</a> <!-- Back button added -->
 
     <script>
-        function goBack() {
-            window.history.back();
-        }
-
         // Get the content, title, and number from the URL parameters
         const params = new URLSearchParams(window.location.search);
         const content = decodeURIComponent(params.get('content'));
         const title = decodeURIComponent(params.get('title'));
         const number = decodeURIComponent(params.get('number'));
-        
+
         if (content) {
             document.getElementById('lyrics').textContent = content;
         } else {
@@ -47,11 +43,11 @@
         }
 
         if (title && number) {
-            // Set the heading to display only the song number
-            document.getElementById('title').textContent = `Song Number: ${number}`;
+            // Set the heading to display the song number and title
+            document.getElementById('title').textContent = `${number} - ${title}`;
             
-            // Set the browser's title to display only the song title
-            document.title = `SDA Hymnal - ${title}`;
+            // Set the browser's title
+            document.title = `SDA Hymnal - ${number} - ${title}`;
         }
 
         // Check if the previous page was start-cycle-lyrics.html
@@ -62,18 +58,5 @@
             }, 100); // Wait for 100 milliseconds before going back
         }
     </script>
-    <style>
-        #back-button {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            padding: 10px;
-            font-size: 16px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
 </body>
 </html>
