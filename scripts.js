@@ -99,12 +99,13 @@ document.addEventListener('DOMContentLoaded', () => {
             let filteredSongs = [];
 
             if (languageDropdown.value === 'both') {
-                // Filter songs based on the query
+                // Handle both title and number search
                 filteredSongs = allSongs.filter(song =>
-                    song.title.toLowerCase().includes(query)
+                    song.title.toLowerCase().includes(query) ||
+                    song.number.toLowerCase().includes(query)
                 );
 
-                // Handle mapping for corresponding songs
+                // Handle song mapping for corresponding songs
                 songMapping.forEach(mapping => {
                     const foundEnglishSong = allSongs.find(song => song.number === mapping.english);
                     if (foundEnglishSong && foundEnglishSong.title.toLowerCase().includes(query)) {
@@ -123,8 +124,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
             } else {
+                // Handle search for a single language
                 filteredSongs = allSongs.filter(song =>
-                    song.title.toLowerCase().includes(query)
+                    song.title.toLowerCase().includes(query) ||
+                    song.number.toLowerCase().includes(query)
                 );
             }
 
