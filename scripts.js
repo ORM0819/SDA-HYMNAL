@@ -99,12 +99,12 @@ document.addEventListener('DOMContentLoaded', () => {
             let filteredSongs = [];
 
             if (languageDropdown.value === 'both') {
-                const searchResults = allSongs.filter(song =>
+                // Filter songs based on the query
+                filteredSongs = allSongs.filter(song =>
                     song.title.toLowerCase().includes(query)
                 );
 
-                filteredSongs = [...searchResults];
-
+                // Get corresponding songs based on mapping
                 songMapping.forEach(mapping => {
                     const foundEnglishSong = allSongs.find(song => song.number === mapping.english && song.title.toLowerCase().includes(query));
                     if (foundEnglishSong) {
