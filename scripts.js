@@ -96,11 +96,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Enhance search functionality
     searchInput.addEventListener('input', () => {
         const query = searchInput.value.toLowerCase();
-        const filteredSongs = allSongs.filter(song => 
+        let filteredSongs = allSongs.filter(song => 
             song.number.toLowerCase().includes(query) || 
             song.title.toLowerCase().includes(query)
         );
 
+        // Create a set to keep track of songs to display
         const mappedSongs = new Set(filteredSongs);
 
         // Add corresponding songs based on the mapping
