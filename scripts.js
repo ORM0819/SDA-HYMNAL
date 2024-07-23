@@ -27,18 +27,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const language = languageDropdown.value;
         switch (language) {
             case 'spanish':
-                return 'songs_es.json';
+                return ['songs_es.json'];
             case 'both':
                 return ['songs.json', 'songs_es.json'];
             default:
-                return 'songs.json';
+                return ['songs.json'];
         }
     }
 
     // Fetch and display songs based on the selected language
     function loadSongs() {
         const urls = getSongsUrl();
-        const fetches = Array.isArray(urls) ? urls.map(url => fetch(url).then(response => response.json())) : [fetch(urls).then(response => response.json())];
+        const fetches = urls.map(url => fetch(url).then(response => response.json()));
+
         Promise.all(fetches)
             .then(results => {
                 let data = results.flat();
@@ -54,8 +55,12 @@ document.addEventListener('DOMContentLoaded', () => {
                                     const correspondingSongNumber = correspondingMapping.english === song.number ? correspondingMapping.spanish : correspondingMapping.english;
                                     const correspondingSong = data.find(s => s.number === correspondingSongNumber);
                                     if (correspondingSong) {
-                                        mappedData.push(song);
-                                        mappedData.push(correspondingSong);
+                                        if (!mappedData.some(s => s.number === song.number)) {
+                                            mappedData.push(song);
+                                        }
+                                        if (!mappedData.some(s => s.number === correspondingSong.number)) {
+                                            mappedData.push(correspondingSong);
+                                        }
                                     }
                                 } else {
                                     mappedData.push(song);
@@ -104,7 +109,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 song.number.toLowerCase().includes(query) ||
                 song.title.toLowerCase().includes(query)
             );
-            displaySongs(filteredSongs);
+            songList.innerHTML = '';
+            filteredSongs.forEach(song => {
+                const li = document.createElement('li');
+                li.textContent = `${song.number} - ${song.title}`;
+                li.dataset.image = song.image;
+                li.dataset.title = song.title;
+                li.dataset.number = song.number;
+                li.dataset.content = song.content;
+                li.addEventListener('click', () => {
+                    const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
+                    const title = encodeURIComponent(song.title);
+                    const number = encodeURIComponent(song.number);
+                    const content = encodeURIComponent(song.content);
+
+                    if (dropdownMenu.value === 'lyrics') {
+                        window.location.href = `lyrics.html?content=${content}&title=${title}&number=${number}`;
+                    } else {
+                        window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
+                    }
+                });
+                songList.appendChild(li);
+            });
         });
 
         // Start Cycle Button Functionality
