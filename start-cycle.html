@@ -26,22 +26,14 @@
     <h1>Starting Cycle...</h1>
     <script>
         function cycleSongs() {
-            const referrer = document.referrer;
-            const fromIndexPage = referrer.includes('index.html');
+            const currentIndex = parseInt(localStorage.getItem('currentIndex')) || 0;
             const language = localStorage.getItem('languageValue') || 'english';
             const dropdownValue = localStorage.getItem('dropdownValue') || 'music-score';
             const songsUrl = language === 'spanish' ? 'songs_es.json' : 'songs.json';
 
-            // Reset index if coming from index.html
-            if (fromIndexPage) {
-                localStorage.setItem('currentIndex', 0);
-            }
-
             fetch(songsUrl)
                 .then(response => response.json())
                 .then(data => {
-                    const currentIndex = parseInt(localStorage.getItem('currentIndex')) || 0;
-
                     if (currentIndex >= data.length) {
                         // Reset index and redirect to index.html when the end of the list is reached
                         localStorage.setItem('currentIndex', 0);
@@ -53,13 +45,10 @@
                     const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
                     const title = encodeURIComponent(song.title);
                     const number = encodeURIComponent(song.number);
-                    const content = encodeURIComponent(song.content);
 
                     localStorage.setItem('currentIndex', currentIndex + 1);
 
-                    const redirectUrl = dropdownValue === 'lyrics'
-                        ? `lyrics.html?content=${content}&title=${title}&number=${number}`
-                        : `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
+                    const redirectUrl = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
 
                     console.log('Redirecting to:', redirectUrl);
                     window.location.href = redirectUrl;
@@ -70,6 +59,10 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            const referrer = document.referrer;
+            if (!referrer.includes('image.html')) {
+                localStorage.setItem('currentIndex', 0);
+            }
             cycleSongs();
         });
     </script>
