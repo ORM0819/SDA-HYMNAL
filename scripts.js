@@ -110,25 +110,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     const englishSong = allSongs.find(song => song.number === mapping.english);
                     const spanishSong = allSongs.find(song => song.number === mapping.spanish);
 
-                    if (englishSong) {
-                        if (englishSong.title.toLowerCase().includes(query)) {
-                            if (!filteredSongs.some(song => song.number === englishSong.number)) {
-                                filteredSongs.push(englishSong);
-                            }
-                            if (spanishSong && !filteredSongs.some(song => song.number === spanishSong.number)) {
-                                filteredSongs.push(spanishSong);
-                            }
+                    if (englishSong && englishSong.title.toLowerCase().includes(query)) {
+                        if (!filteredSongs.some(song => song.number === englishSong.number)) {
+                            filteredSongs.push(englishSong);
+                        }
+                        if (spanishSong && !filteredSongs.some(song => song.number === spanishSong.number)) {
+                            filteredSongs.push(spanishSong);
                         }
                     }
 
-                    if (spanishSong) {
-                        if (spanishSong.title.toLowerCase().includes(query)) {
-                            if (!filteredSongs.some(song => song.number === spanishSong.number)) {
-                                filteredSongs.push(spanishSong);
-                            }
-                            if (englishSong && !filteredSongs.some(song => song.number === englishSong.number)) {
-                                filteredSongs.push(englishSong);
-                            }
+                    if (spanishSong && spanishSong.title.toLowerCase().includes(query)) {
+                        if (!filteredSongs.some(song => song.number === spanishSong.number)) {
+                            filteredSongs.push(spanishSong);
+                        }
+                        if (englishSong && !filteredSongs.some(song => song.number === englishSong.number)) {
+                            filteredSongs.push(englishSong);
                         }
                     }
                 });
