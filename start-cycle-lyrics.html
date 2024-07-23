@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="manifest" href="manifest.json">
+    <title>SDA Hymnal - Start Cycle (Lyrics Only)</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('https://ormt03.github.io/SDA-HYMNAL/service-worker.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Starting Cycle (Lyrics Only)...</h1>
+    <script>
+        function cycleSongs() {
+            const currentIndex = parseInt(localStorage.getItem('currentIndex')) || 0;
+            const language = localStorage.getItem('languageValue') || 'english';
+            const songsUrl = language === 'spanish' ? 'songs_es.json' : 'songs.json';
+
+            fetch(songsUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (currentIndex >= data.length) {
+                        // Reset index and redirect to index.html when the end of the list is reached
+                        localStorage.setItem('currentIndex', 0);
+                        window.location.href = 'index.html';
+                        return;
+                    }
+
+                    const song = data[currentIndex];
+                    const title = encodeURIComponent(song.title);
+                    const number = encodeURIComponent(song.number);
+                    const content = encodeURIComponent(song.content);
+
+                    localStorage.setItem('currentIndex', currentIndex + 1);
+
+                    const redirectUrl = `lyrics.html?content=${content}&title=${title}&number=${number}`;
+
+                    console.log('Redirecting to:', redirectUrl);
+                    window.location.href = redirectUrl;
+                })
+                .catch(error => {
+                    console.error('Error loading songs:', error);
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const referrer = document.referrer;
+            if (!referrer.includes('image.html') && !referrer.includes('lyrics.html')) {
+                localStorage.setItem('currentIndex', 0);
+            }
+            cycleSongs();
+        });
+    </script>
+</body>
+</html>
