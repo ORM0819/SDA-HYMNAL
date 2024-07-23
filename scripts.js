@@ -23,8 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     let allSongs = [];
-    let songMappingEnToEs = [];
-    let songMappingEsToEn = [];
+    let songMapping = [];
 
     // Function to determine the correct JSON file based on the selected language
     function getSongsUrls() {
@@ -40,27 +39,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Fetch song mapping data
-    function loadSongMappings() {
-        return Promise.all([
-            fetch('song_mapping_en_to_es.json')
-                .then(response => response.json())
-                .then(data => {
-                    songMappingEnToEs = data;
-                    console.log('English to Spanish song mapping loaded:', data);
-                })
-                .catch(error => {
-                    console.error('Error loading English to Spanish song mapping:', error);
-                }),
-            fetch('song_mapping_es_to_en.json')
-                .then(response => response.json())
-                .then(data => {
-                    songMappingEsToEn = data;
-                    console.log('Spanish to English song mapping loaded:', data);
-                })
-                .catch(error => {
-                    console.error('Error loading Spanish to English song mapping:', error);
-                })
-        ]);
+    function loadSongMapping() {
+        return fetch('song_mapping.json')
+            .then(response => response.json())
+            .then(data => {
+                songMapping = data;
+                console.log('Song mapping loaded:', data);
+            })
+            .catch(error => {
+                console.error('Error loading song mapping:', error);
+            });
     }
 
     // Fetch and display songs based on the selected language
@@ -124,27 +112,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Add corresponding songs based on the mapping
         filteredSongs.forEach(song => {
-            let correspondingNumber, correspondingSong;
-
-            // If the song is English, look in English to Spanish mapping
-            if (songMappingEnToEs.some(map => map.english === song.number)) {
-                const mapping = songMappingEnToEs.find(map => map.english === song.number);
-                correspondingNumber = mapping.spanish;
-                correspondingSong = allSongs.find(s => s.number === correspondingNumber && s.image.includes('es'));
-                if (correspondingSong) {
-                    mappedSongs.add(correspondingSong);
+            const mapping = songMapping.find(map => map.english === song.number || map.spanish === song.number);
+            if (mapping) {
+                let correspondingNumber;
+                if (mapping.english === song.number) {
+                    correspondingNumber = mapping.spanish;
                     console.log(`Mapping found for English song number ${song.number}: Spanish song number ${correspondingNumber}`);
+                } else {
+                    correspondingNumber = mapping.english;
+                    console.log(`Mapping found for Spanish song number ${song.number}: English song number ${correspondingNumber}`);
                 }
-            }
-
-            // If the song is Spanish, look in Spanish to English mapping
-            if (songMappingEsToEn.some(map => map.spanish === song.number)) {
-                const mapping = songMappingEsToEn.find(map => map.spanish === song.number);
-                correspondingNumber = mapping.english;
-                correspondingSong = allSongs.find(s => s.number === correspondingNumber && s.image.includes('en'));
+                const correspondingSong = allSongs.find(s => s.number === correspondingNumber);
                 if (correspondingSong) {
                     mappedSongs.add(correspondingSong);
-                    console.log(`Mapping found for Spanish song number ${song.number}: English song number ${correspondingNumber}`);
                 }
             }
         });
@@ -165,5 +145,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Load initial data
-    Promise.all([loadSongs(), loadSongMappings()]);
+    Promise.all([loadSongs(), loadSongMapping()]);
 });
