@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const languageDropdown = document.getElementById('language-dropdown');
     const startCycleButton = document.getElementById('start-cycle');
     let allSongs = []; // To store all loaded songs
-    let songMapping = {}; // To store the song mapping
+    let songMapping = []; // To store the song mapping
 
     // Set the default dropdown values from local storage
     const savedDropdownValue = localStorage.getItem('dropdownValue') || 'music-score';
