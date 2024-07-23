@@ -25,7 +25,7 @@
 <body>
     <h1>Starting Cycle...</h1>
     <script>
-        function cycleSongs() {
+        function cycleSongs(fromPage) {
             const currentIndex = parseInt(localStorage.getItem('currentIndex')) || 0;
             const language = localStorage.getItem('languageValue') || 'english';
             const dropdownValue = localStorage.getItem('dropdownValue') || 'music-score';
@@ -55,10 +55,16 @@
                         redirectUrl = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
                     }
 
-                    // Ensure the redirection happens smoothly
-                    setTimeout(() => {
-                        window.location.href = redirectUrl;
-                    }, 1000); // 1 second delay to handle redirection
+                    // Redirect based on the previous page
+                    if (fromPage === 'image' || fromPage === 'lyrics') {
+                        setTimeout(() => {
+                            window.location.href = redirectUrl;
+                        }, 1000); // 1 second delay to handle redirection
+                    } else {
+                        // If the page is not from image or lyrics, redirect to index.html
+                        console.log('Unknown page source. Redirecting to index.html.');
+                        window.location.href = 'index.html';
+                    }
                 })
                 .catch(error => {
                     console.error('Error loading songs:', error);
@@ -66,9 +72,14 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Determine where the cycle was started from
+            const referrer = document.referrer;
+            const fromPage = referrer.includes('image.html') ? 'image' :
+                             referrer.includes('lyrics.html') ? 'lyrics' : 'other';
+
             // Set the index to 0 or the saved index
             localStorage.setItem('currentIndex', localStorage.getItem('currentIndex') || 0);
-            cycleSongs();
+            cycleSongs(fromPage);
         });
     </script>
 </body>
