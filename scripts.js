@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Populate the list with all relevant songs
-        populateList([...mappedSongs]);
+        populateList(Array.from(mappedSongs));
     });
 
     // Start Cycle Button Functionality
