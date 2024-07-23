@@ -80,8 +80,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Start Cycle Button Functionality
                 startCycleButton.addEventListener('click', () => {
+                    const dropdownValue = dropdownMenu.value;
                     localStorage.setItem('currentIndex', 0);
-                    window.location.href = 'start-cycle.html';
+                    const redirectUrl = dropdownValue === 'lyrics'
+                        ? 'start-cycle-lyrics.html'
+                        : 'start-cycle.html';
+                    window.location.href = redirectUrl;
                 });
             })
             .catch(error => {
