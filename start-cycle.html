@@ -56,7 +56,7 @@
                     console.log('Redirecting to:', redirectUrl);
                     setTimeout(() => {
                         window.location.href = redirectUrl;
-                    }, 000); // 1 second delay to handle redirection
+                    }, 0); // No delay for immediate redirection
                 })
                 .catch(error => {
                     console.error('Error loading songs:', error);
@@ -69,7 +69,15 @@
                 localStorage.setItem('currentIndex', 0);
             }
 
-            cycleSongs();
+            // Check referrer to continue the cycle
+            const referrer = document.referrer;
+            if (referrer.includes('image.html') || referrer.includes('lyrics.html')) {
+                cycleSongs();
+            } else {
+                // If not coming from image or lyrics, reset to index
+                localStorage.setItem('currentIndex', 0);
+                window.location.href = 'index.html';
+            }
         });
     </script>
 </body>
