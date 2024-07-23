@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         Promise.all(requests)
             .then(dataArray => {
+                // Flatten and merge all songs
                 allSongs = dataArray.flat();
                 console.log('All songs loaded:', allSongs); // Check allSongs content here
                 populateList(allSongs);
