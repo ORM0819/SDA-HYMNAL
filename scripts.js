@@ -96,29 +96,40 @@ document.addEventListener('DOMContentLoaded', () => {
         // Search functionality
         searchInput.addEventListener('input', () => {
             const query = searchInput.value.toLowerCase();
-            const filteredSongs = allSongs.filter(song =>
-                song.number.toLowerCase().includes(query) ||
-                song.title.toLowerCase().includes(query)
-            );
+            let filteredSongs = [];
 
-            // Add mapped songs to the search results
-            const additionalSongs = [];
             if (languageDropdown.value === 'both') {
-                filteredSongs.forEach(song => {
-                    const mappedSong = songMapping.find(map => map.english === song.number || map.spanish === song.number);
-                    if (mappedSong) {
-                        const correspondingSongNumber = mappedSong.english === song.number ? mappedSong.spanish : mappedSong.english;
-                        const correspondingSong = allSongs.find(s => s.number === correspondingSongNumber);
-                        if (correspondingSong && !filteredSongs.some(s => s.number === correspondingSong.number)) {
-                            additionalSongs.push(correspondingSong);
+                const searchResults = allSongs.filter(song =>
+                    song.title.toLowerCase().includes(query)
+                );
+
+                filteredSongs = [...searchResults];
+
+                songMapping.forEach(mapping => {
+                    const foundEnglishSong = allSongs.find(song => song.number === mapping.english && song.title.toLowerCase().includes(query));
+                    if (foundEnglishSong) {
+                        const foundSpanishSong = allSongs.find(song => song.number === mapping.spanish);
+                        if (foundSpanishSong && !filteredSongs.some(song => song.number === foundSpanishSong.number)) {
+                            filteredSongs.push(foundSpanishSong);
+                        }
+                    }
+
+                    const foundSpanishSong = allSongs.find(song => song.number === mapping.spanish && song.title.toLowerCase().includes(query));
+                    if (foundSpanishSong) {
+                        const foundEnglishSong = allSongs.find(song => song.number === mapping.english);
+                        if (foundEnglishSong && !filteredSongs.some(song => song.number === foundEnglishSong.number)) {
+                            filteredSongs.push(foundEnglishSong);
                         }
                     }
                 });
+            } else {
+                filteredSongs = allSongs.filter(song =>
+                    song.title.toLowerCase().includes(query)
+                );
             }
 
-            // Combine and filter out duplicates
-            const combinedSongs = [...filteredSongs, ...additionalSongs];
-            const uniqueSongs = combinedSongs.filter((song, index, self) =>
+            // Remove duplicate songs based on number and title
+            const uniqueSongs = filteredSongs.filter((song, index, self) =>
                 index === self.findIndex(s => s.number === song.number && s.title === song.title)
             );
 
