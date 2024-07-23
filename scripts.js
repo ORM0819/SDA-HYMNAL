@@ -109,12 +109,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Enhance search functionality
     searchInput.addEventListener('input', () => {
         const query = searchInput.value.toLowerCase();
+        console.log('Search query:', query);
 
         // Filter songs based on the search query
         let filteredSongs = allSongs.filter(song => 
             song.number.toLowerCase().includes(query) || 
             song.title.toLowerCase().includes(query)
         );
+
+        console.log('Filtered songs:', filteredSongs);
 
         // Create a set to avoid duplicate entries
         const mappedSongs = new Set(filteredSongs);
@@ -130,6 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 correspondingSong = allSongs.find(s => s.number === correspondingNumber);
                 if (correspondingSong) {
                     mappedSongs.add(correspondingSong);
+                    console.log(`Mapping found for English song number ${song.number}: Spanish song number ${correspondingNumber}`);
                 }
             }
 
@@ -139,6 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 correspondingSong = allSongs.find(s => s.number === correspondingNumber);
                 if (correspondingSong) {
                     mappedSongs.add(correspondingSong);
+                    console.log(`Mapping found for Spanish song number ${song.number}: English song number ${correspondingNumber}`);
                 }
             }
         });
