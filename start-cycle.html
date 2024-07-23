@@ -25,7 +25,7 @@
 <body>
     <h1>Starting Cycle...</h1>
     <script>
-        function cycleSongs(fromPage) {
+        function cycleSongs() {
             const currentIndex = parseInt(localStorage.getItem('currentIndex')) || 0;
             const language = localStorage.getItem('languageValue') || 'english';
             const dropdownValue = localStorage.getItem('dropdownValue') || 'music-score';
@@ -35,8 +35,8 @@
                 .then(response => response.json())
                 .then(data => {
                     if (currentIndex >= data.length) {
-                        console.log('End of cycle. Redirecting to index.html.');
-                        localStorage.removeItem('currentIndex'); // Reset index
+                        // Reset index and redirect to index.html when the end of the list is reached
+                        localStorage.setItem('currentIndex', 0);
                         window.location.href = 'index.html';
                         return;
                     }
@@ -49,23 +49,14 @@
 
                     localStorage.setItem('currentIndex', currentIndex + 1);
 
-                    let redirectUrl;
-                    if (dropdownValue === 'lyrics') {
-                        redirectUrl = `lyrics.html?content=${content}&title=${title}&number=${number}`;
-                    } else {
-                        redirectUrl = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
-                    }
+                    const redirectUrl = dropdownValue === 'lyrics'
+                        ? `lyrics.html?content=${content}&title=${title}&number=${number}`
+                        : `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
 
-                    // Redirect based on the previous page
-                    if (fromPage === 'image' || fromPage === 'lyrics') {
-                        console.log('Redirecting to:', redirectUrl);
-                        setTimeout(() => {
-                            window.location.href = redirectUrl;
-                        }, 1000); // 1 second delay to handle redirection
-                    } else {
-                        console.log('Unknown page source. Redirecting to index.html.');
-                        window.location.href = 'index.html';
-                    }
+                    console.log('Redirecting to:', redirectUrl);
+                    setTimeout(() => {
+                        window.location.href = redirectUrl;
+                    }, 1000); // 1 second delay to handle redirection
                 })
                 .catch(error => {
                     console.error('Error loading songs:', error);
@@ -73,19 +64,12 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Determine where the cycle was started from
-            const referrer = document.referrer;
-            const fromPage = referrer.includes('image.html') ? 'image' :
-                             referrer.includes('lyrics.html') ? 'lyrics' : 'other';
-
-            // Reset index if not coming from image.html or lyrics.html
-            if (fromPage === 'other') {
+            // Ensure the index is set to 0 if it's not already
+            if (!localStorage.getItem('currentIndex')) {
                 localStorage.setItem('currentIndex', 0);
             }
 
-            // Set the index to 0 or the saved index
-            localStorage.setItem('currentIndex', localStorage.getItem('currentIndex') || 0);
-            cycleSongs(fromPage);
+            cycleSongs();
         });
     </script>
 </body>
