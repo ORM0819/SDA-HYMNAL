@@ -99,10 +99,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const query = searchInput.value.toLowerCase();
 
         // Filter songs based on the search query
-        const filteredSongs = allSongs.filter(song => 
+        let filteredSongs = allSongs.filter(song => 
             song.number.toLowerCase().includes(query) || 
             song.title.toLowerCase().includes(query)
         );
+
+        console.log('Filtered songs:', filteredSongs);
 
         // Create a set to avoid duplicate entries
         const mappedSongs = new Set(filteredSongs);
@@ -121,6 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
+
+        console.log('Mapped songs:', [...mappedSongs]);
 
         // Populate the list with all relevant songs
         populateList([...mappedSongs]);
