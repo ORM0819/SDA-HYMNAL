@@ -31,10 +31,6 @@
             const dropdownValue = localStorage.getItem('dropdownValue') || 'music-score';
             const songsUrl = language === 'spanish' ? 'songs_es.json' : 'songs.json';
 
-            console.log(`Fetching from: ${songsUrl}`);
-            console.log(`Current index: ${currentIndex}`);
-            console.log(`Dropdown value: ${dropdownValue}`);
-
             fetch(songsUrl)
                 .then(response => response.json())
                 .then(data => {
@@ -59,18 +55,21 @@
                         redirectUrl = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
                     }
 
-                    console.log(`Redirecting to: ${redirectUrl}`);
-                    
+                    // Ensure the redirection happens smoothly
                     setTimeout(() => {
                         window.location.href = redirectUrl;
-                    }, 1000); // Increased delay for proper redirection
+                    }, 1000); // 1 second delay to handle redirection
                 })
                 .catch(error => {
                     console.error('Error loading songs:', error);
                 });
         }
 
-        document.addEventListener('DOMContentLoaded', cycleSongs);
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set the index to 0 or the saved index
+            localStorage.setItem('currentIndex', localStorage.getItem('currentIndex') || 0);
+            cycleSongs();
+        });
     </script>
 </body>
 </html>
