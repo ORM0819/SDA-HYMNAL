@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const dropdownMenu = document.getElementById('dropdown-menu');
     const languageDropdown = document.getElementById('language-dropdown');
     const startCycleButton = document.getElementById('start-cycle');
+    let allSongs = []; // To store all loaded songs
+    let songMapping = {}; // To store the song mapping
 
     // Set the default dropdown values from local storage
     const savedDropdownValue = localStorage.getItem('dropdownValue') || 'music-score';
@@ -42,40 +44,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         Promise.all(fetches)
             .then(results => {
-                let data = results.flat();
-                console.log('Loaded data:', data); // Log loaded data
+                allSongs = results.flat();
+                console.log('Loaded data:', allSongs); // Log loaded data
 
                 if (languageDropdown.value === 'both') {
                     fetch('song_mapping.json')
                         .then(response => response.json())
                         .then(mapping => {
                             console.log('Loaded mapping:', mapping); // Log mapping data
-                            const mappedData = [];
-                            data.forEach(song => {
-                                const correspondingMapping = mapping.find(map => map.english === song.number || map.spanish === song.number);
-                                if (correspondingMapping) {
-                                    const correspondingSongNumber = correspondingMapping.english === song.number ? correspondingMapping.spanish : correspondingMapping.english;
-                                    const correspondingSong = data.find(s => s.number === correspondingSongNumber);
-                                    if (correspondingSong) {
-                                        if (!mappedData.some(s => s.number === song.number)) {
-                                            mappedData.push(song);
-                                        }
-                                        if (!mappedData.some(s => s.number === correspondingSong.number)) {
-                                            mappedData.push(correspondingSong);
-                                        }
-                                    }
-                                } else {
-                                    mappedData.push(song);
-                                }
-                            });
-                            data = mappedData;
-                            displaySongs(data);
+                            songMapping = mapping;
+                            displaySongs(allSongs);
                         })
                         .catch(error => {
                             console.error('Error loading mapping:', error);
                         });
                 } else {
-                    displaySongs(data);
+                    displaySongs(allSongs);
                 }
             })
             .catch(error => {
@@ -112,12 +96,29 @@ document.addEventListener('DOMContentLoaded', () => {
         // Search functionality
         searchInput.addEventListener('input', () => {
             const query = searchInput.value.toLowerCase();
-            const filteredSongs = songs.filter(song =>
+            const filteredSongs = allSongs.filter(song =>
                 song.number.toLowerCase().includes(query) ||
                 song.title.toLowerCase().includes(query)
             );
+
+            const additionalSongs = [];
+            if (languageDropdown.value === 'both') {
+                filteredSongs.forEach(song => {
+                    const mappedSong = songMapping.find(map => map.english === song.number || map.spanish === song.number);
+                    if (mappedSong) {
+                        const correspondingSongNumber = mappedSong.english === song.number ? mappedSong.spanish : mappedSong.english;
+                        const correspondingSong = allSongs.find(s => s.number === correspondingSongNumber);
+                        if (correspondingSong && !filteredSongs.includes(correspondingSong)) {
+                            additionalSongs.push(correspondingSong);
+                        }
+                    }
+                });
+            }
+
+            const combinedSongs = [...filteredSongs, ...additionalSongs];
+
             songList.innerHTML = '';
-            filteredSongs.forEach(song => {
+            combinedSongs.forEach(song => {
                 const li = document.createElement('li');
                 li.textContent = `${song.number} - ${song.title}`;
                 li.dataset.image = song.image;
@@ -139,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 songList.appendChild(li);
             });
 
-            console.log('Filtered songs:', filteredSongs); // Log filtered songs
+            console.log('Filtered songs:', combinedSongs); // Log filtered songs
         });
 
         // Start Cycle Button Functionality
