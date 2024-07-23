@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         switch (language) {
             case 'spanish':
                 return ['songs_es.json'];
-            case 'english-spanish':
+            case 'both':
                 return ['songs.json', 'songs_es.json'];
             default:
                 return ['songs.json'];
