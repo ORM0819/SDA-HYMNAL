@@ -23,7 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     let allSongs = [];
-    let songMapping = [];
+    let songMappingEnToEs = [];
+    let songMappingEsToEn = [];
 
     // Function to determine the correct JSON file based on the selected language
     function getSongsUrls() {
@@ -39,16 +40,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Fetch song mapping data
-    function loadSongMapping() {
-        return fetch('song_mapping.json')
-            .then(response => response.json())
-            .then(data => {
-                songMapping = data;
-                console.log('Song mapping loaded:', data);
-            })
-            .catch(error => {
-                console.error('Error loading song mapping:', error);
-            });
+    function loadSongMappings() {
+        return Promise.all([
+            fetch('song_mapping_en_to_es.json')
+                .then(response => response.json())
+                .then(data => {
+                    songMappingEnToEs = data;
+                    console.log('English to Spanish song mapping loaded:', data);
+                })
+                .catch(error => {
+                    console.error('Error loading English to Spanish song mapping:', error);
+                }),
+            fetch('song_mapping_es_to_en.json')
+                .then(response => response.json())
+                .then(data => {
+                    songMappingEsToEn = data;
+                    console.log('Spanish to English song mapping loaded:', data);
+                })
+                .catch(error => {
+                    console.error('Error loading Spanish to English song mapping:', error);
+                })
+        ]);
     }
 
     // Fetch and display songs based on the selected language
@@ -109,7 +121,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Add corresponding songs based on the mapping
         filteredSongs.forEach(song => {
-            const mapping = songMapping.find(map => map.english === song.number || map.spanish === song.number);
+            let mapping;
+            if (languageDropdown.value === 'english' || languageDropdown.value === 'both') {
+                mapping = songMappingEnToEs.find(map => map.english === song.number);
+            } else {
+                mapping = songMappingEsToEn.find(map => map.spanish === song.number);
+            }
             if (mapping) {
                 const correspondingNumber = mapping.english === song.number ? mapping.spanish : mapping.english;
                 const correspondingSong = allSongs.find(s => s.number === correspondingNumber);
@@ -135,5 +152,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Load initial data
-    Promise.all([loadSongs(), loadSongMapping()]);
+    Promise.all([loadSongs(), loadSongMappings()]);
 });
