@@ -64,8 +64,12 @@
             if (!referrer.includes('image.html') && !referrer.includes('lyrics.html')) {
                 console.log('Resetting currentIndex to 0.');
                 localStorage.setItem('currentIndex', 0);
+            } else if (referrer.includes('lyrics.html')) {
+                console.log('Continuing cycle from lyrics.html.');
+                cycleSongs();
+            } else {
+                cycleSongs();
             }
-            cycleSongs();
         });
     </script>
 </body>
