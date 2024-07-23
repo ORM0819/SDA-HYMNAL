@@ -43,11 +43,13 @@ document.addEventListener('DOMContentLoaded', () => {
         Promise.all(fetches)
             .then(results => {
                 let data = results.flat();
+                console.log('Loaded data:', data); // Log loaded data
 
                 if (languageDropdown.value === 'both') {
                     fetch('song_mapping.json')
                         .then(response => response.json())
                         .then(mapping => {
+                            console.log('Loaded mapping:', mapping); // Log mapping data
                             const mappedData = [];
                             data.forEach(song => {
                                 const correspondingMapping = mapping.find(map => map.english === song.number || map.spanish === song.number);
@@ -68,6 +70,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             });
                             data = mappedData;
                             displaySongs(data);
+                        })
+                        .catch(error => {
+                            console.error('Error loading mapping:', error);
                         });
                 } else {
                     displaySongs(data);
@@ -102,6 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
             songList.appendChild(li);
         });
 
+        console.log('Displayed songs:', songs); // Log displayed songs
+
         // Search functionality
         searchInput.addEventListener('input', () => {
             const query = searchInput.value.toLowerCase();
@@ -131,6 +138,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 songList.appendChild(li);
             });
+
+            console.log('Filtered songs:', filteredSongs); // Log filtered songs
         });
 
         // Start Cycle Button Functionality
