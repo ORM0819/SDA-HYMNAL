@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const query = searchInput.value.toLowerCase();
 
         // Filter songs based on the search query
-        let filteredSongs = allSongs.filter(song => 
+        const filteredSongs = allSongs.filter(song => 
             song.number.toLowerCase().includes(query) || 
             song.title.toLowerCase().includes(query)
         );
