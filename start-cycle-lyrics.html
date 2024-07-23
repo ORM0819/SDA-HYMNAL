@@ -30,11 +30,13 @@
             const language = localStorage.getItem('languageValue') || 'english';
             const songsUrl = language === 'spanish' ? 'songs_es.json' : 'songs.json';
 
+            console.log(`Fetching songs from: ${songsUrl}`);
             fetch(songsUrl)
                 .then(response => response.json())
                 .then(data => {
                     if (currentIndex >= data.length) {
                         // Reset index and redirect to index.html when the end of the list is reached
+                        console.log('End of song list reached. Resetting index and redirecting to index.html.');
                         localStorage.setItem('currentIndex', 0);
                         window.location.href = 'index.html';
                         return;
@@ -49,7 +51,7 @@
 
                     const redirectUrl = `lyrics.html?content=${content}&title=${title}&number=${number}`;
 
-                    console.log('Redirecting to:', redirectUrl);
+                    console.log(`Redirecting to: ${redirectUrl}`);
                     window.location.href = redirectUrl;
                 })
                 .catch(error => {
@@ -58,10 +60,11 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Check if coming from lyrics.html or image.html
             const referrer = document.referrer;
+            console.log('Document referrer:', referrer);
             if (!referrer.includes('image.html') && !referrer.includes('lyrics.html')) {
-                // Only reset index if not coming from lyrics.html
+                // Only reset index if not coming from lyrics.html or image.html
+                console.log('Resetting currentIndex to 0.');
                 localStorage.setItem('currentIndex', 0);
             }
             cycleSongs();
