@@ -35,22 +35,26 @@
         const number = params.get('number');
 
         if (imageUrl) {
-            document.getElementById('image').src = imageUrl;
+            const imageElement = document.getElementById('image');
+            imageElement.src = imageUrl;
+
+            // Redirect after image has finished loading
+            imageElement.onload = () => {
+                const referrer = document.referrer;
+                if (referrer.includes('start-cycle.html')) {
+                    setTimeout(() => {
+                        window.location.href = 'start-cycle.html';
+                    }, 100); // Adjust the delay as needed
+                }
+            };
         } else {
             document.getElementById('image').alt = 'No image found';
         }
 
         if (title && number) {
-            document.getElementById('title').textContent = `Song Number: ${number}; document.title = SDA Hymnal - ${decodeURIComponent(title)}`;
-}
-
-          // Check if the previous page was start-cycle.html
-    const referrer = document.referrer;
-    if (referrer.includes('start-cycle.html')) {
-        setTimeout(() => {
-            window.location.href = 'start-cycle.html';
-        }, 100); // Adjust the delay as needed
-    }
-</script>
+            document.getElementById('title').textContent = `Song Number: ${number}`;
+            document.title = `SDA Hymnal - ${decodeURIComponent(title)}`;
+        }
+    </script>
 </body>
 </html>
