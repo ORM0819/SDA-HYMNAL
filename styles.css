@@ -7,41 +7,46 @@ body {
     flex-direction: column;
     align-items: center; /* Center content side-to-side */
     min-height: 100vh; /* Ensure full viewport height */
-    position: relative; /* Required for absolute positioning of the link */
 }
 
-/* Style for the header */
-#header {
+/* Style for the header container */
+#header-container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px; /* Add some top margin for spacing */
+    position: relative;
     width: 100%;
-    padding: 10px;
-    box-sizing: border-box;
+    padding: 0 10px;
 }
 
-/* Style for the dropdown container */
-#dropdown-container {
-    margin: 20px;
+/* Style for the title */
+#header-container h1 {
+    margin: 0;
 }
 
-/* Style for the dropdown menu */
+/* Style for the dropdown menus */
+#language-dropdown,
 #dropdown-menu {
+    margin-top: 10px; /* Add space between the title and dropdowns */
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #fff;
     position: absolute;
-    top: 10px;
-    right: 10px;
     z-index: 1000;
 }
 
 /* Style for the language dropdown menu */
 #language-dropdown {
-    position: absolute;
     top: 10px;
     left: 10px;
-    z-index: 1000;
+}
+
+/* Style for the display option dropdown menu */
+#dropdown-menu {
+    top: 10px;
+    right: 10px;
 }
 
 /* Style for the search input on the main page */
