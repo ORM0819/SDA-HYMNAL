@@ -30,11 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const language = languageDropdown.value;
         switch (language) {
             case 'spanish':
-                return 'songs_es.json';
+                return ['songs_es.json'];
             case 'english-spanish':
                 return ['songs.json', 'songs_es.json'];
             default:
-                return 'songs.json';
+                return ['songs.json'];
         }
     }
 
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fetch and display songs based on the selected language
     function loadSongs() {
         const urls = getSongsUrl();
-        const requests = Array.isArray(urls) ? urls.map(url => fetch(url).then(res => res.json())) : [fetch(urls).then(res => res.json())];
+        const requests = urls.map(url => fetch(url).then(res => res.json()));
 
         Promise.all(requests)
             .then(dataArray => {
