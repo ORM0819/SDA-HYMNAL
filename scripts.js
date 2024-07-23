@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Determine the corresponding number and language
                 const correspondingNumber = mapping.english === song.number ? mapping.spanish : mapping.english;
                 const correspondingSong = allSongs.find(s => s.number === correspondingNumber);
-                
+
                 // Ensure we don't add the same song twice
                 if (correspondingSong && !mappedSongs.has(correspondingSong)) {
                     mappedSongs.add(correspondingSong);
