@@ -67,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
+    // Populate the song list in the HTML
     function populateList(songs) {
         songList.innerHTML = '';
         songs.forEach(song => {
@@ -102,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const mappedSongs = new Set(filteredSongs);
 
+        // Add corresponding songs based on the mapping
         filteredSongs.forEach(song => {
             const mapping = songMapping.find(map => map.english === song.number || map.spanish === song.number);
             if (mapping) {
