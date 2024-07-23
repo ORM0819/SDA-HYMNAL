@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 searchInput.addEventListener('input', () => {
                     const query = searchInput.value.toLowerCase();
                     let filteredSongs = [];
-                    
+
                     // Filter songs by title
                     filteredSongs = allSongs.filter(song => 
                         song.title.toLowerCase().includes(query)
@@ -112,7 +112,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         );
                     }
 
-                    populateList(filteredSongs);
+                    // Remove duplicates and ensure unique results
+                    const uniqueFilteredSongs = filteredSongs.filter((song, index, self) => 
+                        index === self.findIndex((t) => (t.number === song.number && t.title === song.title))
+                    );
+
+                    populateList(uniqueFilteredSongs);
                 });
 
                 startCycleButton.addEventListener('click', () => {
