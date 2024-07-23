@@ -36,6 +36,7 @@
                 .then(data => {
                     if (currentIndex >= data.length) {
                         console.log('End of cycle. Redirecting to index.html.');
+                        localStorage.removeItem('currentIndex'); // Reset index
                         window.location.href = 'index.html';
                         return;
                     }
@@ -57,11 +58,11 @@
 
                     // Redirect based on the previous page
                     if (fromPage === 'image' || fromPage === 'lyrics') {
+                        console.log('Redirecting to:', redirectUrl);
                         setTimeout(() => {
                             window.location.href = redirectUrl;
                         }, 1000); // 1 second delay to handle redirection
                     } else {
-                        // If the page is not from image or lyrics, redirect to index.html
                         console.log('Unknown page source. Redirecting to index.html.');
                         window.location.href = 'index.html';
                     }
@@ -76,6 +77,11 @@
             const referrer = document.referrer;
             const fromPage = referrer.includes('image.html') ? 'image' :
                              referrer.includes('lyrics.html') ? 'lyrics' : 'other';
+
+            // Reset index if not coming from image.html or lyrics.html
+            if (fromPage === 'other') {
+                localStorage.setItem('currentIndex', 0);
+            }
 
             // Set the index to 0 or the saved index
             localStorage.setItem('currentIndex', localStorage.getItem('currentIndex') || 0);
