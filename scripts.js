@@ -30,11 +30,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const language = languageDropdown.value;
         switch (language) {
             case 'spanish':
-                return ['songs_es.json'];
+                return [{ url: 'songs_es.json', language: 'spanish' }];
             case 'both':
-                return ['songs.json', 'songs_es.json'];
+                return [
+                    { url: 'songs.json', language: 'english' },
+                    { url: 'songs_es.json', language: 'spanish' }
+                ];
             default:
-                return ['songs.json'];
+                return [{ url: 'songs.json', language: 'english' }];
         }
     }
 
@@ -54,7 +57,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fetch and display songs based on the selected language
     function loadSongs() {
         const urls = getSongsUrls();
-        const requests = urls.map(url => fetch(url).then(res => res.json()));
+        const requests = urls.map(item => 
+            fetch(item.url)
+                .then(res => res.json())
+                .then(data => data.map(song => ({ ...song, language: item.language })))
+        );
 
         Promise.all(requests)
             .then(dataArray => {
@@ -122,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     correspondingNumber = mapping.english;
                     console.log(`Mapping found for Spanish song number ${song.number}: English song number ${correspondingNumber}`);
                 }
-                const correspondingSong = allSongs.find(s => s.number === correspondingNumber);
+                const correspondingSong = allSongs.find(s => s.number === correspondingNumber && s.language === (mapping.english === song.number ? 'spanish' : 'english'));
                 if (correspondingSong) {
                     mappedSongs.add(correspondingSong);
                 }
