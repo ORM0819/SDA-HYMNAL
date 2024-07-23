@@ -124,23 +124,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Add corresponding songs based on the mapping
         filteredSongs.forEach(song => {
-            // Check in both mappings
             let correspondingNumber, correspondingSong;
 
-            const mappingEnToEs = songMappingEnToEs.find(map => map.english === song.number);
-            if (mappingEnToEs) {
-                correspondingNumber = mappingEnToEs.spanish;
-                correspondingSong = allSongs.find(s => s.number === correspondingNumber);
+            // If the song is English, look in English to Spanish mapping
+            if (songMappingEnToEs.some(map => map.english === song.number)) {
+                const mapping = songMappingEnToEs.find(map => map.english === song.number);
+                correspondingNumber = mapping.spanish;
+                correspondingSong = allSongs.find(s => s.number === correspondingNumber && s.image.includes('es'));
                 if (correspondingSong) {
                     mappedSongs.add(correspondingSong);
                     console.log(`Mapping found for English song number ${song.number}: Spanish song number ${correspondingNumber}`);
                 }
             }
 
-            const mappingEsToEn = songMappingEsToEn.find(map => map.spanish === song.number);
-            if (mappingEsToEn) {
-                correspondingNumber = mappingEsToEn.english;
-                correspondingSong = allSongs.find(s => s.number === correspondingNumber);
+            // If the song is Spanish, look in Spanish to English mapping
+            if (songMappingEsToEn.some(map => map.spanish === song.number)) {
+                const mapping = songMappingEsToEn.find(map => map.spanish === song.number);
+                correspondingNumber = mapping.english;
+                correspondingSong = allSongs.find(s => s.number === correspondingNumber && s.image.includes('en'));
                 if (correspondingSong) {
                     mappedSongs.add(correspondingSong);
                     console.log(`Mapping found for Spanish song number ${song.number}: English song number ${correspondingNumber}`);
