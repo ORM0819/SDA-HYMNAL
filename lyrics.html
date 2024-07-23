@@ -7,14 +7,24 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="theme-color" content="#ffffff">
     <link rel="manifest" href="manifest.json">
-    <title>SDA Hymnal</title>
+    <title>SDA Hymnal - Lyrics Viewer</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Add any additional styles here */
+        #back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-    <button id="back-button" onclick="window.history.back();">Back</button>
+    <button id="back-button" onclick="history.back()">Back</button>
     <h1 id="title">SDA Hymnal - Lyrics Viewer</h1>
     <div id="lyrics-container">
         <p id="lyrics"></p>
@@ -26,9 +36,9 @@
         const content = decodeURIComponent(params.get('content'));
         const title = decodeURIComponent(params.get('title'));
         const number = decodeURIComponent(params.get('number'));
-
+        
         if (content) {
-            // Replace newline characters with <br> tags
+            // Replace '\n' with line breaks for display
             document.getElementById('lyrics').innerHTML = content.replace(/\n/g, '<br>');
         } else {
             document.getElementById('lyrics').textContent = 'No content found';
@@ -36,9 +46,9 @@
 
         if (title && number) {
             // Set the heading to display the song number and title
-            document.getElementById('title').textContent = `Song Number: ${number} - ${title}`;
+            document.getElementById('title').textContent = `${number} - ${title}`;
             
-            // Set the browser's title to the song number and title
+            // Set the browser's title to match the heading
             document.title = `SDA Hymnal - ${number} - ${title}`;
         }
 
