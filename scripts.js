@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         switch (language) {
             case 'spanish':
                 return ['songs_es.json'];
-            case 'both':
+            case 'english-spanish':
                 return ['songs.json', 'songs_es.json'];
             default:
                 return ['songs.json'];
@@ -111,9 +111,12 @@ document.addEventListener('DOMContentLoaded', () => {
         filteredSongs.forEach(song => {
             const mapping = songMapping.find(map => map.english === song.number || map.spanish === song.number);
             if (mapping) {
+                // Determine the corresponding number and language
                 const correspondingNumber = mapping.english === song.number ? mapping.spanish : mapping.english;
                 const correspondingSong = allSongs.find(s => s.number === correspondingNumber);
-                if (correspondingSong) {
+                
+                // Ensure we don't add the same song twice
+                if (correspondingSong && !mappedSongs.has(correspondingSong)) {
                     mappedSongs.add(correspondingSong);
                 }
             }
