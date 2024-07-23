@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         Promise.all(requests)
             .then(dataArray => {
                 allSongs = dataArray.flat();
-                console.log('All songs loaded:', allSongs);
+                console.log('All songs loaded:', allSongs); // Check allSongs content here
                 populateList(allSongs);
             })
             .catch(error => {
