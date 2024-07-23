@@ -4,17 +4,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const dropdownMenu = document.getElementById('dropdown-menu');
     const languageDropdown = document.getElementById('language-dropdown');
     const startCycleButton = document.getElementById('start-cycle');
-    let allSongs = []; // To store all loaded songs
-    let songMapping = []; // To store the song mapping
 
-    // Set the default dropdown values from local storage
     const savedDropdownValue = localStorage.getItem('dropdownValue') || 'music-score';
     dropdownMenu.value = savedDropdownValue;
 
     const savedLanguageValue = localStorage.getItem('languageValue') || 'english';
     languageDropdown.value = savedLanguageValue;
 
-    // Save dropdown values to local storage
     dropdownMenu.addEventListener('change', () => {
         localStorage.setItem('dropdownValue', dropdownMenu.value);
     });
@@ -24,156 +20,109 @@ document.addEventListener('DOMContentLoaded', () => {
         loadSongs(); // Load songs based on the selected language
     });
 
-    // Function to determine the correct JSON files based on the selected language
-    function getSongsUrls() {
+    function getSongsUrl() {
         const language = languageDropdown.value;
         switch (language) {
             case 'spanish':
-                return ['songs_es.json'];
+                return 'songs_es.json';
             case 'both':
                 return ['songs.json', 'songs_es.json'];
             default:
-                return ['songs.json'];
+                return 'songs.json';
         }
     }
 
-    // Fetch and display songs based on the selected language
+    function loadMapping() {
+        return fetch('song_mapping.json')
+            .then(response => response.json())
+            .then(data => {
+                console.log('Mapping data loaded:', data);
+                return data;
+            })
+            .catch(error => {
+                console.error('Error loading mapping file:', error);
+                return [];
+            });
+    }
+
     function loadSongs() {
-        const urls = getSongsUrls();
-        const fetches = urls.map(url => fetch(url).then(response => response.json()));
+        const urls = getSongsUrl();
+        const promises = Array.isArray(urls) ? urls.map(url => fetch(url).then(response => response.json())) : [fetch(urls).then(response => response.json())];
 
-        Promise.all(fetches)
+        Promise.all(promises)
             .then(results => {
-                allSongs = results.flat();
-                console.log('Loaded data:', allSongs); // Log loaded data
+                let allSongs = [];
+                results.forEach(data => allSongs = allSongs.concat(data));
+                
+                return loadMapping().then(mapping => ({ allSongs, mapping }));
+            })
+            .then(({ allSongs, mapping }) => {
+                console.log('All songs loaded:', allSongs);
 
-                if (languageDropdown.value === 'both') {
-                    fetch('song_mapping.json')
-                        .then(response => response.json())
-                        .then(mapping => {
-                            console.log('Loaded mapping:', mapping); // Log mapping data
-                            songMapping = mapping;
-                            displaySongs(allSongs);
-                        })
-                        .catch(error => {
-                            console.error('Error loading mapping:', error);
+                function populateList(songs) {
+                    songList.innerHTML = '';
+                    songs.forEach(song => {
+                        const li = document.createElement('li');
+                        li.textContent = `${song.number} - ${song.title}`;
+                        li.dataset.image = song.image;
+                        li.dataset.title = song.title;
+                        li.dataset.number = song.number;
+                        li.dataset.content = song.content;
+                        li.addEventListener('click', () => {
+                            const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
+                            const title = encodeURIComponent(song.title);
+                            const number = encodeURIComponent(song.number);
+                            const content = encodeURIComponent(song.content);
+
+                            if (dropdownMenu.value === 'lyrics') {
+                                window.location.href = `lyrics.html?content=${content}&title=${title}&number=${number}`;
+                            } else {
+                                window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
+                            }
                         });
-                } else {
-                    displaySongs(allSongs);
+                        songList.appendChild(li);
+                    });
                 }
+
+                populateList(allSongs);
+
+                searchInput.addEventListener('input', () => {
+                    const query = searchInput.value.toLowerCase();
+                    let filteredSongs = [];
+                    
+                    // Filter songs by title
+                    filteredSongs = allSongs.filter(song => 
+                        song.title.toLowerCase().includes(query)
+                    );
+
+                    // Check if the query is a number and find corresponding songs
+                    const queryNumber = query.match(/^\d+$/);
+                    if (queryNumber) {
+                        const englishNumber = queryNumber[0];
+                        const spanishNumber = mapping.find(entry => entry.english === englishNumber)?.spanish;
+                        if (spanishNumber) {
+                            filteredSongs = filteredSongs.concat(
+                                allSongs.filter(song => song.number === englishNumber || song.number === spanishNumber)
+                            );
+                        } else {
+                            filteredSongs = filteredSongs.concat(
+                                allSongs.filter(song => song.number === englishNumber)
+                            );
+                        }
+                    }
+
+                    populateList(filteredSongs);
+                });
+
+                startCycleButton.addEventListener('click', () => {
+                    localStorage.setItem('currentIndex', 0);
+                    window.location.href = 'start-cycle.html';
+                });
             })
             .catch(error => {
                 console.error('Error loading songs:', error);
             });
     }
 
-    function displaySongs(songs) {
-        songList.innerHTML = '';
-        songs.forEach(song => {
-            const li = document.createElement('li');
-            li.textContent = `${song.number} - ${song.title}`;
-            li.dataset.image = song.image;
-            li.dataset.title = song.title;
-            li.dataset.number = song.number;
-            li.dataset.content = song.content;
-            li.addEventListener('click', () => {
-                const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
-                const title = encodeURIComponent(song.title);
-                const number = encodeURIComponent(song.number);
-                const content = encodeURIComponent(song.content);
-
-                if (dropdownMenu.value === 'lyrics') {
-                    window.location.href = `lyrics.html?content=${content}&title=${title}&number=${number}`;
-                } else {
-                    window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
-                }
-            });
-            songList.appendChild(li);
-        });
-
-        console.log('Displayed songs:', songs); // Log displayed songs
-
-        // Search functionality
-        searchInput.addEventListener('input', () => {
-            const query = searchInput.value.toLowerCase();
-            let filteredSongs = [];
-
-            if (languageDropdown.value === 'both') {
-                // Handle both title and number search
-                filteredSongs = allSongs.filter(song =>
-                    song.title.toLowerCase().includes(query) ||
-                    song.number.toLowerCase().includes(query)
-                );
-
-                // Handle song mapping for corresponding songs
-                songMapping.forEach(mapping => {
-                    const englishSong = allSongs.find(song => song.number === mapping.english);
-                    const spanishSong = allSongs.find(song => song.number === mapping.spanish);
-
-                    if (englishSong && englishSong.title.toLowerCase().includes(query)) {
-                        if (!filteredSongs.some(song => song.number === englishSong.number)) {
-                            filteredSongs.push(englishSong);
-                        }
-                        if (spanishSong && !filteredSongs.some(song => song.number === spanishSong.number)) {
-                            filteredSongs.push(spanishSong);
-                        }
-                    }
-
-                    if (spanishSong && spanishSong.title.toLowerCase().includes(query)) {
-                        if (!filteredSongs.some(song => song.number === spanishSong.number)) {
-                            filteredSongs.push(spanishSong);
-                        }
-                        if (englishSong && !filteredSongs.some(song => song.number === englishSong.number)) {
-                            filteredSongs.push(englishSong);
-                        }
-                    }
-                });
-            } else {
-                // Handle search for a single language
-                filteredSongs = allSongs.filter(song =>
-                    song.title.toLowerCase().includes(query) ||
-                    song.number.toLowerCase().includes(query)
-                );
-            }
-
-            // Remove duplicate songs based on number and title
-            const uniqueSongs = filteredSongs.filter((song, index, self) =>
-                index === self.findIndex(s => s.number === song.number && s.title === song.title)
-            );
-
-            songList.innerHTML = '';
-            uniqueSongs.forEach(song => {
-                const li = document.createElement('li');
-                li.textContent = `${song.number} - ${song.title}`;
-                li.dataset.image = song.image;
-                li.dataset.title = song.title;
-                li.dataset.number = song.number;
-                li.dataset.content = song.content;
-                li.addEventListener('click', () => {
-                    const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
-                    const title = encodeURIComponent(song.title);
-                    const number = encodeURIComponent(song.number);
-                    const content = encodeURIComponent(song.content);
-
-                    if (dropdownMenu.value === 'lyrics') {
-                        window.location.href = `lyrics.html?content=${content}&title=${title}&number=${number}`;
-                    } else {
-                        window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
-                    }
-                });
-                songList.appendChild(li);
-            });
-
-            console.log('Filtered songs:', uniqueSongs); // Log filtered songs
-        });
-
-        // Start Cycle Button Functionality
-        startCycleButton.addEventListener('click', () => {
-            localStorage.setItem('currentIndex', 0);
-            window.location.href = 'start-cycle.html';
-        });
-    }
-
-    // Initial load
     loadSongs();
 });
