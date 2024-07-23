@@ -101,6 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 song.title.toLowerCase().includes(query)
             );
 
+            // Add mapped songs to the search results
             const additionalSongs = [];
             if (languageDropdown.value === 'both') {
                 filteredSongs.forEach(song => {
@@ -108,17 +109,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (mappedSong) {
                         const correspondingSongNumber = mappedSong.english === song.number ? mappedSong.spanish : mappedSong.english;
                         const correspondingSong = allSongs.find(s => s.number === correspondingSongNumber);
-                        if (correspondingSong && !filteredSongs.includes(correspondingSong)) {
+                        if (correspondingSong && !filteredSongs.some(s => s.number === correspondingSong.number)) {
                             additionalSongs.push(correspondingSong);
                         }
                     }
                 });
             }
 
+            // Combine and filter out duplicates
             const combinedSongs = [...filteredSongs, ...additionalSongs];
+            const uniqueSongs = combinedSongs.filter((song, index, self) =>
+                index === self.findIndex(s => s.number === song.number && s.title === song.title)
+            );
 
             songList.innerHTML = '';
-            combinedSongs.forEach(song => {
+            uniqueSongs.forEach(song => {
                 const li = document.createElement('li');
                 li.textContent = `${song.number} - ${song.title}`;
                 li.dataset.image = song.image;
@@ -140,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 songList.appendChild(li);
             });
 
-            console.log('Filtered songs:', combinedSongs); // Log filtered songs
+            console.log('Filtered songs:', uniqueSongs); // Log filtered songs
         });
 
         // Start Cycle Button Functionality
