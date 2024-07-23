@@ -65,13 +65,17 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Check if the referrer is image.html or lyrics.html
             const referrer = document.referrer;
-            if (referrer.includes('image.html') || referrer.includes('lyrics.html')) {
+            if (referrer.includes('image.html')) {
                 cycleSongs();
             } else {
+            if (referrer.includes('lyrics.html')) {
+                cycleSongs();
+            } else {
+              
                 // Reset index and start from the first song if referrer is unknown
                 localStorage.setItem('currentIndex', 0);
                 cycleSongs();
-            }
+            }}
         });
     </script>
 </body>
