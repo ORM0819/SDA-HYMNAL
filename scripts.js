@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     let allSongs = [];
-    let songMapping = [];
 
     // Function to determine the correct JSON file based on the selected language
     function getSongsUrls() {
@@ -36,19 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
             default:
                 return ['songs.json'];
         }
-    }
-
-    // Fetch song mapping data
-    function loadSongMapping() {
-        return fetch('song_mapping.json')
-            .then(response => response.json())
-            .then(data => {
-                songMapping = data;
-                console.log('Song mapping loaded:', data);
-            })
-            .catch(error => {
-                console.error('Error loading song mapping:', error);
-            });
     }
 
     // Fetch and display songs based on the selected language
@@ -106,5 +92,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Load initial data
-    Promise.all([loadSongs(), loadSongMapping()]);
+    loadSongs();
 });
