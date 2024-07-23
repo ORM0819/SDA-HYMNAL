@@ -28,6 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
         switch (language) {
             case 'spanish':
                 return 'songs_es.json';
+            case 'both':
+                return ['songs.json', 'songs_es.json'];
             default:
                 return 'songs.json';
         }
@@ -35,62 +37,81 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch and display songs based on the selected language
     function loadSongs() {
-        fetch(getSongsUrl())
-            .then(response => response.json())
-            .then(data => {
-                console.log('Data loaded:', data);
+        const urls = getSongsUrl();
+        const fetches = Array.isArray(urls) ? urls.map(url => fetch(url).then(response => response.json())) : [fetch(urls).then(response => response.json())];
+        Promise.all(fetches)
+            .then(results => {
+                let data = results.flat();
 
-                function populateList(songs) {
-                    songList.innerHTML = '';
-                    songs.forEach(song => {
-                        const li = document.createElement('li');
-                        li.textContent = `${song.number} - ${song.title}`;
-                        li.dataset.image = song.image;
-                        li.dataset.title = song.title;
-                        li.dataset.number = song.number;
-                        li.dataset.content = song.content;
-                        li.addEventListener('click', () => {
-                            const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
-                            const title = encodeURIComponent(song.title);
-                            const number = encodeURIComponent(song.number);
-                            const content = encodeURIComponent(song.content);
-
-                            if (dropdownMenu.value === 'lyrics') {
-                                window.location.href = `lyrics.html?content=${content}&title=${title}&number=${number}`;
-                            } else {
-                                window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
-                            }
+                if (languageDropdown.value === 'both') {
+                    fetch('song_mapping.json')
+                        .then(response => response.json())
+                        .then(mapping => {
+                            const mappedData = [];
+                            data.forEach(song => {
+                                const correspondingMapping = mapping.find(map => map.english === song.number || map.spanish === song.number);
+                                if (correspondingMapping) {
+                                    const correspondingSongNumber = correspondingMapping.english === song.number ? correspondingMapping.spanish : correspondingMapping.english;
+                                    const correspondingSong = data.find(s => s.number === correspondingSongNumber);
+                                    if (correspondingSong) {
+                                        mappedData.push(song);
+                                        mappedData.push(correspondingSong);
+                                    }
+                                } else {
+                                    mappedData.push(song);
+                                }
+                            });
+                            data = mappedData;
+                            displaySongs(data);
                         });
-                        songList.appendChild(li);
-                    });
+                } else {
+                    displaySongs(data);
                 }
-
-                // Initial population
-                populateList(data);
-
-                // Search functionality
-                searchInput.addEventListener('input', () => {
-                    const query = searchInput.value.toLowerCase();
-                    const filteredSongs = data.filter(song => 
-                        song.number.toLowerCase().includes(query) || 
-                        song.title.toLowerCase().includes(query)
-                    );
-                    populateList(filteredSongs);
-                });
-
-                // Start Cycle Button Functionality
-                startCycleButton.addEventListener('click', () => {
-                    const dropdownValue = dropdownMenu.value;
-                    localStorage.setItem('currentIndex', 0);
-                    const redirectUrl = dropdownValue === 'lyrics'
-                        ? 'start-cycle-lyrics.html'
-                        : 'start-cycle.html';
-                    window.location.href = redirectUrl;
-                });
             })
             .catch(error => {
                 console.error('Error loading songs:', error);
             });
+    }
+
+    function displaySongs(songs) {
+        songList.innerHTML = '';
+        songs.forEach(song => {
+            const li = document.createElement('li');
+            li.textContent = `${song.number} - ${song.title}`;
+            li.dataset.image = song.image;
+            li.dataset.title = song.title;
+            li.dataset.number = song.number;
+            li.dataset.content = song.content;
+            li.addEventListener('click', () => {
+                const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
+                const title = encodeURIComponent(song.title);
+                const number = encodeURIComponent(song.number);
+                const content = encodeURIComponent(song.content);
+
+                if (dropdownMenu.value === 'lyrics') {
+                    window.location.href = `lyrics.html?content=${content}&title=${title}&number=${number}`;
+                } else {
+                    window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
+                }
+            });
+            songList.appendChild(li);
+        });
+
+        // Search functionality
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase();
+            const filteredSongs = songs.filter(song =>
+                song.number.toLowerCase().includes(query) ||
+                song.title.toLowerCase().includes(query)
+            );
+            displaySongs(filteredSongs);
+        });
+
+        // Start Cycle Button Functionality
+        startCycleButton.addEventListener('click', () => {
+            localStorage.setItem('currentIndex', 0);
+            window.location.href = 'start-cycle.html';
+        });
     }
 
     // Initial load
