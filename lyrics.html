@@ -5,29 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#ffffff">
     <link rel="manifest" href="manifest.json">
-    <title>SDA Hymnal - Lyrics Viewer</title>
+    <title>SDA Hymnal</title>
     <link rel="stylesheet" href="styles.css">
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('https://ormt03.github.io/SDA-HYMNAL/service-worker.js')
-                    .then((registration) => {
-                        console.log('Service Worker registered with scope:', registration.scope);
-                    })
-                    .catch((error) => {
-                        console.log('Service Worker registration failed:', error);
-                    });
-            });
-        }
-    </script>
+    <style>
+        /* Add any additional styles here */
+    </style>
 </head>
 <body>
+    <button id="back-button" onclick="window.history.back();">Back</button>
     <h1 id="title">SDA Hymnal - Lyrics Viewer</h1>
     <div id="lyrics-container">
         <p id="lyrics"></p>
     </div>
-    <a id="back-button" href="index.html">Back</a>
 
     <script>
         // Get the content, title, and number from the URL parameters
@@ -35,18 +26,19 @@
         const content = decodeURIComponent(params.get('content'));
         const title = decodeURIComponent(params.get('title'));
         const number = decodeURIComponent(params.get('number'));
-        
+
         if (content) {
-            document.getElementById('lyrics').textContent = content;
+            // Replace newline characters with <br> tags
+            document.getElementById('lyrics').innerHTML = content.replace(/\n/g, '<br>');
         } else {
             document.getElementById('lyrics').textContent = 'No content found';
         }
 
         if (title && number) {
-            // Set the heading to display only the song number and title
-            document.getElementById('title').textContent = `${number} - ${title}`;
+            // Set the heading to display the song number and title
+            document.getElementById('title').textContent = `Song Number: ${number} - ${title}`;
             
-            // Set the browser's title to display the song number and title
+            // Set the browser's title to the song number and title
             document.title = `SDA Hymnal - ${number} - ${title}`;
         }
 
