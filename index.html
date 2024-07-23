@@ -11,20 +11,22 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="header-container">
-        <h1>SDA Hymnal</h1>
-        <!-- Language Dropdown -->
-        <select id="language-dropdown">
-            <option value="english">English</option>
-            <option value="spanish">Spanish</option>
-            <option value="both">English & Spanish</option>
-        </select>
-        <!-- Display Option Dropdown -->
-        <select id="dropdown-menu">
-            <option value="music-score">Music Score and Lyrics</option>
-            <option value="lyrics">Lyrics Only</option>
-        </select>
-    </div>
+    <header>
+        <div id="header-container">
+            <h1>SDA Hymnal</h1>
+            <!-- Language Dropdown -->
+            <select id="language-dropdown">
+                <option value="english">English</option>
+                <option value="spanish">Spanish</option>
+                <option value="both">English & Spanish</option>
+            </select>
+            <!-- Display Option Dropdown -->
+            <select id="dropdown-menu">
+                <option value="music-score">Music Score and Lyrics</option>
+                <option value="lyrics">Lyrics Only</option>
+            </select>
+        </div>
+    </header>
     <input type="text" id="search" placeholder="Search by number or title">
     <ul id="song-list"></ul>
     <button id="start-cycle">Start Cycle</button>
