@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     let allSongs = [];
+    let songMapping = [];
 
     // Function to determine the correct JSON file based on the selected language
     function getSongsUrls() {
@@ -30,11 +31,24 @@ document.addEventListener('DOMContentLoaded', () => {
         switch (language) {
             case 'spanish':
                 return ['songs_es.json'];
-            case 'english-spanish':
+            case 'both':
                 return ['songs.json', 'songs_es.json'];
             default:
                 return ['songs.json'];
         }
+    }
+
+    // Fetch song mapping data
+    function loadSongMapping() {
+        return fetch('song_mapping.json')
+            .then(response => response.json())
+            .then(data => {
+                songMapping = data;
+                console.log('Song mapping loaded:', data);
+            })
+            .catch(error => {
+                console.error('Error loading song mapping:', error);
+            });
     }
 
     // Fetch and display songs based on the selected language
@@ -80,6 +94,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Enhance search functionality
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.toLowerCase();
+
+        // Filter songs based on the search query
+        let filteredSongs = allSongs.filter(song => 
+            song.number.toLowerCase().includes(query) || 
+            song.title.toLowerCase().includes(query)
+        );
+
+        // Create a set to avoid duplicate entries
+        const mappedSongs = new Set(filteredSongs);
+
+        // Add corresponding songs based on the mapping
+        filteredSongs.forEach(song => {
+            const mapping = songMapping.find(map => map.english === song.number || map.spanish === song.number);
+            if (mapping) {
+                const correspondingNumber = mapping.english === song.number ? mapping.spanish : mapping.english;
+                const correspondingSong = allSongs.find(s => s.number === correspondingNumber);
+                if (correspondingSong) {
+                    mappedSongs.add(correspondingSong);
+                }
+            }
+        });
+
+        // Populate the list with all relevant songs
+        populateList([...mappedSongs]);
+    });
+
     // Start Cycle Button Functionality
     startCycleButton.addEventListener('click', () => {
         localStorage.setItem('currentIndex', 0);
@@ -92,5 +135,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Load initial data
-    loadSongs();
+    Promise.all([loadSongs(), loadSongMapping()]);
 });
