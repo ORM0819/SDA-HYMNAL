@@ -23,21 +23,17 @@
     </script>
 </head>
 <body>
-    <button id="back-button" onclick="goBack()">Back</button>
     <h1 id="title">SDA Hymnal - Image Viewer</h1>
     <div id="image-container">
         <img id="image" src="" alt="Image">
     </div>
+    <a href="index.html" id="back-button">Back</a> <!-- Back button added -->
 
     <script>
-        function goBack() {
-            window.history.back();
-        }
-
         const params = new URLSearchParams(window.location.search);
         const imageUrl = params.get('image');
-        const title = params.get('title');
-        const number = params.get('number');
+        const title = decodeURIComponent(params.get('title'));
+        const number = decodeURIComponent(params.get('number'));
 
         if (imageUrl) {
             const imageElement = document.getElementById('image');
@@ -57,22 +53,9 @@
         }
 
         if (title && number) {
-            document.getElementById('title').textContent = `Song Number: ${number}`;
-            document.title = `SDA Hymnal - ${decodeURIComponent(title)}`;
+            document.getElementById('title').textContent = `${number} - ${title}`;
+            document.title = `SDA Hymnal - ${number} - ${title}`;
         }
     </script>
-    <style>
-        #back-button {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            padding: 10px;
-            font-size: 16px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
 </body>
 </html>
