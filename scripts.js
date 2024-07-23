@@ -100,15 +100,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (queryNumber) {
                         const englishNumber = queryNumber[0];
                         const spanishNumber = mapping.find(entry => entry.english === englishNumber)?.spanish;
-                        if (spanishNumber) {
-                            filteredSongs = filteredSongs.concat(
-                                allSongs.filter(song => song.number === englishNumber || song.number === spanishNumber)
-                            );
-                        } else {
-                            filteredSongs = filteredSongs.concat(
-                                allSongs.filter(song => song.number === englishNumber)
-                            );
-                        }
+                        
+                        // Filter songs based on the correct mapping
+                        filteredSongs = filteredSongs.concat(
+                            allSongs.filter(song => song.number === englishNumber || song.number === spanishNumber)
+                        );
+
+                        // Remove incorrect results (e.g., English 78 if English 125 is searched)
+                        filteredSongs = filteredSongs.filter((song, index, self) => 
+                            index === self.findIndex((t) => (t.number === song.number))
+                        );
                     }
 
                     populateList(filteredSongs);
