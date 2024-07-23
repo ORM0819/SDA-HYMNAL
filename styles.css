@@ -7,50 +7,52 @@ body {
     flex-direction: column;
     align-items: center; /* Center content side-to-side */
     min-height: 100vh; /* Ensure full viewport height */
+    position: relative; /* Required for absolute positioning of the dropdowns */
 }
 
-/* Style for the header container */
-header {
+/* Style for the header */
+#header {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: space-between;
     width: 100%;
-    padding: 20px 0; /* Add padding for spacing */
+    padding: 10px;
     box-sizing: border-box;
-}
-
-/* Style for the header container items */
-#header-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    width: 100%;
+    position: relative; /* For positioning the title below dropdowns */
 }
 
 /* Style for the title */
 h1 {
-    margin: 0;
+    margin-top: 60px; /* Pushes the title lower than the dropdowns */
 }
 
-/* Style for the dropdown menus */
-#language-dropdown,
+/* Style for the dropdown container */
+#dropdown-container {
+    margin: 20px;
+    position: relative;
+}
+
+/* Style for the dropdown menu */
 #dropdown-menu {
-    margin-top: 10px; /* Space between the title and dropdowns */
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #fff;
 }
 
-/* Style for the language dropdown menu */
+/* Style for the language dropdown */
 #language-dropdown {
-    margin-right: 10px; /* Space between dropdowns */
-}
-
-/* Style for the display option dropdown menu */
-#dropdown-menu {
-    margin-left: 10px; /* Space between dropdowns */
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
 }
 
 /* Style for the search input on the main page */
