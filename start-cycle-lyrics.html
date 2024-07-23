@@ -58,8 +58,10 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Check if coming from lyrics.html or image.html
             const referrer = document.referrer;
             if (!referrer.includes('image.html') && !referrer.includes('lyrics.html')) {
+                // Only reset index if not coming from lyrics.html
                 localStorage.setItem('currentIndex', 0);
             }
             cycleSongs();
