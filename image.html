@@ -21,19 +21,37 @@
             });
         }
     </script>
+    <style>
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-button:hover {
+            background: #0056b3;
+        }
+    </style>
 </head>
 <body>
+    <a href="index.html" class="back-button">Back</a>
     <h1 id="title">SDA Hymnal - Image Viewer</h1>
     <div id="image-container">
         <img id="image" src="" alt="Image">
     </div>
-    <a href="index.html" id="back-button">Back</a> <!-- Back button added -->
 
     <script>
         const params = new URLSearchParams(window.location.search);
         const imageUrl = params.get('image');
-        const title = decodeURIComponent(params.get('title'));
-        const number = decodeURIComponent(params.get('number'));
+        const title = params.get('title');
+        const number = params.get('number');
 
         if (imageUrl) {
             const imageElement = document.getElementById('image');
@@ -53,8 +71,8 @@
         }
 
         if (title && number) {
-            document.getElementById('title').textContent = `${number} - ${title}`;
-            document.title = `SDA Hymnal - ${number} - ${title}`;
+            document.getElementById('title').textContent = `${number} - ${decodeURIComponent(title)}`;
+            document.title = `SDA Hymnal - ${number} - ${decodeURIComponent(title)}`;
         }
     </script>
 </body>
