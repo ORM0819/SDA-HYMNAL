@@ -96,12 +96,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Enhance search functionality
     searchInput.addEventListener('input', () => {
         const query = searchInput.value.toLowerCase();
+
+        // Filter songs based on the search query
         let filteredSongs = allSongs.filter(song => 
             song.number.toLowerCase().includes(query) || 
             song.title.toLowerCase().includes(query)
         );
 
-        // Create a set to keep track of songs to display
+        // Create a set to avoid duplicate entries
         const mappedSongs = new Set(filteredSongs);
 
         // Add corresponding songs based on the mapping
@@ -116,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // Populate the list with all relevant songs
         populateList([...mappedSongs]);
     });
 
