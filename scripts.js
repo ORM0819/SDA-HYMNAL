@@ -121,15 +121,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Add corresponding songs based on the mapping
         filteredSongs.forEach(song => {
-            let mapping;
-            if (languageDropdown.value === 'english' || languageDropdown.value === 'both') {
-                mapping = songMappingEnToEs.find(map => map.english === song.number);
-            } else {
-                mapping = songMappingEsToEn.find(map => map.spanish === song.number);
+            // Check in both mappings
+            let correspondingNumber, correspondingSong;
+
+            const mappingEnToEs = songMappingEnToEs.find(map => map.english === song.number);
+            if (mappingEnToEs) {
+                correspondingNumber = mappingEnToEs.spanish;
+                correspondingSong = allSongs.find(s => s.number === correspondingNumber);
+                if (correspondingSong) {
+                    mappedSongs.add(correspondingSong);
+                }
             }
-            if (mapping) {
-                const correspondingNumber = mapping.english === song.number ? mapping.spanish : mapping.english;
-                const correspondingSong = allSongs.find(s => s.number === correspondingNumber);
+
+            const mappingEsToEn = songMappingEsToEn.find(map => map.spanish === song.number);
+            if (mappingEsToEn) {
+                correspondingNumber = mappingEsToEn.english;
+                correspondingSong = allSongs.find(s => s.number === correspondingNumber);
                 if (correspondingSong) {
                     mappedSongs.add(correspondingSong);
                 }
