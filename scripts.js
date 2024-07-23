@@ -94,42 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Enhance search functionality
-    searchInput.addEventListener('input', () => {
-        const query = searchInput.value.toLowerCase();
-
-        // Filter songs based on the search query
-        let filteredSongs = allSongs.filter(song => 
-            song.number.toLowerCase().includes(query) || 
-            song.title.toLowerCase().includes(query)
-        );
-
-        console.log('Filtered songs:', filteredSongs);
-
-        // Create a set to avoid duplicate entries
-        const mappedSongs = new Set(filteredSongs);
-
-        // Add corresponding songs based on the mapping
-        filteredSongs.forEach(song => {
-            const mapping = songMapping.find(map => map.english === song.number || map.spanish === song.number);
-            if (mapping) {
-                // Determine the corresponding number and language
-                const correspondingNumber = mapping.english === song.number ? mapping.spanish : mapping.english;
-                const correspondingSong = allSongs.find(s => s.number === correspondingNumber);
-
-                // Ensure we don't add the same song twice
-                if (correspondingSong && !mappedSongs.has(correspondingSong)) {
-                    mappedSongs.add(correspondingSong);
-                }
-            }
-        });
-
-        console.log('Mapped songs:', [...mappedSongs]);
-
-        // Populate the list with all relevant songs
-        populateList([...mappedSongs]);
-    });
-
     // Start Cycle Button Functionality
     startCycleButton.addEventListener('click', () => {
         localStorage.setItem('currentIndex', 0);
