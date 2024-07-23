@@ -61,7 +61,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const referrer = document.referrer;
             console.log('Document referrer:', referrer);
-            if (!referrer.includes('image.html') && !referrer.includes('lyrics.html')) {
+            if (!referrer.includes('lyrics.html')) {
                 console.log('Resetting currentIndex to 0.');
                 localStorage.setItem('currentIndex', 0);
             }
