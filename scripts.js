@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let songMapping = [];
 
     // Function to determine the correct JSON file based on the selected language
-    function getSongsUrl() {
+    function getSongsUrls() {
         const language = languageDropdown.value;
         switch (language) {
             case 'spanish':
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch and display songs based on the selected language
     function loadSongs() {
-        const urls = getSongsUrl();
+        const urls = getSongsUrls();
         const requests = urls.map(url => fetch(url).then(res => res.json()));
 
         Promise.all(requests)
