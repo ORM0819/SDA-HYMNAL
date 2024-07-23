@@ -21,13 +21,31 @@
             });
         }
     </script>
+    <style>
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-button:hover {
+            background: #0056b3;
+        }
+    </style>
 </head>
 <body>
+    <a href="index.html" class="back-button">Back</a>
     <h1 id="title">SDA Hymnal - Lyrics Viewer</h1>
     <div id="lyrics-container">
         <p id="lyrics"></p>
     </div>
-    <a href="index.html" id="back-button">Back</a> <!-- Back button added -->
 
     <script>
         // Get the content, title, and number from the URL parameters
@@ -35,7 +53,7 @@
         const content = decodeURIComponent(params.get('content'));
         const title = decodeURIComponent(params.get('title'));
         const number = decodeURIComponent(params.get('number'));
-
+        
         if (content) {
             document.getElementById('lyrics').textContent = content;
         } else {
@@ -43,10 +61,10 @@
         }
 
         if (title && number) {
-            // Set the heading to display the song number and title
+            // Set the heading to display only the song number and title
             document.getElementById('title').textContent = `${number} - ${title}`;
             
-            // Set the browser's title
+            // Set the browser's title to display the song number and title
             document.title = `SDA Hymnal - ${number} - ${title}`;
         }
 
