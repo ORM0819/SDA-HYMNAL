@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dropdownMenu = document.getElementById('dropdown-menu');
     const languageDropdown = document.getElementById('language-dropdown');
     const startCycleButton = document.getElementById('start-cycle');
+    const progressBar = document.getElementById('progress-bar');
 
     // Set the default dropdown values from local storage
     const savedDropdownValue = localStorage.getItem('dropdownValue') || 'music-score';
@@ -153,4 +154,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load initial data
     Promise.all([loadSongs(), loadSongMapping()]);
+
+    // Handle service worker messages
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.addEventListener('message', event => {
+            if (event.data.type === 'CACHE_PROGRESS') {
+                const { progress, total } = event.data;
+                progressBar.value = (progress / total) * 100;
+                progressBar.innerHTML = `${progress}/${total}`;
+            }
+        });
+    }
 });
