@@ -1,60 +1,60 @@
 const CACHE_NAME = 'sda-hymnal-cache-v1';
-const URLS_TO_CACHE = [
+const urlsToCache = [
     '/',
-    'index.html',
-    'start-cycle.html',
-    'image.html',
-    'styles.css',
-    'manifest.json',
-    'songs.json',
+    '/index.html',
+    '/start-cycle.html',
+    '/start-cycle-lyrics.html',
+    '/image.html',
+    '/lyrics.html',
+    '/styles.css',
+    '/scripts.js',
+    '/manifest.json',
+    '/songs.json',
+    '/songs_es.json',
+    '/song_mapping.json'
+    // Add all image URLs and any other resources that need to be cached here
 ];
 
-self.addEventListener('install', (event) => {
+// Install event
+self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
-            .then((cache) => {
+            .then(cache => {
                 console.log('Opened cache');
-                return cache.addAll(URLS_TO_CACHE);
-            })
-            .then(() => {
-                // Fetch and cache the songs data
-                fetch('songs.json')
-                    .then(response => response.json())
-                    .then(songs => {
-                        const imageUrls = songs.map(song => `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`);
-                        caches.open(CACHE_NAME)
-                            .then(cache => {
-                                return cache.addAll(imageUrls);
-                            });
-                    });
+                return cache.addAll(urlsToCache);
             })
     );
 });
 
-self.addEventListener('fetch', (event) => {
+// Fetch event
+self.addEventListener('fetch', event => {
     event.respondWith(
         caches.match(event.request)
-            .then((response) => {
+            .then(response => {
                 if (response) {
-                    return response;
+                    return response; // Return the cached response if found
                 }
-                return fetch(event.request).then((networkResponse) => {
-                    // Cache the new response
-                    return caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(event.request, networkResponse.clone());
-                        return networkResponse;
+                return fetch(event.request).then(response => {
+                    if (!response || response.status !== 200 || response.type !== 'basic') {
+                        return response; // Only cache valid responses
+                    }
+                    const responseToCache = response.clone();
+                    caches.open(CACHE_NAME).then(cache => {
+                        cache.put(event.request, responseToCache);
                     });
+                    return response;
                 });
             })
     );
 });
 
-self.addEventListener('activate', (event) => {
+// Activate event
+self.addEventListener('activate', event => {
     const cacheWhitelist = [CACHE_NAME];
     event.waitUntil(
-        caches.keys().then((cacheNames) => {
+        caches.keys().then(cacheNames => {
             return Promise.all(
-                cacheNames.map((cacheName) => {
+                cacheNames.map(cacheName => {
                     if (cacheWhitelist.indexOf(cacheName) === -1) {
                         return caches.delete(cacheName);
                     }
