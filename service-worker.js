@@ -1,111 +1,39 @@
-const CACHE_NAME = 'sda-hymnal-cache-v1';
-const baseUrlsToCache = [
+const CACHE_NAME = 'my-cache-v1';
+const urlsToCache = [
     '/',
-    '/index.html',
-    '/start-cycle.html',
-    '/start-cycle-lyrics.html',
-    '/styles.css',
-    '/scripts.js',
-    '/manifest.json',
-    '/songs.json',
-    '/songs_es.json',
-    '/song_mapping.json'
+    'index.html',
+    'styles.css',
+    'scripts.js',
+    // Add other URLs to cache
 ];
 
-self.addEventListener('install', event => {
+// Install event
+self.addEventListener('install', (event) => {
     event.waitUntil(
-        caches.open(CACHE_NAME).then(cache => {
-            let total = baseUrlsToCache.length; // Initialize with baseUrlsToCache count
-            let progress = 0;
-
-            function updateProgress() {
-                self.clients.matchAll().then(clients => {
-                    clients.forEach(client => {
-                        client.postMessage({
-                            type: 'CACHE_PROGRESS',
-                            progress,
-                            total
-                        });
-                    });
-                });
-            }
-
-            // Cache base URLs
-            const cacheBaseUrls = cache.addAll(baseUrlsToCache).then(() => {
-                progress += baseUrlsToCache.length;
-                updateProgress();
-            });
-
-            // Cache songs data and their respective URLs
-            const cacheSongsData = Promise.all([
-                fetch('/songs.json')
-                    .then(response => response.json())
-                    .then(songs => {
-                        const songUrls = songs.map(song => [
-                            `/image.html?title=${encodeURIComponent(song.title)}&number=${encodeURIComponent(song.number)}&image=${encodeURIComponent(song.image)}`,
-                            `/lyrics.html?title=${encodeURIComponent(song.title)}&number=${encodeURIComponent(song.number)}&content=${encodeURIComponent(song.content)}`
-                        ]).flat();
-                        total += songUrls.length;
-                        return songUrls.reduce((promise, url) => {
-                            return promise.then(() => {
-                                return cache.add(url).then(() => {
-                                    progress++;
-                                    updateProgress();
-                                });
-                            });
-                        }, Promise.resolve());
-                    }),
-                fetch('/songs_es.json')
-                    .then(response => response.json())
-                    .then(songs => {
-                        const songUrls = songs.map(song => [
-                            `/image.html?title=${encodeURIComponent(song.title)}&number=${encodeURIComponent(song.number)}&image=${encodeURIComponent(song.image)}`,
-                            `/lyrics.html?title=${encodeURIComponent(song.title)}&number=${encodeURIComponent(song.number)}&content=${encodeURIComponent(song.content)}`
-                        ]).flat();
-                        total += songUrls.length;
-                        return songUrls.reduce((promise, url) => {
-                            return promise.then(() => {
-                                return cache.add(url).then(() => {
-                                    progress++;
-                                    updateProgress();
-                                });
-                            });
-                        }, Promise.resolve());
-                    })
-            ]);
-
-            // Return a promise that resolves when both base URLs and songs data are cached
-            return Promise.all([cacheBaseUrls, cacheSongsData]);
-        })
+        caches.open(CACHE_NAME)
+            .then((cache) => {
+                return cache.addAll(urlsToCache);
+            })
     );
 });
 
-self.addEventListener('fetch', event => {
+// Fetch event
+self.addEventListener('fetch', (event) => {
     event.respondWith(
-        caches.match(event.request).then(response => {
-            if (response) {
-                return response;
-            }
-            return fetch(event.request).then(response => {
-                if (!response || response.status !== 200 || response.type !== 'basic') {
-                    return response;
-                }
-                const responseToCache = response.clone();
-                caches.open(CACHE_NAME).then(cache => {
-                    cache.put(event.request, responseToCache);
-                });
-                return response;
-            });
-        })
+        caches.match(event.request)
+            .then((response) => {
+                return response || fetch(event.request);
+            })
     );
 });
 
-self.addEventListener('activate', event => {
+// Activate event
+self.addEventListener('activate', (event) => {
     const cacheWhitelist = [CACHE_NAME];
     event.waitUntil(
-        caches.keys().then(cacheNames => {
+        caches.keys().then((cacheNames) => {
             return Promise.all(
-                cacheNames.map(cacheName => {
+                cacheNames.map((cacheName) => {
                     if (cacheWhitelist.indexOf(cacheName) === -1) {
                         return caches.delete(cacheName);
                     }
@@ -113,4 +41,17 @@ self.addEventListener('activate', event => {
             );
         })
     );
+});
+
+// Example progress update (this is just a basic example; actual implementation will vary)
+self.addEventListener('message', (event) => {
+    if (event.data.type === 'CACHE_PROGRESS') {
+        const progress = calculateProgress(); // Implement your logic to calculate progress
+        const total = urlsToCache.length; // Example total, adjust as needed
+        event.source.postMessage({
+            type: 'CACHE_PROGRESS',
+            progress,
+            total
+        });
+    }
 });
