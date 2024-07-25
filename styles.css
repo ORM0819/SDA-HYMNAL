@@ -68,20 +68,6 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Style for the back button on the lyrics page */
-#back-button {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    padding: 10px;
-    font-size: 16px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    cursor: pointer;
-    z-index: 1000; /* Ensures the back button is above other content */
-}
-
 /* Style for the lyrics container on the lyrics page */
 #lyrics-container {
     margin: 20px;
