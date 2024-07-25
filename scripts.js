@@ -6,12 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const startCycleButton = document.getElementById('start-cycle');
     const progressBar = document.getElementById('progress-bar');
 
-    // Set the default dropdown values from local storage
-    const savedDropdownValue = localStorage.getItem('dropdownValue') || 'music-score';
-    dropdownMenu.value = savedDropdownValue;
-
-    const savedLanguageValue = localStorage.getItem('languageValue') || 'english';
-    languageDropdown.value = savedLanguageValue;
+    // Set default dropdown values from local storage
+    dropdownMenu.value = localStorage.getItem('dropdownValue') || 'music-score';
+    languageDropdown.value = localStorage.getItem('languageValue') || 'english';
 
     // Save dropdown values to local storage
     dropdownMenu.addEventListener('change', () => {
@@ -26,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let allSongs = [];
     let songMapping = [];
 
-    // Function to determine the correct JSON file based on the selected language
+    // Determine the correct JSON file based on the selected language
     function getSongsUrls() {
         const language = languageDropdown.value;
         switch (language) {
@@ -42,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Fetch song mapping data
+    // Fetch and load song mapping data
     function loadSongMapping() {
         return fetch('song_mapping.json')
             .then(response => response.json())
@@ -66,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         Promise.all(requests)
             .then(dataArray => {
-                // Flatten and merge all songs
                 allSongs = dataArray.flat();
                 console.log('All songs loaded:', allSongs); // Check allSongs content here
                 populateList(allSongs);
@@ -92,11 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const number = encodeURIComponent(song.number);
                 const content = encodeURIComponent(song.content);
 
-                if (dropdownMenu.value === 'lyrics') {
-                    window.location.href = `lyrics.html?content=${content}&title=${title}&number=${number}`;
-                } else {
-                    window.location.href = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
-                }
+                const page = dropdownMenu.value === 'lyrics' ? 'lyrics.html' : 'image.html';
+                window.location.href = `${page}?${dropdownMenu.value === 'lyrics' ? `content=${content}&` : `image=${encodeURIComponent(imageUrl)}&` }title=${title}&number=${number}`;
             });
             songList.appendChild(li);
         });
@@ -107,7 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const query = searchInput.value.toLowerCase();
         console.log('Search query:', query);
 
-        // Filter songs based on the search query
         let filteredSongs = allSongs.filter(song => 
             song.number.toLowerCase().includes(query) || 
             song.title.toLowerCase().includes(query)
@@ -115,21 +107,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         console.log('Filtered songs:', filteredSongs);
 
-        // Create a set to avoid duplicate entries
         const mappedSongs = new Set(filteredSongs);
 
-        // Add corresponding songs based on the mapping
         filteredSongs.forEach(song => {
             const mapping = songMapping.find(map => map.english === song.number || map.spanish === song.number);
             if (mapping) {
-                let correspondingNumber;
-                if (mapping.english === song.number) {
-                    correspondingNumber = mapping.spanish;
-                    console.log(`Mapping found for English song number ${song.number}: Spanish song number ${correspondingNumber}`);
-                } else {
-                    correspondingNumber = mapping.english;
-                    console.log(`Mapping found for Spanish song number ${song.number}: English song number ${correspondingNumber}`);
-                }
+                const correspondingNumber = mapping.english === song.number ? mapping.spanish : mapping.english;
                 const correspondingSong = allSongs.find(s => s.number === correspondingNumber && s.language === (mapping.english === song.number ? 'spanish' : 'english'));
                 if (correspondingSong) {
                     mappedSongs.add(correspondingSong);
@@ -137,19 +120,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Populate the list with all relevant songs
         populateList(Array.from(mappedSongs));
     });
 
     // Start Cycle Button Functionality
     startCycleButton.addEventListener('click', () => {
         localStorage.setItem('currentIndex', 0);
-        const dropdownValue = dropdownMenu.value;
-        if (dropdownValue === 'lyrics') {
-            window.location.href = 'start-cycle-lyrics.html';
-        } else {
-            window.location.href = 'start-cycle.html';
-        }
+        const page = dropdownMenu.value === 'lyrics' ? 'start-cycle-lyrics.html' : 'start-cycle.html';
+        window.location.href = page;
     });
 
     // Load initial data
