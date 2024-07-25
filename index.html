@@ -9,7 +9,19 @@
     <link rel="manifest" href="manifest.json">
     <title>SDA Hymnal</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="scripts.js" defer></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
 </head>
 <body>
     <header>
@@ -31,7 +43,7 @@
     <input type="text" id="search" placeholder="Search by number or title">
     <ul id="song-list"></ul>
     <button id="start-cycle">Start Cycle</button>
-    <progress id="progress-bar" value="0" max="100" style="width: 100%;"></progress>
+    <progress id="progress-bar" max="100" value="0"></progress> <!-- Progress Bar -->
 
     <script src="scripts.js"></script>
 </body>
