@@ -15,7 +15,7 @@ const baseUrlsToCache = [
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME).then(cache => {
-            let total = 0;
+            let total = baseUrlsToCache.length; // Initialize with baseUrlsToCache count
             let progress = 0;
 
             function updateProgress() {
@@ -30,8 +30,14 @@ self.addEventListener('install', event => {
                 });
             }
 
-            return Promise.all([
-                cache.addAll(baseUrlsToCache),
+            // Cache base URLs
+            const cacheBaseUrls = cache.addAll(baseUrlsToCache).then(() => {
+                progress += baseUrlsToCache.length;
+                updateProgress();
+            });
+
+            // Cache songs data and their respective URLs
+            const cacheSongsData = Promise.all([
                 fetch('/songs.json')
                     .then(response => response.json())
                     .then(songs => {
@@ -67,6 +73,9 @@ self.addEventListener('install', event => {
                         }, Promise.resolve());
                     })
             ]);
+
+            // Return a promise that resolves when both base URLs and songs data are cached
+            return Promise.all([cacheBaseUrls, cacheSongsData]);
         })
     );
 });
