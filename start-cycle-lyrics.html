@@ -8,7 +8,6 @@
     <link rel="manifest" href="manifest.json">
     <title>SDA Hymnal - Start Cycle (Lyrics Only)</title>
     <link rel="stylesheet" href="styles.css">
-    
 </head>
 <body>
     <h1>Starting Cycle (Lyrics Only)...</h1>
@@ -16,7 +15,7 @@
         function cycleSongs() {
             let currentIndex = parseInt(localStorage.getItem('currentIndex')) || 0;
             const language = localStorage.getItem('languageValue') || 'english';
-            const songsUrl = language === 'spanish' ? 'songs_es.json' : 'songs.json';
+            const songsUrl = language === 'spanish' ? '/SDA-HYMNAL/songs_es.json' : '/SDA-HYMNAL/songs.json';
 
             console.log(`Fetching songs from: ${songsUrl}`);
             fetch(songsUrl)
@@ -25,7 +24,7 @@
                     if (currentIndex >= data.length) {
                         console.log('End of song list reached. Resetting index and redirecting to index.html.');
                         localStorage.setItem('currentIndex', 0);
-                        window.location.href = 'index.html';
+                        window.location.href = '/SDA-HYMNAL/index.html';
                         return;
                     }
 
@@ -37,7 +36,7 @@
                     currentIndex += 1; // Increment the index here
                     localStorage.setItem('currentIndex', currentIndex);
 
-                    const redirectUrl = `lyrics.html?content=${content}&title=${title}&number=${number}`;
+                    const redirectUrl = `/SDA-HYMNAL/lyrics.html?content=${content}&title=${title}&number=${number}`;
                     console.log(`Redirecting to: ${redirectUrl}`);
                     window.location.href = redirectUrl;
                 })
