@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle service worker messages
     if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js')
+    navigator.serviceWorker.register('/SDA-HYMNAL/service-worker.js')
         .then((registration) => {
             console.log('Service Worker registered with scope:', registration.scope);
         })
