@@ -46,13 +46,8 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const referrer = document.referrer;
-            console.log('Document referrer:', referrer);
-            if (!referrer.includes('lyrics.html')) {
-                console.log('Resetting currentIndex to 0.');
-                localStorage.setItem('currentIndex', 0);
-            }
-            cycleSongs(); // Always call cycleSongs() to handle both initial load and continuation
+            // Always call cycleSongs() to handle both initial load and continuation
+            cycleSongs();
         });
     </script>
 </body>
