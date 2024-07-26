@@ -21,7 +21,14 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
+        console.log('Caching essential files...');
         return cache.addAll(urlsToCache);
+      })
+      .then(() => {
+        console.log('All essential files are cached.');
+      })
+      .catch((error) => {
+        console.error('Failed to cache files during install:', error);
       })
   );
 });
@@ -30,17 +37,17 @@ self.addEventListener('install', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // Handle caching for dynamic pages (like image.html with query parameters)
   if (url.pathname.startsWith('/SDA-HYMNAL/image.html') || url.pathname.startsWith('/SDA-HYMNAL/lyrics.html')) {
     event.respondWith(
       caches.match(event.request)
         .then((response) => {
           if (response) {
-            return response; // Return cached response if available
+            console.log(`Serving ${event.request.url} from cache.`);
+            return response;
           }
+          console.log(`Fetching ${event.request.url} from network.`);
           return fetch(event.request)
             .then((fetchedResponse) => {
-              // Cache the fetched response for future use
               return caches.open(CACHE_NAME)
                 .then((cache) => {
                   cache.put(event.request, fetchedResponse.clone());
@@ -50,16 +57,16 @@ self.addEventListener('fetch', (event) => {
         })
     );
   } else {
-    // Handle caching for other requests
     event.respondWith(
       caches.match(event.request)
         .then((response) => {
           if (response) {
-            return response; // Return cached response if available
+            console.log(`Serving ${event.request.url} from cache.`);
+            return response;
           }
+          console.log(`Fetching ${event.request.url} from network.`);
           return fetch(event.request)
             .then((fetchedResponse) => {
-              // Cache the fetched response for future use
               return caches.open(CACHE_NAME)
                 .then((cache) => {
                   cache.put(event.request, fetchedResponse.clone());
@@ -79,6 +86,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
+            console.log(`Deleting old cache: ${cacheName}`);
             return caches.delete(cacheName);
           }
         })
