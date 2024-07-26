@@ -10,29 +10,13 @@
     <title>SDA Hymnal</title>
     <link rel="stylesheet" href="styles.css">
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js')
-                    .then((registration) => {
-                        console.log('Service Worker registered with scope:', registration.scope);
-                    })
-                    .catch((error) => {
-                        console.log('Service Worker registration failed:', error);
-                    });
-
-                // Add a listener for progress updates from the service worker
-                navigator.serviceWorker.addEventListener('message', event => {
-                    if (event.data.type === 'CACHE_PROGRESS') {
-                        const progressBar = document.getElementById('progress-bar');
-                        const progressText = document.getElementById('progress-text');
-                        if (progressBar && progressText) {
-                            progressBar.value = (event.data.progress / event.data.total) * 100;
-                            progressText.textContent = `Caching Progress: ${event.data.progress}/${event.data.total}`;
-                        }
-                    }
-                });
-            });
-        }
+        navigator.serviceWorker.register('service-worker.js', { scope: '/' })
+    .then((registration) => {
+        console.log('Service Worker registered with scope:', registration.scope);
+    })
+    .catch((error) => {
+        console.error('Service Worker registration failed:', error);
+    });
     </script>
 </head>
 <body>
