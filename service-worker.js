@@ -7,17 +7,18 @@ const urlsToCache = [
     // Add other URLs to cache
 ];
 
-// Install event
+// Install event - Cache the files
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then((cache) => {
+                console.log('Opened cache');
                 return cache.addAll(urlsToCache);
             })
     );
 });
 
-// Fetch event
+// Fetch event - Serve cached files
 self.addEventListener('fetch', (event) => {
     event.respondWith(
         caches.match(event.request)
@@ -27,7 +28,7 @@ self.addEventListener('fetch', (event) => {
     );
 });
 
-// Activate event
+// Activate event - Clean up old caches
 self.addEventListener('activate', (event) => {
     const cacheWhitelist = [CACHE_NAME];
     event.waitUntil(
@@ -43,11 +44,12 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-// Example progress update (this is just a basic example; actual implementation will vary)
+// Example progress update
 self.addEventListener('message', (event) => {
     if (event.data.type === 'CACHE_PROGRESS') {
-        const progress = calculateProgress(); // Implement your logic to calculate progress
-        const total = urlsToCache.length; // Example total, adjust as needed
+        // Progress calculation placeholder
+        const progress = calculateProgress();
+        const total = urlsToCache.length;
         event.source.postMessage({
             type: 'CACHE_PROGRESS',
             progress,
@@ -55,3 +57,10 @@ self.addEventListener('message', (event) => {
         });
     }
 });
+
+// Placeholder function for progress calculation
+function calculateProgress() {
+    // This function should track the actual progress of caching
+    // For simplicity, let's assume it's always 100% here
+    return urlsToCache.length; // Change this logic to track actual progress
+}
