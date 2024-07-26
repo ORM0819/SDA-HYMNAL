@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const languageDropdown = document.getElementById('language-dropdown');
     const startCycleButton = document.getElementById('start-cycle');
     const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text'); // Reference for progress text
 
     // Set default dropdown values from local storage
     dropdownMenu.value = localStorage.getItem('dropdownValue') || 'music-score';
@@ -144,10 +145,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
         navigator.serviceWorker.addEventListener('message', (event) => {
+            console.log('Received message from service worker:', event.data); // Debug message
             if (event.data.type === 'CACHE_PROGRESS') {
                 const { progress, total } = event.data;
                 progressBar.value = (progress / total) * 100;
-                progressBar.innerHTML = `Caching Progress: ${progress}/${total}`;
+                progressText.textContent = `Caching Progress: ${progress}/${total}`; // Update progress text
             }
         });
     }
