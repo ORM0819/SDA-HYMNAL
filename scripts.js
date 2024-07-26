@@ -133,22 +133,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load initial data
     Promise.all([loadSongs(), loadSongMapping()]);
 
-    // Handle service worker messages
+    // Register and handle service worker messages
     if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/SDA-HYMNAL/service-worker.js')
-        .then((registration) => {
-            console.log('Service Worker registered with scope:', registration.scope);
-        })
-        .catch((error) => {
-            console.error('Service Worker registration failed:', error);
-        });
+        navigator.serviceWorker.register('/SDA-HYMNAL/service-worker.js', { scope: '/SDA-HYMNAL/' })
+            .then((registration) => {
+                console.log('Service Worker registered with scope:', registration.scope);
+            })
+            .catch((error) => {
+                console.error('Service Worker registration failed:', error);
+            });
 
-    navigator.serviceWorker.addEventListener('message', (event) => {
-        if (event.data.type === 'CACHE_PROGRESS') {
-            const { progress, total } = event.data;
-            progressBar.value = (progress / total) * 100;
-            progressBar.innerHTML = `Caching Progress: ${progress}/${total}`;
-        }
-    });
-}
+        navigator.serviceWorker.addEventListener('message', (event) => {
+            if (event.data.type === 'CACHE_PROGRESS') {
+                const { progress, total } = event.data;
+                progressBar.value = (progress / total) * 100;
+                progressBar.innerHTML = `Caching Progress: ${progress}/${total}`;
+            }
+        });
+    }
 });
