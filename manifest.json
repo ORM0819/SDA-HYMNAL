@@ -2,7 +2,7 @@
   "name": "SDA Hymnal",
   "short_name": "SDA Hymnal",
   "description": "A digital hymnal with English and Spanish songs.",
-  "start_url": "/",
+  "start_url": "/SDA-HYMNAL",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
