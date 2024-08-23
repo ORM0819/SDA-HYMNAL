@@ -16,7 +16,6 @@
     <a id="back-button" href="old.html">Back</a>
 
     <script>
-        // Function to get query parameters from the URL
         function getQueryParams() {
             var params = {};
             var queryString = window.location.search.substring(1);
@@ -28,14 +27,12 @@
             return params;
         }
 
-        // Get the parameters from the URL
         var params = getQueryParams();
         var content = params['content'];
         var title = params['title'];
         var number = params['number'];
 
         if (content) {
-            // Replace '\n' with line breaks for display
             document.getElementById('lyrics').innerHTML = content.replace(/\n/g, '<br>');
         } else {
             document.getElementById('lyrics').textContent = 'No lyrics found';
