@@ -1,119 +1,48 @@
-document.addEventListener('DOMContentLoaded', function () {
-    var searchInput = document.getElementById('search');
-    var songList = document.getElementById('song-list');
-    var dropdownMenu = document.getElementById('dropdown-menu');
-    var languageDropdown = document.getElementById('language-dropdown');
-    var startCycleButton = document.getElementById('start-cycle');
-    
-    var allSongs = [];
-    var songMapping = [];
-
-    function loadSongMapping() {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', 'song_mapping.json', true);
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                songMapping = JSON.parse(xhr.responseText);
-            }
-        };
-        xhr.send();
+// Example: Assuming you have a function that navigates to the image or lyrics viewer
+function navigateToViewer(type, song) {
+    var baseUrl;
+    if (type === 'image') {
+        baseUrl = 'image-old.html';
+    } else if (type === 'lyrics') {
+        baseUrl = 'lyrics-old.html';
     }
 
-    function getSongsUrls() {
-        var language = languageDropdown.value;
-        switch (language) {
-            case 'spanish':
-                return [{ url: 'songs_es.json', language: 'spanish' }];
-            case 'both':
-                return [
-                    { url: 'songs.json', language: 'english' },
-                    { url: 'songs_es.json', language: 'spanish' }
-                ];
-            default:
-                return [{ url: 'songs.json', language: 'english' }];
+    // Construct the URL with the necessary query parameters
+    var url = baseUrl + '?number=' + encodeURIComponent(song.number) +
+              '&title=' + encodeURIComponent(song.title);
+
+    if (type === 'image') {
+        url += '&image=' + encodeURIComponent(song.image);
+    } else if (type === 'lyrics') {
+        url += '&content=' + encodeURIComponent(song.content);
+    }
+
+    // Redirect to the constructed URL
+    window.location.href = url;
+}
+
+// Example of usage when a user clicks on a song
+document.getElementById('song-list').addEventListener('click', function(e) {
+    var target = e.target;
+    if (target.tagName === 'LI') {
+        var songNumber = target.getAttribute('data-number');
+        var songTitle = target.getAttribute('data-title');
+        var songImage = target.getAttribute('data-image'); // For image viewer
+        var songContent = target.getAttribute('data-content'); // For lyrics viewer
+
+        // Example of determining which type of viewer to navigate to
+        if (someCondition) {
+            navigateToViewer('image', {
+                number: songNumber,
+                title: songTitle,
+                image: songImage
+            });
+        } else {
+            navigateToViewer('lyrics', {
+                number: songNumber,
+                title: songTitle,
+                content: songContent
+            });
         }
     }
-
-    function loadSongs() {
-        var urls = getSongsUrls();
-        var completedRequests = 0;
-        var tempSongs = [];
-
-        urls.forEach(function (item) {
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', item.url, true);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    var data = JSON.parse(xhr.responseText);
-                    data.forEach(function (song) {
-                        song.language = item.language;
-                        tempSongs.push(song);
-                    });
-                    completedRequests++;
-                    if (completedRequests === urls.length) {
-                        allSongs = tempSongs;
-                        populateList(allSongs);
-                    }
-                }
-            };
-            xhr.send();
-        });
-    }
-
-    function populateList(songs) {
-        songList.innerHTML = '';
-        songs.forEach(function (song) {
-            var li = document.createElement('li');
-            li.textContent = song.number + ' - ' + song.title;
-            li.dataset.image = song.image;
-            li.dataset.title = song.title;
-            li.dataset.number = song.number;
-            li.dataset.content = song.content;
-            li.addEventListener('click', function () {
-                var imageUrl = 'src/Hymnal.XF/Resources/Assets/MusicSheets/' + song.image;
-                var title = encodeURIComponent(song.title);
-                var number = encodeURIComponent(song.number);
-                var content = encodeURIComponent(song.content);
-
-                var page = dropdownMenu.value === 'lyrics' ? 'lyrics.html' : 'image.html';
-                window.location.href = page + '?' + (dropdownMenu.value === 'lyrics' ? 'content=' + content + '&' : 'image=' + encodeURIComponent(imageUrl) + '&') + 'title=' + title + '&number=' + number;
-            });
-            songList.appendChild(li);
-        });
-    }
-
-    searchInput.addEventListener('input', function () {
-        var query = searchInput.value.toLowerCase();
-        var filteredSongs = allSongs.filter(function (song) {
-            return song.number.toLowerCase().indexOf(query) !== -1 || song.title.toLowerCase().indexOf(query) !== -1;
-        });
-
-        var mappedSongs = [];
-        filteredSongs.forEach(function (song) {
-            mappedSongs.push(song);
-            var mapping = songMapping.find(function (map) {
-                return map.english === song.number || map.spanish === song.number;
-            });
-            if (mapping) {
-                var correspondingNumber = mapping.english === song.number ? mapping.spanish : mapping.english;
-                var correspondingSong = allSongs.find(function (s) {
-                    return s.number === correspondingNumber && s.language === (mapping.english === song.number ? 'spanish' : 'english');
-                });
-                if (correspondingSong) {
-                    mappedSongs.push(correspondingSong);
-                }
-            }
-        });
-
-        populateList(mappedSongs);
-    });
-
-    startCycleButton.addEventListener('click', function () {
-        localStorage.setItem('currentIndex', 0);
-        var page = dropdownMenu.value === 'lyrics' ? 'start-cycle-lyrics.html' : 'start-cycle.html';
-        window.location.href = page;
-    });
-
-    loadSongs();
-    loadSongMapping();
 });
