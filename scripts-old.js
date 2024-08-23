@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var songList = document.getElementById('song-list');
     var dropdownMenu = document.getElementById('dropdown-menu');
     var languageDropdown = document.getElementById('language-dropdown');
-    var startCycleButton = document.getElementById('start-cycle');
     
     var allSongs = [];
     var songMapping = [];
@@ -106,12 +105,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         populateList(mappedSongs);
-    });
-
-    startCycleButton.addEventListener('click', function () {
-        localStorage.setItem('currentIndex', 0);
-        var page = dropdownMenu.value === 'lyrics' ? 'start-cycle-lyrics.html' : 'start-cycle.html';
-        window.location.href = page;
     });
 
     loadSongs();
