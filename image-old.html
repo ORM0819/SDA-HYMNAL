@@ -13,7 +13,7 @@
     <div id="image-container">
         <img id="image" src="" alt="Image">
     </div>
-    <button id="back-button" onclick="history.back()">Back</button>
+    <a id="back-button" href="old.html">Back</a>
 
     <script>
         // Function to get query parameters from the URL
@@ -37,16 +37,6 @@
         if (imageUrl) {
             var imageElement = document.getElementById('image');
             imageElement.src = imageUrl;
-
-            // Redirect after image has finished loading
-            imageElement.onload = function() {
-                var referrer = document.referrer;
-                if (referrer.indexOf('start-cycle.html') !== -1) {
-                    setTimeout(function() {
-                        window.location.href = 'start-cycle.html';
-                    }, 100); // Adjust the delay as needed
-                }
-            };
         } else {
             document.getElementById('image').alt = 'No image found';
         }
