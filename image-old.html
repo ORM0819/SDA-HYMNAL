@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>SDA Hymnal - Image Viewer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1 id="title">SDA Hymnal - Image Viewer</h1>
+    <div id="image-container">
+        <img id="image" src="" alt="Image">
+    </div>
+    <a id="back-button" href="index.html">Back</a>
+
+    <script>
+        // Function to get query parameters from the URL
+        function getQueryParams() {
+            var params = {};
+            var queryString = window.location.search.substring(1);
+            var queryArray = queryString.split('&');
+            for (var i = 0; i < queryArray.length; i++) {
+                var pair = queryArray[i].split('=');
+                params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+            }
+            return params;
+        }
+
+        // Get the parameters from the URL
+        var params = getQueryParams();
+        var imageUrl = params['image'];
+        var title = params['title'];
+        var number = params['number'];
+
+        if (imageUrl) {
+            var imageElement = document.getElementById('image');
+            imageElement.src = imageUrl;
+
+            // Redirect after image has finished loading
+            imageElement.onload = function() {
+                var referrer = document.referrer;
+                if (referrer.indexOf('start-cycle.html') !== -1) {
+                    setTimeout(function() {
+                        window.location.href = 'start-cycle.html';
+                    }, 100); // Adjust the delay as needed
+                }
+            };
+        } else {
+            document.getElementById('image').alt = 'No image found';
+        }
+
+        if (title && number) {
+            var pageTitle = number + ' - ' + title;
+            document.getElementById('title').textContent = pageTitle;
+            document.title = 'SDA Hymnal - ' + pageTitle;
+        }
+    </script>
+</body>
+</html>
