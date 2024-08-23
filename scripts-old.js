@@ -107,6 +107,32 @@ document.addEventListener('DOMContentLoaded', function () {
         populateList(mappedSongs);
     });
 
+    languageDropdown.addEventListener('change', function () {
+        loadSongs();
+    });
+
+    dropdownMenu.addEventListener('change', function () {
+        localStorage.setItem('displayOption', dropdownMenu.value);
+    });
+
+    function restoreSettings() {
+        var savedLanguage = localStorage.getItem('selectedLanguage');
+        if (savedLanguage) {
+            languageDropdown.value = savedLanguage;
+        }
+
+        var savedDisplayOption = localStorage.getItem('displayOption');
+        if (savedDisplayOption) {
+            dropdownMenu.value = savedDisplayOption;
+        }
+    }
+
+    languageDropdown.addEventListener('change', function () {
+        localStorage.setItem('selectedLanguage', languageDropdown.value);
+        loadSongs();
+    });
+
+    restoreSettings();
     loadSongs();
     loadSongMapping();
 });
