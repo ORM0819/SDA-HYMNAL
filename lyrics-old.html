@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>SDA Hymnal - Lyrics Viewer</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        #back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <button id="back-button" onclick="history.back()">Back</button>
+    <h1 id="title">SDA Hymnal - Lyrics Viewer</h1>
+    <div id="lyrics-container">
+        <p id="lyrics"></p>
+    </div>
+
+    <script>
+        // Function to get query parameters from the URL
+        function getQueryParams() {
+            var params = {};
+            var queryString = window.location.search.substring(1);
+            var queryArray = queryString.split('&');
+            for (var i = 0; i < queryArray.length; i++) {
+                var pair = queryArray[i].split('=');
+                params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+            }
+            return params;
+        }
+
+        // Get the parameters from the URL
+        var params = getQueryParams();
+        var content = params['content'];
+        var title = params['title'];
+        var number = params['number'];
+
+        if (content) {
+            // Replace '\n' with line breaks for display
+            document.getElementById('lyrics').innerHTML = content.replace(/\n/g, '<br>');
+        } else {
+            document.getElementById('lyrics').textContent = 'No content found';
+        }
+
+        if (title && number) {
+            var pageTitle = number + ' - ' + title;
+            document.getElementById('title').textContent = pageTitle;
+            document.title = 'SDA Hymnal - ' + pageTitle;
+        }
+
+        // Check if the previous page was start-cycle-lyrics.html
+        if (document.referrer.indexOf('start-cycle-lyrics.html') !== -1) {
+            setTimeout(function() {
+                window.history.back();
+            }, 100); // Adjust the delay as needed
+        }
+    </script>
+</body>
+</html>
