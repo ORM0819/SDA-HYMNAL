@@ -37,11 +37,13 @@
         const title = decodeURIComponent(params.get('title'));
         const number = decodeURIComponent(params.get('number'));
         
+        // Set the lyrics content
+        const lyricsElement = document.getElementById('lyrics');
         if (content) {
             // Replace '\n' with line breaks for display
-            document.getElementById('lyrics').innerHTML = content.replace(/\n/g, '<br>');
+            lyricsElement.innerHTML = content.replace(/\n/g, '<br>');
         } else {
-            document.getElementById('lyrics').textContent = 'No content found';
+            lyricsElement.textContent = 'No content found';
         }
 
         if (title && number) {
@@ -54,10 +56,15 @@
 
         // Check if the previous page was start-cycle-lyrics.html
         if (document.referrer.includes('start-cycle-lyrics.html')) {
-            // Wait for a few seconds and then go back to start-cycle.html to continue the cycle
-            setTimeout(() => {
+            // Create a MutationObserver to watch for changes to the lyrics element
+            const observer = new MutationObserver(() => {
+                // Redirect once the lyrics content is loaded
                 window.location.href = 'start-cycle-lyrics.html';
-            }, 100); // Wait for 100 milliseconds before going back
+                observer.disconnect(); // Stop observing once redirected
+            });
+
+            // Observe changes to the lyrics element
+            observer.observe(lyricsElement, { childList: true, subtree: true });
         }
     </script>
 </body>
