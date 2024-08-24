@@ -70,18 +70,23 @@ a:hover {
 
 /* Style for the lyrics container on the lyrics page */
 #lyrics-container {
-    margin: 20px;
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
 }
 
 /* Style for the lyrics on the lyrics page */
 #lyrics {
-    max-width: 90%;
-    margin: 20px auto; /* Centers and adds spacing around the lyrics */
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    box-sizing: border-box;
+    font-size: calc(1.5vw + 1rem); /* Responsive text size */
+    line-height: 1.6;
+    text-align: justify;
+    word-wrap: break-word;
 }
 
 /* Style for the dropdown menu */
@@ -155,18 +160,29 @@ a:hover {
     img {
         max-width: 100%;
     }
+
+    #title {
+        font-size: 5vw;
+    }
+
+    #lyrics {
+        font-size: calc(2.5vw + 1rem); /* Larger text for smaller screens */
+    }
 }
 
+/* Style for the progress container on start-cycle pages */
 #progress-container {
     margin-top: 20px;
     text-align: center;
 }
 
+/* Style for the progress bar on start-cycle pages */
 #progress-bar {
     width: 100%;
     height: 20px;
 }
 
+/* Style for the progress text on start-cycle pages */
 #progress-text {
     display: block;
     margin-top: 10px;
