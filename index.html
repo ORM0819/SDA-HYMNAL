@@ -6,11 +6,33 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="theme-color" content="#ffffff">
-    <link rel="icon" href="/SDA-HYMNAL/SDA-Hymnal-512">
+
+    <!-- Link to the manifest file -->
     <link rel="manifest" href="/SDA-HYMNAL/manifest.json">
+
     <title>SDA Hymnal</title>
     <link rel="stylesheet" href="styles.css">
     
+    <script>
+        // Check if the manifest is loading correctly
+        fetch('/SDA-HYMNAL/manifest.json')
+            .then(response => {
+                if (response.ok) {
+                    console.log('Manifest loaded successfully.');
+                    return response.json();
+                } else {
+                    console.error('Manifest failed to load.', response.status);
+                }
+            })
+            .then(manifest => {
+                if (manifest) {
+                    console.log('Manifest content:', manifest);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching manifest:', error);
+            });
+    </script>
 </head>
 <body>
     <header>
