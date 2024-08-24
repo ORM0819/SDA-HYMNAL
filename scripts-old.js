@@ -81,10 +81,19 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function normalizeText(text) {
+        if (typeof text.normalize === 'function') {
+            return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\w\s]/gi, '');
+        } else {
+            return text.replace(/[^\w\s]/gi, ''); // Fallback for older browsers
+        }
+    }
+
     searchInput.addEventListener('input', function () {
-        var query = searchInput.value.toLowerCase();
+        var query = normalizeText(searchInput.value.toLowerCase());
         var filteredSongs = allSongs.filter(function (song) {
-            return song.number.toLowerCase().indexOf(query) !== -1 || song.title.toLowerCase().indexOf(query) !== -1;
+            return normalizeText(song.number.toLowerCase()).indexOf(query) !== -1 || 
+                   normalizeText(song.title.toLowerCase()).indexOf(query) !== -1;
         });
 
         var mappedSongs = [];
