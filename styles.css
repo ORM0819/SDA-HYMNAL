@@ -71,7 +71,6 @@ a:hover {
 /* Style for the lyrics container on the lyrics page */
 #lyrics-container {
     width: 90%;
-    max-width: 800px;
     margin: 0 auto;
     padding: 20px;
     background-color: #f9f9f9;
