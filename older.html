@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDA Hymnal</title>
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- iOS Specific Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="SDA Hymnal">
+    <link rel="apple-touch-icon" href="SDA-Hymnal-3.png">
+</head>
+<body>
+    <header>
+        <div id="header-container">
+            <h1>SDA Hymnal</h1>
+            <!-- Language Dropdown -->
+            <select id="language-dropdown">
+                <option value="english">English</option>
+                <option value="spanish">Spanish</option>
+                <option value="both">English & Spanish</option>
+            </select>
+            <!-- Display Option Dropdown -->
+            <select id="dropdown-menu">
+                <option value="music-score">Music Score and Lyrics</option>
+                <option value="lyrics">Lyrics Only</option>
+            </select>
+        </div>
+    </header>
+    <input type="text" id="search" placeholder="Search by number or title">
+    <ul id="song-list"></ul>
+
+    <script src="scripts-older.js"></script>
+</body>
+</html>
