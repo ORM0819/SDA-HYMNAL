@@ -98,12 +98,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Enhance search functionality
     searchInput.addEventListener('input', () => {
-        const query = searchInput.value.toLowerCase();
+        const query = normalizeText(searchInput.value.toLowerCase());
         console.log('Search query:', query);
 
         let filteredSongs = allSongs.filter(song => 
-            song.number.toLowerCase().includes(query) || 
-            song.title.toLowerCase().includes(query)
+            normalizeText(song.number).includes(query) || 
+            normalizeText(song.title).toLowerCase().includes(query)
         );
 
         console.log('Filtered songs:', filteredSongs);
@@ -124,6 +124,11 @@ document.addEventListener('DOMContentLoaded', () => {
         populateList(Array.from(mappedSongs));
     });
 
+    // Helper function to normalize text by removing accents and punctuation
+    function normalizeText(text) {
+        return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\w\s]/gi, '');
+    }
+
     // Start Cycle Button Functionality
     startCycleButton.addEventListener('click', () => {
         localStorage.setItem('currentIndex', 0);
@@ -134,16 +139,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load initial data
     Promise.all([loadSongs(), loadSongMapping()]);
 
-  if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/SDA-HYMNAL/service-worker.js')
-      .then((registration) => {
-        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-      })
-      .catch((error) => {
-        console.log('ServiceWorker registration failed: ', error);
-      });
-  });
-}
-    
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/SDA-HYMNAL/service-worker.js')
+                .then((registration) => {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                })
+                .catch((error) => {
+                    console.log('ServiceWorker registration failed: ', error);
+                });
+        });
+    }
 });
