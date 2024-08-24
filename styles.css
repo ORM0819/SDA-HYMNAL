@@ -70,8 +70,10 @@ a:hover {
 
 /* Style for the lyrics container on the lyrics page */
 #lyrics-container {
-    width: 90%;
-    margin: 0 auto;
+    display: inline-block; /* Adjusts the container size based on its content */
+    width: auto; /* Automatically adjusts width based on content */
+    max-width: 90%; /* Prevents the container from becoming too wide */
+    margin: 0 auto; /* Center the container horizontally */
     padding: 20px;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
@@ -84,7 +86,7 @@ a:hover {
 #lyrics {
     font-size: calc(1.5vw + 1rem); /* Responsive text size */
     line-height: 1.6;
-    text-align: justify;
+    text-align: center; /* Center text inside the container */
     word-wrap: break-word;
 }
 
