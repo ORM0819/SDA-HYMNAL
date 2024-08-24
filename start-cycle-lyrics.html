@@ -46,7 +46,10 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Always call cycleSongs() to handle both initial load and continuation
+            const referrer = document.referrer;
+            if (!referrer.includes('lyrics.html')) {
+                localStorage.setItem('currentIndex', 0);
+            }
             cycleSongs();
         });
     </script>
