@@ -82,11 +82,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function normalizeText(text) {
-        if (typeof text.normalize === 'function') {
-            return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\w\s]/gi, '');
-        } else {
-            return text.replace(/[^\w\s]/gi, ''); // Fallback for older browsers
-        }
+        // Replace accented characters with their non-accented equivalents
+        return text.replace(/[áàäâã]/g, 'a')
+                   .replace(/[éèëê]/g, 'e')
+                   .replace(/[íìïî]/g, 'i')
+                   .replace(/[óòöôõ]/g, 'o')
+                   .replace(/[úùüû]/g, 'u')
+                   .replace(/[ñ]/g, 'n')
+                   .replace(/[^\w\s]/gi, ''); // Remove punctuation
     }
 
     searchInput.addEventListener('input', function () {
