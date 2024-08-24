@@ -56,15 +56,13 @@
 
         // Check if the previous page was start-cycle-lyrics.html
         if (document.referrer.includes('start-cycle-lyrics.html')) {
-            // Create a MutationObserver to watch for changes to the lyrics element
-            const observer = new MutationObserver(() => {
-                // Redirect once the lyrics content is loaded
-                window.location.href = 'start-cycle-lyrics.html';
-                observer.disconnect(); // Stop observing once redirected
-            });
-
-            // Observe changes to the lyrics element
-            observer.observe(lyricsElement, { childList: true, subtree: true });
+            // Polling function to check if lyrics content has loaded
+            const checkContentLoaded = setInterval(() => {
+                if (lyricsElement.innerHTML.trim() !== '' && lyricsElement.innerHTML !== 'No content found') {
+                    clearInterval(checkContentLoaded); // Stop checking
+                    window.location.href = 'start-cycle-lyrics.html'; // Redirect
+                }
+            }, 10); // Check every 100 milliseconds
         }
     </script>
 </body>
