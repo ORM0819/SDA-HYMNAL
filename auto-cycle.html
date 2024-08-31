@@ -10,69 +10,61 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Auto Cycle Mode</h1>
+    <h1>Auto Cycling Through Songs...</h1>
     <script>
-        function autoCycleSongs() {
-            const referrer = document.referrer;
-            let cycleMode = 'image'; // Default to image mode
+        function cycleSongs() {
+            // Retrieve current indexes or initialize them to 0
+            let currentIndex = parseInt(localStorage.getItem('currentAutoCycleIndex')) || 0;
+            let viewMode = parseInt(localStorage.getItem('currentViewMode')) || 0; // 0 for image, 1 for lyrics
+            let currentLanguage = localStorage.getItem('currentLanguage') || 'english'; // Toggle between 'english' and 'spanish'
 
-            if (referrer.includes('lyrics.html') || referrer.includes('start-cycle-lyrics.html')) {
-                cycleMode = 'lyrics';
-            }
+            // Toggle language for the next cycle
+            currentLanguage = currentLanguage === 'english' ? 'spanish' : 'english';
+            localStorage.setItem('currentLanguage', currentLanguage);
 
-            const storageKey = cycleMode === 'lyrics' ? 'currentIndexLyrics' : 'currentIndex';
-            const language = localStorage.getItem('languageValue') || 'english';
+            const songsUrl = currentLanguage === 'spanish' ? '/SDA-HYMNAL/songs_es.json' : '/SDA-HYMNAL/songs.json';
 
-            // Get the songs URL based on language
-            const englishSongsUrl = '/SDA-HYMNAL/songs.json';
-            const spanishSongsUrl = '/SDA-HYMNAL/songs_es.json';
+            // Fetch the song data
+            fetch(songsUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (currentIndex >= data.length) {
+                        // Reset the index and redirect to index.html when the end of the list is reached
+                        localStorage.setItem('currentAutoCycleIndex', 0);
+                        window.location.href = '/SDA-HYMNAL/index.html';
+                        return;
+                    }
 
-            // Fetch both English and Spanish songs
-            Promise.all([
-                fetch(englishSongsUrl).then(response => response.json()),
-                fetch(spanishSongsUrl).then(response => response.json())
-            ]).then(([englishSongs, spanishSongs]) => {
-                const allSongs = englishSongs.concat(spanishSongs);
-                let currentIndex = parseInt(localStorage.getItem(storageKey)) || 0;
+                    // Get the song data
+                    const song = data[currentIndex];
+                    const imageUrl = `/SDA-HYMNAL/src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
+                    const title = encodeURIComponent(song.title);
+                    const number = encodeURIComponent(song.number);
+                    const content = encodeURIComponent(song.content);
 
-                if (currentIndex >= allSongs.length) {
-                    // Reset index and redirect to index.html when the end of the list is reached
-                    localStorage.setItem(storageKey, 0);
-                    window.location.href = '/SDA-HYMNAL/index.html';
-                    return;
-                }
+                    // Increment the index for the next song and toggle view mode
+                    localStorage.setItem('currentAutoCycleIndex', currentIndex + 1);
+                    viewMode = 1 - viewMode; // Toggle between 0 (image) and 1 (lyrics)
+                    localStorage.setItem('currentViewMode', viewMode);
 
-                const song = allSongs[currentIndex];
-                localStorage.setItem(storageKey, currentIndex + 1);
+                    // Determine the redirect URL based on the view mode
+                    let redirectUrl;
+                    if (viewMode === 0) {
+                        redirectUrl = `/SDA-HYMNAL/image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
+                    } else {
+                        redirectUrl = `/SDA-HYMNAL/lyrics.html?content=${content}&title=${title}&number=${number}`;
+                    }
 
-                const title = encodeURIComponent(song.title);
-                const number = encodeURIComponent(song.number);
-                const contentOrImage = cycleMode === 'lyrics'
-                    ? encodeURIComponent(song.content)
-                    : encodeURIComponent(`src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`);
-
-                const redirectUrl = cycleMode === 'lyrics'
-                    ? `/SDA-HYMNAL/lyrics.html?content=${contentOrImage}&title=${title}&number=${number}`
-                    : `/SDA-HYMNAL/image.html?image=${contentOrImage}&title=${title}&number=${number}`;
-
-                console.log(`Redirecting to: ${redirectUrl}`);
-                window.location.href = redirectUrl;
-            }).catch(error => {
-                console.error('Error loading songs:', error);
-            });
+                    console.log('Redirecting to:', redirectUrl);
+                    window.location.href = redirectUrl;
+                })
+                .catch(error => {
+                    console.error('Error loading songs:', error);
+                });
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const referrer = document.referrer;
-
-            // Reset index if coming from a non-cycling page
-            if (!referrer.includes('image.html') && !referrer.includes('lyrics.html')) {
-                localStorage.setItem('currentIndex', 0);
-                localStorage.setItem('currentIndexLyrics', 0);
-            }
-
-            autoCycleSongs();
-        });
+        // Start the cycle when the page is loaded
+        document.addEventListener('DOMContentLoaded', cycleSongs);
     </script>
 </body>
 </html>
