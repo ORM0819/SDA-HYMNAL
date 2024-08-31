@@ -19,6 +19,9 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         #back-button {
             left: 10px;
@@ -26,11 +29,19 @@
         #share-button {
             right: 10px;
         }
+        #share-button svg {
+            width: 20px;
+            height: 20px;
+        }
     </style>
 </head>
 <body>
     <button id="back-button" onclick="history.back()">Back</button>
-    <button id="share-button">Share</button>
+    <button id="share-button" onclick="sharePage()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share">
+            <path d="M23 7a10.15 10.15 0 0 0-5.27-1.42A4.48 4.48 0 0 0 14 5.55a4.48 4.48 0 0 0-4.25 5.85c-2.31-.49-4.46-1.68-6.02-3.38A10.15 10.15 0 0 0 1 17a10 10 0 0 0 22 0z"></path>
+        </svg>
+    </button>
     <h1 id="title">SDA Hymnal - Lyrics Viewer</h1>
     <div id="lyrics-container">
         <p id="lyrics"></p>
@@ -81,9 +92,6 @@
                 alert('Sharing is not supported on this device.');
             }
         }
-
-        // Attach the share function to the button
-        document.getElementById('share-button').addEventListener('click', sharePage);
     </script>
 </body>
 </html>
