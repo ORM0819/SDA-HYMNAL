@@ -3,9 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const songList = document.getElementById('song-list');
     const dropdownMenu = document.getElementById('dropdown-menu');
     const languageDropdown = document.getElementById('language-dropdown');
-    const startCycleButton = document.getElementById('start-cycle');
-    const progressBar = document.getElementById('progress-bar');
-    const progressText = document.getElementById('progress-text'); // Reference for progress text
 
     // Set default dropdown values from local storage
     dropdownMenu.value = localStorage.getItem('dropdownValue') || 'music-score';
@@ -96,11 +93,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Enhance search functionality
     searchInput.addEventListener('input', () => {
         const query = normalizeText(searchInput.value.toLowerCase());
         console.log('Search query:', query);
 
+        // Find songs that match the search query directly
         let filteredSongs = allSongs.filter(song => 
             normalizeText(song.number).includes(query) || 
             normalizeText(song.title).toLowerCase().includes(query)
@@ -108,19 +105,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
         console.log('Filtered songs:', filteredSongs);
 
+        // Initialize sets to avoid duplicate entries
         const mappedSongs = new Set(filteredSongs);
 
+        // Handle English-to-Spanish mappings
         filteredSongs.forEach(song => {
-            const mapping = songMapping.find(map => map.english === song.number || map.spanish === song.number);
-            if (mapping) {
-                const correspondingNumber = mapping.english === song.number ? mapping.spanish : mapping.english;
-                const correspondingSong = allSongs.find(s => s.number === correspondingNumber && s.language === (mapping.english === song.number ? 'spanish' : 'english'));
-                if (correspondingSong) {
-                    mappedSongs.add(correspondingSong);
-                }
+            const englishMapping = songMapping.find(map => Array.isArray(map.english) ? map.english.includes(song.number) : map.english === song.number);
+            if (englishMapping) {
+                const correspondingNumbers = Array.isArray(englishMapping.spanish) ? englishMapping.spanish : [englishMapping.spanish];
+                correspondingNumbers.forEach(correspondingNumber => {
+                    const correspondingSong = allSongs.find(s => s.number === correspondingNumber && s.language === 'spanish');
+                    if (correspondingSong) {
+                        mappedSongs.add(correspondingSong);
+                    }
+                });
+            }
+
+            // Handle Spanish-to-English mappings
+            const spanishMapping = songMapping.find(map => Array.isArray(map.spanish) ? map.spanish.includes(song.number) : map.spanish === song.number);
+            if (spanishMapping) {
+                const correspondingNumbers = Array.isArray(spanishMapping.english) ? spanishMapping.english : [spanishMapping.english];
+                correspondingNumbers.forEach(correspondingNumber => {
+                    const correspondingSong = allSongs.find(s => s.number === correspondingNumber && s.language === 'english');
+                    if (correspondingSong) {
+                        mappedSongs.add(correspondingSong);
+                    }
+                });
             }
         });
 
+        // Convert the set to an array and populate the list
         populateList(Array.from(mappedSongs));
     });
 
