@@ -7,18 +7,12 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>SDA Hymnal - Auto Cycle</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="scripts.js" defer></script> <!-- Include your existing scripts.js file -->
 </head>
 <body>
     <h1>Auto Cycling...</h1>
     
     <script>
-        function startCycle(isLyrics) {
-            localStorage.setItem('currentIndex', 0);
-            localStorage.setItem('currentIndexLyrics', 0);
-            const page = isLyrics ? 'start-cycle-lyrics.html' : 'start-cycle.html';
-            window.location.href = page;
-        }
-
         function autoCycle() {
             const referrer = document.referrer;
             const languageValue = localStorage.getItem('languageValue');
@@ -33,33 +27,21 @@
                 // Change to English and Music Score
                 localStorage.setItem('languageValue', 'english');
                 localStorage.setItem('dropdownValue', 'music-score');
-
-                // Call the startCycle function
-                startCycle(false);
             }
             // If coming from start-cycle.html for the first time
             else if (referrer.includes('start-cycle.html') && languageValue === 'english') {
                 // Change to Spanish
                 localStorage.setItem('languageValue', 'spanish');
-
-                // Call the startCycle function
-                startCycle(false);
             }
             // If coming from start-cycle.html for the second time
             else if (referrer.includes('start-cycle.html') && languageValue === 'spanish') {
                 // Change to Lyrics view
                 localStorage.setItem('dropdownValue', 'lyrics');
-
-                // Call the startCycle function with lyrics
-                startCycle(true);
             }
             // If coming from start-cycle-lyrics.html for the first time
             else if (referrer.includes('start-cycle-lyrics.html') && languageValue === 'spanish') {
                 // Change to English
                 localStorage.setItem('languageValue', 'english');
-
-                // Call the startCycle function with lyrics
-                startCycle(true);
             }
             // If coming from start-cycle-lyrics.html for the second time
             else if (referrer.includes('start-cycle-lyrics.html') && languageValue === 'english') {
@@ -69,7 +51,11 @@
 
                 // Redirect back to index.html
                 window.location.href = 'index.html';
+                return; // Exit the function to prevent further execution
             }
+
+            // Simulate a click on the startCycleButton
+            startCycleButton.click();
         }
 
         document.addEventListener('DOMContentLoaded', autoCycle);
