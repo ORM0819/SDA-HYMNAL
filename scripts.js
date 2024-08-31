@@ -137,10 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = page;
     });
 
-// Attach the function to the button click event
-startCycleButton.addEventListener('click', handleStartCycle);
-
-
     // Load initial data
     Promise.all([loadSongs(), loadSongMapping()]);
 
