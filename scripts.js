@@ -132,6 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Start Cycle Button Functionality
     startCycleButton.addEventListener('click', () => {
         localStorage.setItem('currentIndex', 0);
+        localStorage.setItem('currentIndexLyrics', 0);
         const page = dropdownMenu.value === 'lyrics' ? 'start-cycle-lyrics.html' : 'start-cycle.html';
         window.location.href = page;
     });
