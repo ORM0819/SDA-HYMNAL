@@ -10,7 +10,15 @@
 </head>
 <body>
     <h1>Auto Cycling...</h1>
+    
     <script>
+        function startCycle(isLyrics) {
+            localStorage.setItem('currentIndex', 0);
+            localStorage.setItem('currentIndexLyrics', 0);
+            const page = isLyrics ? 'start-cycle-lyrics.html' : 'start-cycle.html';
+            window.location.href = page;
+        }
+
         function autoCycle() {
             const referrer = document.referrer;
             const languageValue = localStorage.getItem('languageValue');
@@ -26,32 +34,32 @@
                 localStorage.setItem('languageValue', 'english');
                 localStorage.setItem('dropdownValue', 'music-score');
 
-                // Redirect to start-cycle.html
-                window.location.href = 'start-cycle.html';
+                // Call the startCycle function
+                startCycle(false);
             }
             // If coming from start-cycle.html for the first time
             else if (referrer.includes('start-cycle.html') && languageValue === 'english') {
                 // Change to Spanish
                 localStorage.setItem('languageValue', 'spanish');
 
-                // Redirect back to start-cycle.html
-                window.location.href = 'start-cycle.html';
+                // Call the startCycle function
+                startCycle(false);
             }
             // If coming from start-cycle.html for the second time
             else if (referrer.includes('start-cycle.html') && languageValue === 'spanish') {
                 // Change to Lyrics view
                 localStorage.setItem('dropdownValue', 'lyrics');
 
-                // Redirect to start-cycle-lyrics.html
-                window.location.href = 'start-cycle-lyrics.html';
+                // Call the startCycle function with lyrics
+                startCycle(true);
             }
             // If coming from start-cycle-lyrics.html for the first time
             else if (referrer.includes('start-cycle-lyrics.html') && languageValue === 'spanish') {
                 // Change to English
                 localStorage.setItem('languageValue', 'english');
 
-                // Redirect back to start-cycle-lyrics.html
-                window.location.href = 'start-cycle-lyrics.html';
+                // Call the startCycle function with lyrics
+                startCycle(true);
             }
             // If coming from start-cycle-lyrics.html for the second time
             else if (referrer.includes('start-cycle-lyrics.html') && languageValue === 'english') {
