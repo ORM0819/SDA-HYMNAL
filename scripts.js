@@ -137,14 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = page;
     });
 
-  // Function to handle start cycle logic
-function handleStartCycle() {
-    localStorage.setItem('currentIndex', 0);
-    localStorage.setItem('currentIndexLyrics', 0);
-    const page = dropdownMenu.value === 'lyrics' ? 'start-cycle-lyrics.html' : 'start-cycle.html';
-    window.location.href = page;
-}
-
 // Attach the function to the button click event
 startCycleButton.addEventListener('click', handleStartCycle);
 
