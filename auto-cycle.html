@@ -35,7 +35,7 @@
                 localStorage.setItem('dropdownValue', 'music-score');
 
                 // Call the startCycle function
-                startCycle();
+                startCycle(false);
             }
             // If coming from start-cycle.html for the first time
             else if (referrer.includes('start-cycle.html') && languageValue === 'english') {
@@ -43,7 +43,7 @@
                 localStorage.setItem('languageValue', 'spanish');
 
                 // Call the startCycle function
-                startCycle();
+                startCycle(false);
             }
             // If coming from start-cycle.html for the second time
             else if (referrer.includes('start-cycle.html') && languageValue === 'spanish') {
@@ -51,7 +51,7 @@
                 localStorage.setItem('dropdownValue', 'lyrics');
 
                 // Call the startCycle function with lyrics
-                startCycle();
+                startCycle(true);
             }
             // If coming from start-cycle-lyrics.html for the first time
             else if (referrer.includes('start-cycle-lyrics.html') && languageValue === 'spanish') {
@@ -59,7 +59,7 @@
                 localStorage.setItem('languageValue', 'english');
 
                 // Call the startCycle function with lyrics
-                startCycle();
+                startCycle(true);
             }
             // If coming from start-cycle-lyrics.html for the second time
             else if (referrer.includes('start-cycle-lyrics.html') && languageValue === 'english') {
