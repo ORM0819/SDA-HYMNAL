@@ -9,11 +9,10 @@
     <link rel="manifest" href="manifest.json">
     <title>SDA Hymnal - Lyrics Viewer</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Include Font Awesome for share icon (optional) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         #back-button, #share-button {
             position: absolute;
+            top: 10px;
             padding: 10px;
             font-size: 16px;
             background-color: #f0f0f0;
@@ -22,39 +21,22 @@
             cursor: pointer;
         }
         #back-button {
-            top: 10px;
             left: 10px;
         }
         #share-button {
-            top: 10px;
             right: 10px;
         }
     </style>
 </head>
 <body>
     <button id="back-button" onclick="history.back()">Back</button>
-    <button id="share-button" onclick="sharePage()">
-        <i class="fas fa-share-alt"></i> <!-- Font Awesome Share Icon -->
-    </button>
+    <button id="share-button">Share</button>
     <h1 id="title">SDA Hymnal - Lyrics Viewer</h1>
     <div id="lyrics-container">
         <p id="lyrics"></p>
     </div>
 
     <script>
-        // Function to handle page sharing
-        function sharePage() {
-            if (navigator.share) {
-                navigator.share({
-                    title: document.title,
-                    url: window.location.href
-                }).catch(console.error);
-            } else {
-                // Fallback for browsers that do not support the Web Share API
-                alert('Share functionality is not supported on this browser.');
-            }
-        }
-
         // Get the content, title, and number from the URL parameters
         const params = new URLSearchParams(window.location.search);
         const content = decodeURIComponent(params.get('content'));
@@ -78,16 +60,30 @@
             document.title = `SDA Hymnal - ${number} - ${title}`;
         }
 
-        // Check if the previous page was start-cycle-lyrics.html
-        if (document.referrer.includes('start-cycle-lyrics.html')) {
-            // Polling function to check if lyrics content has loaded
-            const checkContentLoaded = setInterval(() => {
-                if (lyricsElement.innerHTML.trim() !== '' && lyricsElement.innerHTML !== 'No content found') {
-                    clearInterval(checkContentLoaded); // Stop checking
-                    window.location.href = 'start-cycle-lyrics.html'; // Redirect
-                }
-            }, 10); // Check every 100 milliseconds
+        // Function to process and format lyrics
+        function formatLyrics(lyrics) {
+            return lyrics
+                .replace(/^(\d+)\./gm, (match, p1) => `Verse ${p1}`)  // Replace "1." with "Verse 1", etc.
+                .replace(/^Chorus:/gm, 'Chorus');  // Replace "Chorus:" with "Chorus"
         }
+
+        // Share function
+        function sharePage() {
+            const shareContent = `${number} - ${title}\n\n${formatLyrics(content)}`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: `${number} - ${title}`,
+                    text: shareContent,
+                    url: window.location.href
+                }).catch(error => console.error('Error sharing:', error));
+            } else {
+                alert('Sharing is not supported on this device.');
+            }
+        }
+
+        // Attach the share function to the button
+        document.getElementById('share-button').addEventListener('click', sharePage);
     </script>
 </body>
 </html>
