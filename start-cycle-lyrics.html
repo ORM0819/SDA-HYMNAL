@@ -13,7 +13,7 @@
     <h1>Starting Cycle (Lyrics Only)...</h1>
     <script>
         function cycleSongs() {
-            let currentIndex = parseInt(localStorage.getItem('currentIndex')) || 0;
+            let currentIndexLyrics = parseInt(localStorage.getItem('currentIndexLyrics')) || 0;
             const language = localStorage.getItem('languageValue') || 'english';
             const songsUrl = language === 'spanish' ? '/SDA-HYMNAL/songs_es.json' : '/SDA-HYMNAL/songs.json';
 
@@ -21,9 +21,9 @@
             fetch(songsUrl)
                 .then(response => response.json())
                 .then(data => {
-                    if (currentIndex >= data.length) {
+                    if (currentIndexLyrics >= data.length) {
                         console.log('End of song list reached. Resetting index and redirecting to index.html.');
-                        localStorage.setItem('currentIndex', 0);
+                        localStorage.setItem('currentIndexLyrics', 0);
                         window.location.href = '/SDA-HYMNAL/index.html';
                         return;
                     }
@@ -33,8 +33,8 @@
                     const number = encodeURIComponent(song.number);
                     const content = encodeURIComponent(song.content);
 
-                    currentIndex += 1; // Increment the index here
-                    localStorage.setItem('currentIndex', currentIndex);
+                    currentIndexLyrics += 1; // Increment the index here
+                    localStorage.setItem('currentIndexLyrics', currentIndexLyrics);
 
                     const redirectUrl = `/SDA-HYMNAL/lyrics.html?content=${content}&title=${title}&number=${number}`;
                     console.log(`Redirecting to: ${redirectUrl}`);
@@ -48,7 +48,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const referrer = document.referrer;
             if (!referrer.includes('lyrics.html')) {
-                localStorage.setItem('currentIndex', 0);
+                localStorage.setItem('currentIndexLyrics', 0);
             }
             cycleSongs();
         });
