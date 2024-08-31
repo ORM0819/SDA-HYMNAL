@@ -129,14 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\w\s]/gi, '');
     }
 
-    // Start Cycle Button Functionality
-    startCycleButton.addEventListener('click', () => {
-        localStorage.setItem('currentIndex', 0);
-        localStorage.setItem('currentIndexLyrics', 0);
-        const page = dropdownMenu.value === 'lyrics' ? 'start-cycle-lyrics.html' : 'start-cycle.html';
-        window.location.href = page;
-    });
-
     // Load initial data
     Promise.all([loadSongs(), loadSongMapping()]);
 
