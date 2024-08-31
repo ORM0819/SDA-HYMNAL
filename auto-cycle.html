@@ -7,12 +7,32 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>SDA Hymnal - Auto Cycle</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="scripts.js" defer></script> <!-- Include your existing scripts.js file -->
 </head>
 <body>
     <h1>Auto Cycling...</h1>
     
     <script>
+
+      function handleStartCycle() {
+    localStorage.setItem('currentIndex', 0);
+    localStorage.setItem('currentIndexLyrics', 0);
+
+    const dropdownMenu = document.getElementById('dropdownMenu'); // Ensure this is the correct ID
+
+    let page = 'start-cycle.html'; // Default page
+
+    if (dropdownMenu) {
+        page = dropdownMenu.value === 'lyrics' ? 'start-cycle-lyrics.html' : 'start-cycle.html';
+    } else {
+        // Fallback based on saved dropdown value if dropdownMenu doesn't exist
+        const savedDropdownValue = localStorage.getItem('dropdownValue') || 'music-score';
+        page = savedDropdownValue === 'lyrics' ? 'start-cycle-lyrics.html' : 'start-cycle.html';
+    }
+
+    window.location.href = page;
+}
+
+      
         function autoCycle() {
             const referrer = document.referrer;
             const languageValue = localStorage.getItem('languageValue');
