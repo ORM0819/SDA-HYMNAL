@@ -79,10 +79,11 @@
         // Share function
         function sharePage() {
             const shareContent = `${number} - ${title}\n\n${formatLyrics(content)}`;
-
+            const shareTitle = `${number} - ${title}`;
+            
             if (navigator.share) {
                 navigator.share({
-                    title: `${number} - ${title}`,
+                    title: shareTitle,
                     text: shareContent,
                     url: window.location.href
                 }).catch(error => console.error('Error sharing:', error));
