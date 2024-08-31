@@ -84,8 +84,7 @@
             if (navigator.share) {
                 navigator.share({
                     title: shareTitle,
-                    text: shareContent,
-                    url: window.location.href
+                    text: shareContent
                 }).catch(error => console.error('Error sharing:', error));
             } else {
                 alert('Sharing is not supported on this device.');
