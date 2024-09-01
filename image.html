@@ -28,13 +28,17 @@
 
             // Redirect after image has finished loading
             imageElement.onload = () => {
-                const referrer = document.referrer;
-                if (referrer.includes('start-cycle.html') || referrer.includes('Download.html')) {
-                    setTimeout(() => {
-                        window.location.href = 'start-cycle.html';
-                    }, 100); // Adjust delay as needed
-                }
-            };
+    console.log('Image loaded');
+    const referrer = document.referrer;
+    console.log('Referrer:', referrer);
+    if (referrer.includes('start-cycle.html') || referrer.includes('Download.html')) {
+        setTimeout(() => {
+            console.log('Redirecting to start-cycle.html');
+            window.location.href = 'start-cycle.html';
+        }, 100); // Adjust delay if needed
+    }
+};
+
         } else {
             document.getElementById('image').alt = 'No image found';
         }
