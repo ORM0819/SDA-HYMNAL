@@ -43,10 +43,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const referrer = document.referrer;
-            if (!referrer.includes('image.html') && !referrer.includes('lyrics.html')) {
-                localStorage.setItem('es_currentIndex', 0);
-            }
             cycleSongs();
         });
     </script>
