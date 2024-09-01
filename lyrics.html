@@ -92,7 +92,7 @@
         }
 
         // Check if the previous page was start-cycle-lyrics.html
-        if (document.referrer.includes('start-cycle-lyrics.html')) {
+        if (document.referrer.includes('start-cycle-lyrics.html' || 'Download.html')) {
             // Polling function to check if lyrics content has loaded
             const checkContentLoaded = setInterval(() => {
                 if (lyricsElement.innerHTML.trim() !== '' && lyricsElement.innerHTML !== 'No content found') {
