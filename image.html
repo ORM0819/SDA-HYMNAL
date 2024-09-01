@@ -30,7 +30,7 @@
             // Redirect after image has finished loading
             imageElement.onload = () => {
                 const referrer = document.referrer;
-                if (referrer.includes('start-cycle.html' || 'Download.html)) {
+                if (referrer.includes('start-cycle.html' || 'Download.html')) {
                     setTimeout(() => {
                         window.location.href = 'start-cycle.html';
                     }, 00); // Adjust the delay as needed
