@@ -84,7 +84,7 @@
         }
 
         // Check if the previous page was start-cycle-lyrics.html
-        if (document.referrer.includes('start-cycle-lyrics.html') || document.referrer.includes('Download.html')) {
+        if (document.referrer.includes('start-cycle-lyrics.html') || document.referrer.includes('Download.html') || document.referrer.includes('English-Lyrics.html') || document.referrer.includes('Spanish-Lyrics.html')) {
     const checkContentLoaded = setInterval(() => {
         if (lyricsElement.innerHTML.trim() !== '' && lyricsElement.innerHTML !== 'No content found') {
             clearInterval(checkContentLoaded);
