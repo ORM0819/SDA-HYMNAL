@@ -79,8 +79,12 @@
                 localStorage.setItem('languageValue', localStorage.getItem('originalLanguageValue'));
                 localStorage.setItem('dropdownValue', localStorage.getItem('originalDropdownValue'));
 
-                // Redirect back to index.html
-                window.location.href = 'index.html';
+                // Check if there's a parent window
+                if (window.opener) {
+                    window.opener.location.href = 'index.html'; // Redirect parent window
+                } else {
+                    window.location.href = 'index.html'; // Redirect current window
+                }
                 return; // Exit the function to prevent further execution
             }
 
