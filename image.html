@@ -31,11 +31,17 @@
     console.log('Image loaded');
     const referrer = document.referrer;
     console.log('Referrer:', referrer);
-    if (referrer.includes('start-cycle.html') || referrer.includes('Download.html') || referrer.includes('English-Music-Score.html') || referrer.includes('Spanish-Music-Score.html')) {
+    if (referrer.includes('start-cycle.html')) {
         setTimeout(() => {
             console.log('Redirecting to start-cycle.html');
-            history.back();
+            window.location.href = 'start-cycle.html';
         }, 00); // Adjust delay if needed
+    }
+              else if (referrer.includes('Download.html') || referrer.includes('English-Music-Score.html') || referrer.includes('Spanish-Music-Score.html')){
+                setTimeout(() => {
+                console.log('Redirecting to previous page');
+                history.back();
+            }, 00); // Adjust delay if needed
     }
 };
 
