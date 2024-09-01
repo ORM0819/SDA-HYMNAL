@@ -42,7 +42,10 @@
     </div>
 
   <script>
-localStorage.setItem('download', 'download');
+// Check if the item already exists before setting it
+if (!localStorage.getItem('download')) {
+    localStorage.setItem('download', 'download');
+}
     
   </script>
     
