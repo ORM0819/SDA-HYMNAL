@@ -13,6 +13,15 @@
     
     <script>
 
+
+      if (!localStorage.getItem('languageValue')) {
+                localStorage.setItem('languageValue', 'english');
+            }
+
+      if (!localStorage.getItem('dropdownValue')) {
+                localStorage.setItem('dropdownValue', 'music-score');
+            }
+
       function handleStartCycle() {
     localStorage.setItem('currentIndex', 0);
     localStorage.setItem('currentIndexLyrics', 0);
