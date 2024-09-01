@@ -17,7 +17,6 @@
     <button id="back-button" onclick="history.back()">Back</button>
 
     <script>
-        const prevPage = sessionStorage.getItem('prevPage');
         const params = new URLSearchParams(window.location.search);
         const imageUrl = params.get('image');
         const title = params.get('title');
@@ -32,7 +31,7 @@
     console.log('Image loaded');
     const referrer = document.referrer;
     console.log('Referrer:', referrer);
-    if (prevPage === 'start-cycle.html' || prevPage === 'Download.html') {
+    if (referrer.includes('start-cycle.html') || referrer.includes('Download.html')) {
         setTimeout(() => {
             console.log('Redirecting to start-cycle.html');
             window.location.href = 'start-cycle.html';
