@@ -44,8 +44,15 @@
                 // Save current values
                 localStorage.setItem('originalLanguageValue', languageValue);
                 localStorage.setItem('originalDropdownValue', dropdownValue);
-                localstorage.setItem('download', null);
-                localstorage.setItem('download', null);
+            if (localStorage.getItem('download')) {
+                localStorage.removeItem('download');
+            }
+            if (localStorage.getItem('download')) {
+                localStorage.removeItem('download');
+            }
+             if (localStorage.getItem('download')) {
+                localStorage.removeItem('download');
+            }
 
                 // Change to English and Music Score
                 localStorage.setItem('languageValue', 'english');
