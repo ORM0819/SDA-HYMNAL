@@ -13,27 +13,27 @@
     <h1>Downloading Files...</h1>
     <script>
         function cycleSongs() {
-            let currentIndexLyrics = parseInt(localStorage.getItem('currentIndexLyrics')) || 0;
+            let SpanishCurrentIndexLyrics = parseInt(localStorage.getItem('SpanishCurrentIndexLyrics')) || 0;
             const songsUrl = '/SDA-HYMNAL/songs_es.json'; // Spanish songs
 
             console.log(`Fetching songs from: ${songsUrl}`);
             fetch(songsUrl)
                 .then(response => response.json())
                 .then(data => {
-                    if (currentIndexLyrics >= data.length) {
+                    if (SpanishCurrentIndexLyrics >= data.length) {
                         console.log('End of song list reached. Resetting index and redirecting to index.html.');
-                        localStorage.setItem('currentIndexLyrics', 0);
+                        localStorage.setItem('SpanishCurrentIndexLyrics', 0);
                         window.location.href = 'auto-cycle.html';
                         return;
                     }
 
-                    const song = data[currentIndexLyrics];
+                    const song = data[SpanishCurrentIndexLyrics];
                     const title = encodeURIComponent(song.title);
                     const number = encodeURIComponent(song.number);
                     const content = encodeURIComponent(song.content);
 
-                    currentIndexLyrics += 1; // Increment the index here
-                    localStorage.setItem('currentIndexLyrics', currentIndexLyrics);
+                    SpanishCurrentIndexLyrics += 1; // Increment the index here
+                    localStorage.setItem('SpanishCurrentIndexLyrics', SpanishCurrentIndexLyrics);
 
                     const redirectUrl = `/SDA-HYMNAL/lyrics.html?content=${content}&title=${title}&number=${number}`;
                     console.log(`Redirecting to: ${redirectUrl}`);
@@ -47,7 +47,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const referrer = document.referrer;
             if (!referrer.includes('lyrics.html')) {
-                localStorage.setItem('currentIndexLyrics', 0);
+                localStorage.setItem('SpanishCurrentIndexLyrics', 0);
             }
             cycleSongs();
         });
