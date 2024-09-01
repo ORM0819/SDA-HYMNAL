@@ -34,8 +34,8 @@
     if (referrer.includes('start-cycle.html') || referrer.includes('Download.html') || referrer.includes('English-Music-Score.html') || referrer.includes('Spanish-Music-Score.html')) {
         setTimeout(() => {
             console.log('Redirecting to start-cycle.html');
-            window.location.href = 'start-cycle.html';
-        }, 100); // Adjust delay if needed
+            history.back();
+        }, 00); // Adjust delay if needed
     }
 };
 
