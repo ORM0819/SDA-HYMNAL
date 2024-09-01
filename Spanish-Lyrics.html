@@ -21,7 +21,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (es_currentIndexLyrics >= data.length) {
-                        console.log('End of song list reached. Resetting index and redirecting to index.html.');
+                        console.log('End of song list reached. Resetting index and redirecting to auto-cycle.html.');
                         localStorage.setItem('es_currentIndexLyrics', 0);
                         window.location.href = 'auto-cycle.html';
                         return;
@@ -32,7 +32,7 @@
                     const number = encodeURIComponent(song.number);
                     const content = encodeURIComponent(song.content);
 
-                    es_currentIndexLyrics += 1; // Increment the index here
+                    es_currentIndexLyrics += 1;
                     localStorage.setItem('es_currentIndexLyrics', es_currentIndexLyrics);
 
                     const redirectUrl = `/SDA-HYMNAL/lyrics.html?content=${content}&title=${title}&number=${number}`;
