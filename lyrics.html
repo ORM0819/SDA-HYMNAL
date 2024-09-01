@@ -85,13 +85,15 @@
 
         // Check if the previous page was start-cycle-lyrics.html
         if (document.referrer.includes('start-cycle-lyrics.html') || document.referrer.includes('Download.html')) {
-            const checkContentLoaded = setInterval(() => {
-                if (lyricsElement.innerHTML.trim() !== '' && lyricsElement.innerHTML !== 'No content found') {
-                    clearInterval(checkContentLoaded);
-                    window.location.href = 'start-cycle-lyrics.html';
-                }
-            }, 100); // Check every 100 milliseconds
+    const checkContentLoaded = setInterval(() => {
+        if (lyricsElement.innerHTML.trim() !== '' && lyricsElement.innerHTML !== 'No content found') {
+            clearInterval(checkContentLoaded);
+            console.log('Redirecting to start-cycle-lyrics.html');
+            window.location.href = 'start-cycle-lyrics.html';
         }
+    }, 100); // Adjust polling interval if needed
+}
+
     </script>
 </body>
 </html>
