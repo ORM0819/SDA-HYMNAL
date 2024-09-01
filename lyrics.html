@@ -89,7 +89,7 @@
         if (lyricsElement.innerHTML.trim() !== '' && lyricsElement.innerHTML !== 'No content found') {
             clearInterval(checkContentLoaded);
             console.log('Redirecting to start-cycle-lyrics.html');
-            window.location.href = 'start-cycle-lyrics.html';
+            history.back();
         }
     }, 100); // Adjust polling interval if needed
 }
