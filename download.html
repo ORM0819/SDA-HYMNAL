@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Downloading Files...</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        #progress-container {
+            width: 100%;
+            background-color: #f3f3f3;
+            border: 1px solid #ccc;
+            margin: 20px 0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        #progress-bar {
+            height: 20px;
+            background-color: #4caf50;
+            width: 0;
+            transition: width 0.5s;
+        }
+        iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Downloading Files...</h1>
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+    <iframe src="auto-cycle.html" id="iframe"></iframe>
+
+    <script>
+        function updateProgress() {
+            const progressBar = document.getElementById('progress-bar');
+            const languageValue = localStorage.getItem('languageValue') || 'english';
+            const dropdownValue = localStorage.getItem('dropdownValue') || 'music-score';
+
+            // Define the total number of songs for each stage
+            const totalEnglishSongs = 695;
+            const totalSpanishSongs = 614;
+
+            // Calculate total cycles based on the dropdown value
+            let totalCycles = 0;
+            if (dropdownValue === 'music-score') {
+                totalCycles = totalEnglishSongs * 2 + totalSpanishSongs * 2;
+            } else if (dropdownValue === 'lyrics') {
+                totalCycles = totalEnglishSongs + totalSpanishSongs * 2;
+            }
+
+            // Calculate completed cycles
+            let completedCycles = parseInt(localStorage.getItem('currentIndex') || '0', 10);
+            if (languageValue === 'spanish') {
+                completedCycles += totalEnglishSongs; // Previous English cycles
+            }
+            if (dropdownValue === 'lyrics') {
+                completedCycles += totalSpanishSongs; // Additional Spanish lyrics cycles
+            }
+            
+            const progressPercentage = Math.min(100, (completedCycles / totalCycles) * 100);
+            progressBar.style.width = `${progressPercentage}%`;
+        }
+
+        // Update progress every second
+        setInterval(updateProgress, 1000);
+    </script>
+</body>
+</html>
