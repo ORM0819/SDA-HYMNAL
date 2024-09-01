@@ -39,7 +39,7 @@
             const dropdownValue = localStorage.getItem('dropdownValue');
 
             // If coming from index.html
-            if (referrer.includes('index.html') || referrer === 'https://ormt03.github.io/SDA-HYMNAL/') {
+            if (referrer.includes('index.html') || referrer.includes('download.html') || referrer === 'https://ormt03.github.io/SDA-HYMNAL/') {
                 // Save current values
                 localStorage.setItem('originalLanguageValue', languageValue);
                 localStorage.setItem('originalDropdownValue', dropdownValue);
