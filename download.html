@@ -17,15 +17,31 @@
             margin: 20px auto;
             width: 80%;
             max-width: 600px;
+            border: 2px solid black; /* Black outline for the container */
+            border-radius: 5px;
+            background-color: #f0f0f0; /* Light background for the container */
+            position: relative; /* For positioning the text inside */
+            height: 30px; /* Height of the progress bar */
+            display: flex; /* Use flexbox for centering content */
+            align-items: center; /* Center content vertically */
+            justify-content: center; /* Center content horizontally */
         }
         #progress-bar {
-            width: 0;
-            height: 30px;
+            height: 100%; /* Full height of the container */
             background-color: #4caf50;
             color: #fff;
-            text-align: center;
-            line-height: 30px;
             border-radius: 5px;
+            position: absolute; /* Absolute positioning within the container */
+            top: 0;
+            left: 0;
+            z-index: 1; /* Ensure it stays behind the text */
+            width: 0; /* Initialize width */
+        }
+        #progress-text {
+            position: absolute; /* Absolute positioning within the container */
+            color: black;
+            font-weight: bold;
+            z-index: 2; /* Ensure text is above the progress bar */
         }
         iframe {
             width: 100%;
@@ -38,34 +54,35 @@
     <h1>Downloading Files...</h1>
     
     <div id="progress-container">
-        <div id="progress-bar">0%</div>
+        <div id="progress-bar"></div>
+        <div id="progress-text">0%</div>
     </div>
 
-  <script>
-// Check if the item already exists before setting it
-if (!localStorage.getItem('download')) {
-    localStorage.setItem('download', 'download');
-}
-    
-  </script>
+    <script>
+        // Check if the item already exists before setting it
+        if (!localStorage.getItem('download')) {
+            localStorage.setItem('download', 'download');
+        }
+    </script>
     
     <iframe src="auto-cycle.html" id="cycle-frame"></iframe>
 
-    <script>
+        <script>
+            
         function updateProgressBar() {
             const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
 
             // Retrieve current progress values from localStorage
             const currentIndex = parseInt(localStorage.getItem('currentIndex'), 10) || 0;
             const currentIndexLyrics = parseInt(localStorage.getItem('currentIndexLyrics'), 10) || 0;
-            const totalEnglishSongs = 695;
-            const totalSpanishSongs = 614;
-
-            // Debugging: Log values to ensure they are being retrieved correctly
-            console.log('currentIndex:', currentIndex);
-            console.log('currentIndexLyrics:', currentIndexLyrics);
-            console.log('dropdownValue:', localStorage.getItem('dropdownValue'));
-            console.log('languageValue:', localStorage.getItem('languageValue'));
+            
+            // Define offsets and total parts
+            const englishMusicScoreOffset = 0;
+            const spanishMusicScoreOffset = 695;
+            const spanishLyricsOffset = 1309;
+            const englishLyricsOffset = 1923;
+            const totalParts = 2618;
 
             // Determine the total progress
             let totalProgress = 0;
@@ -74,28 +91,32 @@ if (!localStorage.getItem('download')) {
 
             if (dropdownValue === 'music-score') {
                 if (languageValue === 'english') {
-                    totalProgress = currentIndex / totalEnglishSongs;
+                    totalProgress = currentIndex + englishMusicScoreOffset;
                 } else if (languageValue === 'spanish') {
-                    totalProgress = (totalEnglishSongs + currentIndex) / (totalEnglishSongs + totalSpanishSongs);
+                    totalProgress = currentIndex + spanishMusicScoreOffset;
                 }
             } else if (dropdownValue === 'lyrics') {
                 if (languageValue === 'english') {
-                    totalProgress = (totalEnglishSongs + currentIndexLyrics) / (totalEnglishSongs + totalSpanishSongs);
+                    totalProgress = currentIndexLyrics + englishLyricsOffset;
                 } else if (languageValue === 'spanish') {
-                    totalProgress = (totalEnglishSongs + totalSpanishSongs + currentIndexLyrics) / (totalEnglishSongs * 2 + totalSpanishSongs * 2);
+                    totalProgress = currentIndexLyrics + spanishLyricsOffset;
                 }
             }
 
-            // Update the progress bar
-            const progressPercentage = Math.min(totalProgress * 100, 100).toFixed(2);
-            progressBar.style.width = progressPercentage + '%';
-            progressBar.textContent = progressPercentage + '%';
+            // Ensure totalProgress does not exceed the total number of parts
+            totalProgress = Math.min(totalProgress, totalParts);
 
-            // Update the progress every 500ms
-            setTimeout(updateProgressBar, 500);
+            // Update the progress bar
+            const progressPercentage = (totalProgress / totalParts * 100).toFixed(2);
+            progressBar.style.width = progressPercentage + '%';
+            progressText.textContent = progressPercentage + '%';
+
+            // Update the progress every 10ms
+            setTimeout(updateProgressBar, 10);
         }
 
         document.addEventListener('DOMContentLoaded', updateProgressBar);
     </script>
+
 </body>
 </html>
