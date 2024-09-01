@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="manifest" href="manifest.json">
-    <title>SDA Hymnal - Ciclo de Inicio (Español)</title>
+    <title>SDA Hymnal - Start Cycle (Spanish Only)</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Descargando Archivos...</h1>
+    <h1>Downloading Files...</h1>
     <script>
         function cycleSongs() {
             const currentIndex = parseInt(localStorage.getItem('currentIndex')) || 0;
-            const songsUrl = 'songs_es.json'; // Spanish songs
+            const songsUrl = '/SDA-HYMNAL/songs_es.json'; // Spanish songs
 
             fetch(songsUrl)
                 .then(response => response.json())
@@ -35,11 +35,11 @@
 
                     const redirectUrl = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
 
-                    console.log('Redirigiendo a:', redirectUrl);
+                    console.log('Redirecting to:', redirectUrl);
                     window.location.href = redirectUrl;
                 })
                 .catch(error => {
-                    console.error('Error al cargar canciones:', error);
+                    console.error('Error loading songs:', error);
                 });
         }
 
