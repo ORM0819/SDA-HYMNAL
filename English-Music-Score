@@ -13,25 +13,25 @@
     <h1>Downloading Files...</h1>
     <script>
         function cycleSongs() {
-            const currentIndex = parseInt(localStorage.getItem('currentIndex')) || 0;
+            const en_currentIndex = parseInt(localStorage.getItem('en_currentIndex')) || 0;
             const songsUrl = 'songs.json'; // English songs
 
             fetch(songsUrl)
                 .then(response => response.json())
                 .then(data => {
-                    if (currentIndex >= data.length) {
+                    if (en_currentIndex >= data.length) {
                         // Reset index and redirect to index.html when the end of the list is reached
-                        localStorage.setItem('currentIndex', 0);
+                        localStorage.setItem('en_currentIndex', 0);
                         window.location.href = 'auto-cycle.html';
                         return;
                     }
 
-                    const song = data[currentIndex];
+                    const song = data[en_currentIndex];
                     const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
                     const title = encodeURIComponent(song.title);
                     const number = encodeURIComponent(song.number);
 
-                    localStorage.setItem('currentIndex', currentIndex + 1);
+                    localStorage.setItem('en_currentIndex', en_currentIndex + 1);
 
                     const redirectUrl = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
 
@@ -46,7 +46,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const referrer = document.referrer;
             if (!referrer.includes('image.html') && !referrer.includes('lyrics.html')) {
-                localStorage.setItem('currentIndex', 0);
+                localStorage.setItem('en_currentIndex', 0);
             }
             cycleSongs();
         });
