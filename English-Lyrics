@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="manifest" href="manifest.json">
+    <title>SDA Hymnal - Start Cycle (Lyrics Only - English)</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Downloading Files...</h1>
+    <script>
+        function cycleSongs() {
+            let currentIndexLyrics = parseInt(localStorage.getItem('currentIndexLyrics')) || 0;
+            const songsUrl = '/SDA-HYMNAL/songs.json'; // English songs
+
+            console.log(`Fetching songs from: ${songsUrl}`);
+            fetch(songsUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (currentIndexLyrics >= data.length) {
+                        console.log('End of song list reached. Resetting index and redirecting to index.html.');
+                        localStorage.setItem('currentIndexLyrics', 0);
+                        window.location.href = 'auto-cycle.html';
+                        return;
+                    }
+
+                    const song = data[currentIndexLyrics];
+                    const title = encodeURIComponent(song.title);
+                    const number = encodeURIComponent(song.number);
+                    const content = encodeURIComponent(song.content);
+
+                    currentIndexLyrics += 1; // Increment the index here
+                    localStorage.setItem('currentIndexLyrics', currentIndexLyrics);
+
+                    const redirectUrl = `/SDA-HYMNAL/lyrics.html?content=${content}&title=${title}&number=${number}`;
+                    console.log(`Redirecting to: ${redirectUrl}`);
+                    window.location.href = redirectUrl;
+                })
+                .catch(error => {
+                    console.error('Error loading songs:', error);
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const referrer = document.referrer;
+            if (!referrer.includes('lyrics.html')) {
+                localStorage.setItem('currentIndexLyrics', 0);
+            }
+            cycleSongs();
+        });
+    </script>
+</body>
+</html>
