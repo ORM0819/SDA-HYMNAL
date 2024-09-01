@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="manifest" href="manifest.json">
+    <title>SDA Hymnal - Downloading Files</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            text-align: center;
+            padding: 20px;
+        }
+        iframe {
+            width: 100%;
+            height: 200px;
+            margin: 10px 0;
+            border: none;
+        }
+        #progressContainer {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        #progressBar {
+            width: 0%;
+            height: 30px;
+            background-color: #4caf50;
+            border-radius: 5px;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Downloading Files...</h1>
+    <div id="progressContainer">
+        <div id="progressBar">0%</div>
+    </div>
+    
+    <iframe src="English-Lyrics.html"></iframe>
+    <iframe src="English-Music-Score.html"></iframe>
+    <iframe src="Spanish-Lyrics.html"></iframe>
+    <iframe src="Spanish-Music-Score.html"></iframe>
+
+    <script>
+        const totalEnglish = 695; // Total English files
+        const totalSpanish = 614; // Total Spanish files
+        const totalFiles = totalEnglish * 2 + totalSpanish * 2; // Total files to process
+
+        function updateProgressBar() {
+            // Get the current progress from localStorage using correct keys
+            const enCurrentIndexLyrics = parseInt(localStorage.getItem('en_currentIndexLyrics')) || 0;
+            const enCurrentIndex = parseInt(localStorage.getItem('en_currentIndex')) || 0;
+            const esCurrentIndexLyrics = parseInt(localStorage.getItem('es_currentIndexLyrics')) || 0;
+            const esCurrentIndex = parseInt(localStorage.getItem('es_currentIndex')) || 0;
+
+            // Calculate total progress
+            const processedFiles = enCurrentIndexLyrics + enCurrentIndex + esCurrentIndexLyrics + esCurrentIndex;
+            const progress = (processedFiles / totalFiles) * 100;
+
+            // Update the progress bar
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressBar').innerText = Math.floor(progress) + '%';
+        }
+
+        // Update the progress bar every tenth of a second
+        setInterval(updateProgressBar, 100);
+
+        // Initialize progress bar on page load
+        updateProgressBar();
+    </script>
+</body>
+</html>
