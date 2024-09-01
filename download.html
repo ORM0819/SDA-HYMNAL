@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>Downloading Files...</title>
     <link rel="stylesheet" href="styles.css">
     <style>
@@ -12,18 +14,18 @@
             padding: 20px;
         }
         #progress-container {
-            width: 100%;
-            background-color: #f3f3f3;
-            border: 1px solid #ccc;
-            margin: 20px 0;
-            border-radius: 5px;
-            overflow: hidden;
+            margin: 20px auto;
+            width: 80%;
+            max-width: 600px;
         }
         #progress-bar {
-            height: 20px;
-            background-color: #4caf50;
             width: 0;
-            transition: width 0.5s;
+            height: 30px;
+            background-color: #4caf50;
+            color: #fff;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 5px;
         }
         iframe {
             width: 100%;
@@ -34,44 +36,52 @@
 </head>
 <body>
     <h1>Downloading Files...</h1>
+    
     <div id="progress-container">
-        <div id="progress-bar"></div>
+        <div id="progress-bar">0%</div>
     </div>
-    <iframe src="auto-cycle.html" id="iframe"></iframe>
+    
+    <iframe src="auto-cycle.html" id="cycle-frame"></iframe>
 
     <script>
-        function updateProgress() {
+        function updateProgressBar() {
             const progressBar = document.getElementById('progress-bar');
-            const languageValue = localStorage.getItem('languageValue') || 'english';
-            const dropdownValue = localStorage.getItem('dropdownValue') || 'music-score';
-
-            // Define the total number of songs for each stage
+            
+            // Retrieve current progress values from localStorage
+            const currentIndex = parseInt(localStorage.getItem('currentIndex'), 10) || 0;
+            const currentIndexLyrics = parseInt(localStorage.getItem('currentIndexLyrics'), 10) || 0;
             const totalEnglishSongs = 695;
             const totalSpanishSongs = 614;
 
-            // Calculate total cycles based on the dropdown value
-            let totalCycles = 0;
+            // Determine the total progress
+            let totalProgress = 0;
+            const dropdownValue = localStorage.getItem('dropdownValue');
+            const languageValue = localStorage.getItem('languageValue');
+
             if (dropdownValue === 'music-score') {
-                totalCycles = totalEnglishSongs * 2 + totalSpanishSongs * 2;
+                if (languageValue === 'english') {
+                    totalProgress = currentIndex / totalEnglishSongs;
+                } else if (languageValue === 'spanish') {
+                    totalProgress = (totalEnglishSongs + currentIndex) / (totalEnglishSongs + totalSpanishSongs);
+                }
             } else if (dropdownValue === 'lyrics') {
-                totalCycles = totalEnglishSongs + totalSpanishSongs * 2;
+                if (languageValue === 'english') {
+                    totalProgress = (totalEnglishSongs + currentIndexLyrics) / (totalEnglishSongs + totalSpanishSongs);
+                } else if (languageValue === 'spanish') {
+                    totalProgress = (totalEnglishSongs + totalSpanishSongs + currentIndexLyrics) / (totalEnglishSongs * 2 + totalSpanishSongs * 2);
+                }
             }
 
-            // Calculate completed cycles
-            let completedCycles = parseInt(localStorage.getItem('currentIndex') || '0', 10);
-            if (languageValue === 'spanish') {
-                completedCycles += totalEnglishSongs; // Previous English cycles
-            }
-            if (dropdownValue === 'lyrics') {
-                completedCycles += totalSpanishSongs; // Additional Spanish lyrics cycles
-            }
-            
-            const progressPercentage = Math.min(100, (completedCycles / totalCycles) * 100);
-            progressBar.style.width = `${progressPercentage}%`;
+            // Update the progress bar
+            const progressPercentage = Math.min(totalProgress * 100, 100).toFixed(2);
+            progressBar.style.width = progressPercentage + '%';
+            progressBar.textContent = progressPercentage + '%';
+
+            // Update the progress every 500ms
+            setTimeout(updateProgressBar, 500);
         }
 
-        // Update progress every second
-        setInterval(updateProgress, 1000);
+        document.addEventListener('DOMContentLoaded', updateProgressBar);
     </script>
 </body>
 </html>
