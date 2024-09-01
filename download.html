@@ -46,12 +46,18 @@
     <script>
         function updateProgressBar() {
             const progressBar = document.getElementById('progress-bar');
-            
+
             // Retrieve current progress values from localStorage
             const currentIndex = parseInt(localStorage.getItem('currentIndex'), 10) || 0;
             const currentIndexLyrics = parseInt(localStorage.getItem('currentIndexLyrics'), 10) || 0;
             const totalEnglishSongs = 695;
             const totalSpanishSongs = 614;
+
+            // Debugging: Log values to ensure they are being retrieved correctly
+            console.log('currentIndex:', currentIndex);
+            console.log('currentIndexLyrics:', currentIndexLyrics);
+            console.log('dropdownValue:', localStorage.getItem('dropdownValue'));
+            console.log('languageValue:', localStorage.getItem('languageValue'));
 
             // Determine the total progress
             let totalProgress = 0;
