@@ -35,6 +35,7 @@
       
         function autoCycle() {
             const referrer = document.referrer;
+            const parentURL = window.parent && window.parent.location ? window.parent.location.href : '';
             const languageValue = localStorage.getItem('languageValue');
             const dropdownValue = localStorage.getItem('dropdownValue');
 
