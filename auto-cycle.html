@@ -89,8 +89,8 @@
                 localStorage.setItem('dropdownValue', localStorage.getItem('originalDropdownValue'));
 
                 // Check if there's a parent window
-                if (window.opener) {
-                    window.opener.location.href = 'index.html'; // Redirect parent window
+                if (window.parent) {
+                    window.parent.location.href = 'index.html'; // Redirect parent window
                 } else {
                     window.location.href = 'index.html'; // Redirect current window
                 }
