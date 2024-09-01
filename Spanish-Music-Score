@@ -13,25 +13,25 @@
     <h1>Downloading Files...</h1>
     <script>
         function cycleSongs() {
-            const currentIndex = parseInt(localStorage.getItem('currentIndex')) || 0;
+            const es_currentIndex = parseInt(localStorage.getItem('es_currentIndex')) || 0;
             const songsUrl = '/SDA-HYMNAL/songs_es.json'; // Spanish songs
 
             fetch(songsUrl)
                 .then(response => response.json())
                 .then(data => {
-                    if (currentIndex >= data.length) {
+                    if (es_currentIndex >= data.length) {
                         // Reset index and redirect to index.html when the end of the list is reached
-                        localStorage.setItem('currentIndex', 0);
+                        localStorage.setItem('es_currentIndex', 0);
                         window.location.href = 'auto-cycle.html';
                         return;
                     }
 
-                    const song = data[currentIndex];
+                    const song = data[es_currentIndex];
                     const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
                     const title = encodeURIComponent(song.title);
                     const number = encodeURIComponent(song.number);
 
-                    localStorage.setItem('currentIndex', currentIndex + 1);
+                    localStorage.setItem('es_currentIndex', es_currentIndex + 1);
 
                     const redirectUrl = `image.html?image=${encodeURIComponent(imageUrl)}&title=${title}&number=${number}`;
 
@@ -46,7 +46,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const referrer = document.referrer;
             if (!referrer.includes('image.html') && !referrer.includes('lyrics.html')) {
-                localStorage.setItem('currentIndex', 0);
+                localStorage.setItem('es_currentIndex', 0);
             }
             cycleSongs();
         });
