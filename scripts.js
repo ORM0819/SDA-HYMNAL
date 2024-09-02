@@ -94,49 +94,62 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     searchInput.addEventListener('input', () => {
-        const query = normalizeText(searchInput.value.toLowerCase());
-        console.log('Search query:', query);
+    const query = normalizeText(searchInput.value.toLowerCase());
+    console.log('Search query:', query);
 
-        // Find songs that match the search query directly
-        let filteredSongs = allSongs.filter(song => 
-            normalizeText(song.number).includes(query) || 
-            normalizeText(song.title).toLowerCase().includes(query)
-        );
+    // Find songs that match the search query directly
+    let filteredSongs = allSongs.filter(song => 
+        normalizeText(song.number).includes(query) || 
+        normalizeText(song.title).toLowerCase().includes(query)
+    );
 
-        console.log('Filtered songs:', filteredSongs);
+    console.log('Filtered songs:', filteredSongs);
 
-        // Initialize sets to avoid duplicate entries
-        const mappedSongs = new Set(filteredSongs);
+    // Initialize a set to avoid duplicate entries
+    const mappedSongs = new Set(filteredSongs);
 
-        // Handle English-to-Spanish mappings
-        filteredSongs.forEach(song => {
-            const englishMapping = songMapping.find(map => Array.isArray(map.english) ? map.english.includes(song.number) : map.english === song.number);
+    // Handle mappings for each song in the filtered list
+    filteredSongs.forEach(song => {
+        // Check if the song is in the mapping based on its language
+        if (song.language === 'english') {
+            const englishMapping = songMapping.find(map => 
+                Array.isArray(map.english) ? map.english.includes(song.number) : map.english === song.number
+            );
             if (englishMapping) {
-                const correspondingNumbers = Array.isArray(englishMapping.spanish) ? englishMapping.spanish : [englishMapping.spanish];
-                correspondingNumbers.forEach(correspondingNumber => {
-                    const correspondingSong = allSongs.find(s => s.number === correspondingNumber && s.language === 'spanish');
+                const correspondingSpanishNumbers = Array.isArray(englishMapping.spanish) ? englishMapping.spanish : [englishMapping.spanish];
+                correspondingSpanishNumbers.forEach(correspondingNumber => {
+                    const correspondingSong = allSongs.find(s => 
+                        s.number === correspondingNumber && s.language === 'spanish'
+                    );
                     if (correspondingSong) {
                         mappedSongs.add(correspondingSong);
                     }
                 });
             }
-
-            // Handle Spanish-to-English mappings
-            const spanishMapping = songMapping.find(map => Array.isArray(map.spanish) ? map.spanish.includes(song.number) : map.spanish === song.number);
+        } else if (song.language === 'spanish') {
+            const spanishMapping = songMapping.find(map => 
+                Array.isArray(map.spanish) ? map.spanish.includes(song.number) : map.spanish === song.number
+            );
             if (spanishMapping) {
-                const correspondingNumbers = Array.isArray(spanishMapping.english) ? spanishMapping.english : [spanishMapping.english];
-                correspondingNumbers.forEach(correspondingNumber => {
-                    const correspondingSong = allSongs.find(s => s.number === correspondingNumber && s.language === 'english');
+                const correspondingEnglishNumbers = Array.isArray(spanishMapping.english) ? spanishMapping.english : [spanishMapping.english];
+                correspondingEnglishNumbers.forEach(correspondingNumber => {
+                    const correspondingSong = allSongs.find(s => 
+                        s.number === correspondingNumber && s.language === 'english'
+                    );
                     if (correspondingSong) {
                         mappedSongs.add(correspondingSong);
                     }
                 });
             }
-        });
-
-        // Convert the set to an array and populate the list
-        populateList(Array.from(mappedSongs));
+        }
     });
+
+    // Convert the set to an array and populate the list
+    populateList(Array.from(mappedSongs));
+});
+
+
+
 
     // Helper function to normalize text by removing accents and punctuation
     function normalizeText(text) {
