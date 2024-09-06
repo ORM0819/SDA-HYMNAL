@@ -35,27 +35,32 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Fetch event to cache dynamic requests (like images and pages with query parameters)
+// Fetch event to handle caching and updating
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  if (url.pathname.startsWith('/SDA-HYMNAL/image.html') || url.pathname.startsWith('/SDA-HYMNAL/lyrics.html')) {
+  // If the request is for download.html, update cached files
+  if (url.pathname === '/SDA-HYMNAL/download.html') {
     event.respondWith(
-      caches.match(event.request)
-        .then((response) => {
-          if (response) {
-            console.log(`Serving ${event.request.url} from cache.`);
-            return response;
-          }
-          console.log(`Fetching ${event.request.url} from network.`);
-          return fetch(event.request)
-            .then((fetchedResponse) => {
-              return caches.open(CACHE_NAME)
-                .then((cache) => {
-                  cache.put(event.request, fetchedResponse.clone());
-                  return fetchedResponse;
+      caches.open(CACHE_NAME)
+        .then((cache) => {
+          console.log('Updating cached files...');
+          return Promise.all(
+            urlsToCache.map((urlToCache) => {
+              return fetch(urlToCache)
+                .then((response) => {
+                  if (response.ok) {
+                    cache.put(urlToCache, response.clone());
+                  }
+                })
+                .catch((error) => {
+                  console.error(`Failed to fetch and update ${urlToCache}:`, error);
                 });
-            });
+            })
+          ).then(() => {
+            // Fetch the updated download.html
+            return fetch(event.request);
+          });
         })
     );
   } else {
