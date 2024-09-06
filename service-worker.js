@@ -12,9 +12,9 @@ const urlsToCache = [
   '/SDA-HYMNAL/songs.json',
   '/SDA-HYMNAL/songs_es.json',
   '/SDA-HYMNAL/start-cycle-lyrics.html',
-  '/SDA-HYMNAL/start-cycle.html'
-  '/SDA-HYMNAL/auto-cycle.html'
-  '/SDA-HYMNAL/download.html
+  '/SDA-HYMNAL/start-cycle.html',
+  '/SDA-HYMNAL/auto-cycle.html',
+  '/SDA-HYMNAL/download.html'
   // Add essential static assets here
 ];
 
