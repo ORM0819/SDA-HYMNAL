@@ -40,7 +40,7 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
   // If the request is for download.html, update cached files
-  if (url.pathname === '/SDA-HYMNAL/download.html') {
+  if (url.pathname.includes('/SDA-HYMNAL/download')) {
     event.respondWith(
       caches.open(CACHE_NAME)
         .then((cache) => {
