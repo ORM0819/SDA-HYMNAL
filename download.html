@@ -84,6 +84,7 @@
                 navigator.serviceWorker.getRegistrations().then((registrations) => {
                     for (let registration of registrations) {
                         registration.update(); // Force update
+                      console.log('Updating service worker:', registration);
                     }
                 }).catch((error) => {
                     console.error('Error updating service worker:', error);
