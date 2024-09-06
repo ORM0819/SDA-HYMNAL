@@ -77,20 +77,6 @@
     <iframe src="auto-cycle.html" id="cycle-frame"></iframe>
 
     <script>
-
-      // Function to update the Service Worker
-        function updateServiceWorker() {
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then((registrations) => {
-                    for (let registration of registrations) {
-                        registration.update(); // Force update
-                      console.log('Updating service worker:', registration);
-                    }
-                }).catch((error) => {
-                    console.error('Error updating service worker:', error);
-                });
-            }
-        }
         // Check if the item already exists before setting it
         if (!localStorage.getItem('download')) {
             localStorage.setItem('download', 'download');
