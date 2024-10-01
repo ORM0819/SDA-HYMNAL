@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Custom Search</title>
+</head>
+<body>
+    <h1>Search with Google</h1>
+    <!-- Google Custom Search Engine Embed -->
+    <script async src="https://cse.google.com/cse.js?cx=YOUR_SEARCH_ENGINE_ID"></script>
+    <div class="gcse-search"></div>
+</body>
+</html>
