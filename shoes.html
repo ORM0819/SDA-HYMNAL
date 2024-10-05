@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wooden Shoes</title>
+    <title>Person Wearing Wooden Shoes</title>
     <style>
         canvas {
             border: 1px solid black;
@@ -13,12 +13,12 @@
     </style>
 </head>
 <body>
-    <canvas id="shoeCanvas" width="500" height="300"></canvas>
+    <canvas id="shoeCanvas" width="500" height="500"></canvas>
     <script>
         const canvas = document.getElementById('shoeCanvas');
         const ctx = canvas.getContext('2d');
 
-        // Function to draw a wooden shoe
+        // Function to draw wooden shoes
         function drawWoodenShoe(x, y, width, height) {
             ctx.fillStyle = '#d2b48c';  // Light brown color for wooden texture
 
@@ -37,11 +37,44 @@
             ctx.stroke();
         }
 
-        // Draw left wooden shoe
-        drawWoodenShoe(100, 100, 150, 80);
+        // Function to draw a stick figure person
+        function drawPerson(x, y) {
+            // Head
+            ctx.beginPath();
+            ctx.arc(x, y, 30, 0, Math.PI * 2, true); // Circle for head
+            ctx.fillStyle = '#ffe0bd'; // Skin color
+            ctx.fill();
+            ctx.stroke();
 
-        // Draw right wooden shoe
-        drawWoodenShoe(250, 100, 150, 80);
+            // Body
+            ctx.beginPath();
+            ctx.moveTo(x, y + 30); // Start below the head
+            ctx.lineTo(x, y + 150); // Body line
+            ctx.stroke();
+
+            // Arms
+            ctx.moveTo(x - 50, y + 70); // Left arm
+            ctx.lineTo(x + 50, y + 70); // Right arm
+            ctx.stroke();
+
+            // Legs
+            ctx.moveTo(x, y + 150); // Start from the bottom of the body
+            ctx.lineTo(x - 40, y + 250); // Left leg
+            ctx.moveTo(x, y + 150);
+            ctx.lineTo(x + 40, y + 250); // Right leg
+            ctx.stroke();
+        }
+
+        // Draw person (you)
+        drawPerson(250, 100);
+
+        // Draw wooden shoes on feet
+        // Left shoe (on the left leg)
+        drawWoodenShoe(210, 250, 80, 40);
+        
+        // Right shoe (on the right leg)
+        drawWoodenShoe(270, 250, 80, 40);
+
     </script>
 </body>
 </html>
