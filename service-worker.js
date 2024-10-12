@@ -1,5 +1,5 @@
 const MAJOR_VERSION = '4';  // Change this for major version updates
-const MINOR_VERSION = '0';  // Change this for minor version updates
+const MINOR_VERSION = '1';  // Change this for minor version updates
 
 const MAJOR_CACHE = `pwa-cache-major-v${MAJOR_VERSION}`;
 const MINOR_CACHE = `pwa-cache-minor-v${MAJOR_VERSION}.${MINOR_VERSION}`;
@@ -27,7 +27,6 @@ const urlsToCacheMinor = [
 // Install event to handle both major and minor caching
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    // Cache only the essential assets in the minor cache during installation
     caches.open(MINOR_CACHE).then((cache) => {
       console.log('Caching minor files...');
       return cache.addAll(urlsToCacheMinor);
@@ -37,9 +36,6 @@ self.addEventListener('install', (event) => {
 
 // Fetch event to handle caching of any file and updating essential files
 self.addEventListener('fetch', (event) => {
-  const url = new URL(event.request.url);
-
-  // Try to match the request in the major cache first
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
@@ -47,7 +43,6 @@ self.addEventListener('fetch', (event) => {
         return cachedResponse;
       }
 
-      // Fetch from network if not cached and add to the major cache
       return fetch(event.request).then((networkResponse) => {
         return caches.open(MAJOR_CACHE).then((cache) => {
           console.log(`Caching ${event.request.url} in the major cache.`);
@@ -59,7 +54,7 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Activate event to manage cache versions
+// Activate event to manage cache versions and clean up old caches
 self.addEventListener('activate', (event) => {
   const majorCacheWhitelist = [MAJOR_CACHE];
   const minorCacheWhitelist = [MINOR_CACHE];
@@ -77,6 +72,12 @@ self.addEventListener('activate', (event) => {
           // Delete old minor caches on a minor version update
           if (!minorCacheWhitelist.includes(cacheName) && cacheName.startsWith('pwa-cache-minor')) {
             console.log(`Deleting old minor cache: ${cacheName}`);
+            return caches.delete(cacheName);
+          }
+
+          // Detect and delete older cache strategies
+          if (!cacheName.startsWith('pwa-cache-major') && !cacheName.startsWith('pwa-cache-minor')) {
+            console.log(`Deleting older cache: ${cacheName}`);
             return caches.delete(cacheName);
           }
         })
