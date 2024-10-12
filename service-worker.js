@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pwa-cache-v3';
+const CACHE_NAME = 'pwa-cache-v3.1';
 const urlsToCache = [
   '/SDA-HYMNAL/',
   '/SDA-HYMNAL/index.html',
