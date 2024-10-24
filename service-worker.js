@@ -1,5 +1,5 @@
 const MAJOR_VERSION = '6';  // Change this for major version updates
-const MINOR_VERSION = '3';  // Change this for minor version updates
+const MINOR_VERSION = '4';  // Change this for minor version updates
 
 const MAJOR_CACHE = `pwa-cache-major-v${MAJOR_VERSION}`;
 const MINOR_CACHE = `pwa-cache-minor-v${MAJOR_VERSION}.${MINOR_VERSION}`;
@@ -36,6 +36,31 @@ self.addEventListener('install', (event) => {
 
 // Fetch event to handle caching of any file and updating essential files
 self.addEventListener('fetch', (event) => {
+  const requestUrl = new URL(event.request.url);
+
+  // Force re-caching of all minor cache files when the download page is accessed
+  if (requestUrl.pathname === '/SDA-HYMNAL/download.html') {
+    event.respondWith(
+      fetch(event.request).then((networkResponse) => {
+        // Open the minor cache and update all files in urlsToCacheMinor
+        caches.open(MINOR_CACHE).then((cache) => {
+          console.log('Updating entire minor cache...');
+          cache.addAll(urlsToCacheMinor).then(() => {
+            console.log('Minor cache updated with all files.');
+          }).catch((error) => {
+            console.error('Error while updating minor cache:', error);
+          });
+        });
+        return networkResponse;
+      }).catch(() => {
+        // If there's a network failure, serve the cached version of the download page
+        return caches.match(event.request);
+      })
+    );
+    return;
+  }
+
+  // Default behavior for other fetch requests
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
