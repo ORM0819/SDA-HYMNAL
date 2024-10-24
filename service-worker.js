@@ -1,5 +1,5 @@
 const MAJOR_VERSION = '6';  // Change this for major version updates
-const MINOR_VERSION = '5';  // Change this for minor version updates
+const MINOR_VERSION = '6';  // Change this for minor version updates
 
 const MAJOR_CACHE = `pwa-cache-major-v${MAJOR_VERSION}`;
 const MINOR_CACHE = `pwa-cache-minor-v${MAJOR_VERSION}.${MINOR_VERSION}`;
@@ -23,6 +23,17 @@ const urlsToCacheMinor = [
   '/SDA-HYMNAL/download.html'
   // Add essential static assets here
 ];
+
+// Request persistent storage to avoid cache being cleared by the browser
+if (navigator.storage && navigator.storage.persist) {
+  navigator.storage.persist().then((persistent) => {
+    if (persistent) {
+      console.log('Persistent storage granted. Cache will not be cleared except by the user.');
+    } else {
+      console.log('Storage may still be cleared under storage pressure.');
+    }
+  });
+}
 
 // Install event to handle both major and minor caching
 self.addEventListener('install', (event) => {
