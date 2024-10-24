@@ -1,5 +1,5 @@
 const MAJOR_VERSION = '6';  // Change this for major version updates
-const MINOR_VERSION = '7';  // Change this for minor version updates
+const MINOR_VERSION = '8';  // Change this for minor version updates
 
 const MAJOR_CACHE = `pwa-cache-major-v${MAJOR_VERSION}`;
 const MINOR_CACHE = `pwa-cache-minor-v${MAJOR_VERSION}.${MINOR_VERSION}`;
@@ -36,10 +36,10 @@ if (navigator.storage && navigator.storage.persist) {
 
 // Install event to handle both major and minor caching
 self.addEventListener('install', (event) => {
-  console.log(`Installing Service Worker with Minor Cache Version: ${MINOR_VERSION}`);
+  console.log(`Installing Service Worker with Version: ${MAJOR_VERSION}.${MINOR_VERSION}`);
   event.waitUntil(
     caches.open(MINOR_CACHE).then((cache) => {
-      console.log(`Caching minor files for version ${MINOR_VERSION}...`);
+      console.log(`Caching minor files for version ${MAJOR_VERSION}.${MINOR_VERSION}...`);
       return cache.addAll(urlsToCacheMinor);
     })
   );
@@ -56,7 +56,7 @@ self.addEventListener('fetch', (event) => {
         console.log('Re-caching all minor cache files for download page...');
         caches.open(MINOR_CACHE).then((cache) => {
           cache.addAll(urlsToCacheMinor).then(() => {
-            console.log(`Minor cache version ${MINOR_VERSION} updated successfully.`);
+            console.log(`Minor cache version ${MAJOR_VERSION}.${MINOR_VERSION} updated successfully.`);
           }).catch((error) => {
             console.error('Error while updating minor cache:', error);
           });
@@ -73,7 +73,7 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
-        console.log(`Serving ${event.request.url} from cache (Minor Cache Version: ${MINOR_VERSION}).`);
+        console.log(`Serving ${event.request.url} from cache (Cache Version: ${MAJOR_VERSION}.${MINOR_VERSION}).`);
         return cachedResponse;
       }
 
