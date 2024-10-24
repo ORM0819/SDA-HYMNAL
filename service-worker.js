@@ -1,5 +1,5 @@
 const MAJOR_VERSION = '6';  // Change this for major version updates
-const MINOR_VERSION = '4';  // Change this for minor version updates
+const MINOR_VERSION = '5';  // Change this for minor version updates
 
 const MAJOR_CACHE = `pwa-cache-major-v${MAJOR_VERSION}`;
 const MINOR_CACHE = `pwa-cache-minor-v${MAJOR_VERSION}.${MINOR_VERSION}`;
@@ -68,13 +68,19 @@ self.addEventListener('fetch', (event) => {
         return cachedResponse;
       }
 
-      return fetch(event.request).then((networkResponse) => {
-        return caches.open(MAJOR_CACHE).then((cache) => {
-          console.log(`Caching ${event.request.url} in the major cache.`);
-          cache.put(event.request, networkResponse.clone());
-          return networkResponse;
+      // Only cache the request in the major cache if it's not in the minor cache
+      if (!urlsToCacheMinor.includes(requestUrl.pathname)) {
+        return fetch(event.request).then((networkResponse) => {
+          return caches.open(MAJOR_CACHE).then((cache) => {
+            console.log(`Caching ${event.request.url} in the major cache.`);
+            cache.put(event.request, networkResponse.clone());
+            return networkResponse;
+          });
         });
-      });
+      } else {
+        // If it's in the minor cache, just fetch it from the network (or fallback to the minor cache)
+        return fetch(event.request).catch(() => caches.match(event.request));
+      }
     })
   );
 });
