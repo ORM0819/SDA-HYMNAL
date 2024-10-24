@@ -1,5 +1,5 @@
 const MAJOR_VERSION = '6';  // Change this for major version updates
-const MINOR_VERSION = '6';  // Change this for minor version updates
+const MINOR_VERSION = '7';  // Change this for minor version updates
 
 const MAJOR_CACHE = `pwa-cache-major-v${MAJOR_VERSION}`;
 const MINOR_CACHE = `pwa-cache-minor-v${MAJOR_VERSION}.${MINOR_VERSION}`;
@@ -21,7 +21,6 @@ const urlsToCacheMinor = [
   '/SDA-HYMNAL/start-cycle.html',
   '/SDA-HYMNAL/auto-cycle.html',
   '/SDA-HYMNAL/download.html'
-  // Add essential static assets here
 ];
 
 // Request persistent storage to avoid cache being cleared by the browser
@@ -37,9 +36,10 @@ if (navigator.storage && navigator.storage.persist) {
 
 // Install event to handle both major and minor caching
 self.addEventListener('install', (event) => {
+  console.log(`Installing Service Worker with Minor Cache Version: ${MINOR_VERSION}`);
   event.waitUntil(
     caches.open(MINOR_CACHE).then((cache) => {
-      console.log('Caching minor files...');
+      console.log(`Caching minor files for version ${MINOR_VERSION}...`);
       return cache.addAll(urlsToCacheMinor);
     })
   );
@@ -53,18 +53,16 @@ self.addEventListener('fetch', (event) => {
   if (requestUrl.pathname === '/SDA-HYMNAL/download.html') {
     event.respondWith(
       fetch(event.request).then((networkResponse) => {
-        // Open the minor cache and update all files in urlsToCacheMinor
+        console.log('Re-caching all minor cache files for download page...');
         caches.open(MINOR_CACHE).then((cache) => {
-          console.log('Updating entire minor cache...');
           cache.addAll(urlsToCacheMinor).then(() => {
-            console.log('Minor cache updated with all files.');
+            console.log(`Minor cache version ${MINOR_VERSION} updated successfully.`);
           }).catch((error) => {
             console.error('Error while updating minor cache:', error);
           });
         });
         return networkResponse;
       }).catch(() => {
-        // If there's a network failure, serve the cached version of the download page
         return caches.match(event.request);
       })
     );
@@ -75,7 +73,7 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
-        console.log(`Serving ${event.request.url} from cache.`);
+        console.log(`Serving ${event.request.url} from cache (Minor Cache Version: ${MINOR_VERSION}).`);
         return cachedResponse;
       }
 
@@ -83,13 +81,13 @@ self.addEventListener('fetch', (event) => {
       if (!urlsToCacheMinor.includes(requestUrl.pathname)) {
         return fetch(event.request).then((networkResponse) => {
           return caches.open(MAJOR_CACHE).then((cache) => {
-            console.log(`Caching ${event.request.url} in the major cache.`);
+            console.log(`Caching ${event.request.url} in the major cache (Version: ${MAJOR_VERSION}).`);
             cache.put(event.request, networkResponse.clone());
             return networkResponse;
           });
         });
       } else {
-        // If it's in the minor cache, just fetch it from the network (or fallback to the minor cache)
+        // If it's in the minor cache, just fetch it from the network or fallback to the minor cache
         return fetch(event.request).catch(() => caches.match(event.request));
       }
     })
