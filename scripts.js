@@ -94,7 +94,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     searchInput.addEventListener('input', () => {
-    const query = normalizeText(searchInput.value.toLowerCase());
+    let query = normalizeText(searchInput.value.toLowerCase());
+
+    // Automatically pad numbers to 3 digits
+    if (!isNaN(query) && query.length > 0) {
+        query = query.padStart(3, '0');
+    }
+    
     console.log('Search query:', query);
 
     // Find songs that match the search query directly
