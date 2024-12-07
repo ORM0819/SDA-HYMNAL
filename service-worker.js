@@ -40,6 +40,7 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(MINOR_CACHE).then((cache) => {
       console.log(Caching minor files for version ${MAJOR_VERSION}.${MINOR_VERSION}...);
+      localStorage.setItem('serviceWorkerVersion', `${MAJOR_VERSION}.${MINOR_VERSION}`); // Store the version here
       return cache.addAll(urlsToCacheMinor);
     })
   );
