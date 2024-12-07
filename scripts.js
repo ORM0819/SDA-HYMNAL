@@ -21,23 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let allSongs = [];
     let songMapping = [];
 
-// Fetch and display version information
-    fetch('/SDA-HYMNAL/service-worker.js')
-        .then(response => response.text())
-        .then(script => {
-            const majorVersionMatch = script.match(/const MAJOR_VERSION = '(\d+)';/);
-            const minorVersionMatch = script.match(/const MINOR_VERSION = '(\d+)';/);
-
-            if (majorVersionMatch && minorVersionMatch) {
-                const majorVersion = majorVersionMatch[1];
-                const minorVersion = minorVersionMatch[1];
-                versionInfo.textContent = `Version: ${majorVersion}.${minorVersion}`;
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching version information:', error);
-        });
-
     // Determine the correct JSON file based on the selected language
     function getSongsUrls() {
         const language = languageDropdown.value;
@@ -92,19 +75,19 @@ document.addEventListener('DOMContentLoaded', () => {
         songList.innerHTML = '';
         songs.forEach(song => {
             const li = document.createElement('li');
-            li.textContent = `${song.number} - ${song.title}`;
+            li.textContent = ${song.number} - ${song.title};
             li.dataset.image = song.image;
             li.dataset.title = song.title;
             li.dataset.number = song.number;
             li.dataset.content = song.content;
             li.addEventListener('click', () => {
-                const imageUrl = `src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image}`;
+                const imageUrl = src/Hymnal.XF/Resources/Assets/MusicSheets/${song.image};
                 const title = encodeURIComponent(song.title);
                 const number = encodeURIComponent(song.number);
                 const content = encodeURIComponent(song.content);
 
                 const page = dropdownMenu.value === 'lyrics' ? 'lyrics.html' : 'image.html';
-                window.location.href = `${page}?${dropdownMenu.value === 'lyrics' ? `content=${content}&` : `image=${encodeURIComponent(imageUrl)}&` }title=${title}&number=${number}`;
+                window.location.href = ${page}?${dropdownMenu.value === 'lyrics' ? content=${content}& : image=${encodeURIComponent(imageUrl)}& }title=${title}&number=${number};
             });
             songList.appendChild(li);
         });
@@ -170,9 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Convert the set to an array and populate the list
     populateList(Array.from(mappedSongs));
 });
-
-
-
 
     // Helper function to normalize text by removing accents and punctuation
     function normalizeText(text) {
