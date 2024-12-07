@@ -1,8 +1,8 @@
 const MAJOR_VERSION = '8';  // Change this for major version updates
 const MINOR_VERSION = '5';  // Change this for minor version updates
 
-const MAJOR_CACHE = `pwa-cache-major-v${MAJOR_VERSION}`;
-const MINOR_CACHE = `pwa-cache-minor-v${MAJOR_VERSION}.${MINOR_VERSION}`;
+const MAJOR_CACHE = pwa-cache-major-v${MAJOR_VERSION};
+const MINOR_CACHE = pwa-cache-minor-v${MAJOR_VERSION}.${MINOR_VERSION};
 
 // URLs to cache for minor updates (essential static assets)
 const urlsToCacheMinor = [
@@ -36,10 +36,10 @@ if (navigator.storage && navigator.storage.persist) {
 
 // Install event to handle both major and minor caching
 self.addEventListener('install', (event) => {
-  console.log(`Installing Service Worker with Version: ${MAJOR_VERSION}.${MINOR_VERSION}`);
+  console.log(Installing Service Worker with Version: ${MAJOR_VERSION}.${MINOR_VERSION});
   event.waitUntil(
     caches.open(MINOR_CACHE).then((cache) => {
-      console.log(`Caching minor files for version ${MAJOR_VERSION}.${MINOR_VERSION}...`);
+      console.log(Caching minor files for version ${MAJOR_VERSION}.${MINOR_VERSION}...);
       return cache.addAll(urlsToCacheMinor);
     })
   );
@@ -56,7 +56,7 @@ self.addEventListener('fetch', (event) => {
         console.log('Re-caching all minor cache files for download page...');
         caches.open(MINOR_CACHE).then((cache) => {
           cache.addAll(urlsToCacheMinor).then(() => {
-            console.log(`Minor cache version ${MAJOR_VERSION}.${MINOR_VERSION} updated successfully.`);
+            console.log(Minor cache version ${MAJOR_VERSION}.${MINOR_VERSION} updated successfully.);
           }).catch((error) => {
             console.error('Error while updating minor cache:', error);
           });
@@ -73,7 +73,7 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
-        console.log(`Serving ${event.request.url} from cache (Cache Version: ${MAJOR_VERSION}.${MINOR_VERSION}).`);
+        console.log(Serving ${event.request.url} from cache (Cache Version: ${MAJOR_VERSION}.${MINOR_VERSION}).);
         return cachedResponse;
       }
 
@@ -81,7 +81,7 @@ self.addEventListener('fetch', (event) => {
       if (!urlsToCacheMinor.includes(requestUrl.pathname)) {
         return fetch(event.request).then((networkResponse) => {
           return caches.open(MAJOR_CACHE).then((cache) => {
-            console.log(`Caching ${event.request.url} in the major cache (Version: ${MAJOR_VERSION}).`);
+            console.log(Caching ${event.request.url} in the major cache (Version: ${MAJOR_VERSION}).);
             cache.put(event.request, networkResponse.clone());
             return networkResponse;
           });
@@ -105,19 +105,19 @@ self.addEventListener('activate', (event) => {
         cacheNames.map((cacheName) => {
           // Delete old major caches on a major version update
           if (!majorCacheWhitelist.includes(cacheName) && cacheName.startsWith('pwa-cache-major')) {
-            console.log(`Deleting old major cache: ${cacheName}`);
+            console.log(Deleting old major cache: ${cacheName});
             return caches.delete(cacheName);
           }
 
           // Delete old minor caches on a minor version update
           if (!minorCacheWhitelist.includes(cacheName) && cacheName.startsWith('pwa-cache-minor')) {
-            console.log(`Deleting old minor cache: ${cacheName}`);
+            console.log(Deleting old minor cache: ${cacheName});
             return caches.delete(cacheName);
           }
 
           // Detect and delete older cache strategies
           if (!cacheName.startsWith('pwa-cache-major') && !cacheName.startsWith('pwa-cache-minor')) {
-            console.log(`Deleting older cache: ${cacheName}`);
+            console.log(Deleting older cache: ${cacheName});
             return caches.delete(cacheName);
           }
         })
