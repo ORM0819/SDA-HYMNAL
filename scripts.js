@@ -21,6 +21,23 @@ document.addEventListener('DOMContentLoaded', () => {
     let allSongs = [];
     let songMapping = [];
 
+// Fetch and display version information
+    fetch('/SDA-HYMNAL/service-worker.js')
+        .then(response => response.text())
+        .then(script => {
+            const majorVersionMatch = script.match(/const MAJOR_VERSION = '(\d+)';/);
+            const minorVersionMatch = script.match(/const MINOR_VERSION = '(\d+)';/);
+
+            if (majorVersionMatch && minorVersionMatch) {
+                const majorVersion = majorVersionMatch[1];
+                const minorVersion = minorVersionMatch[1];
+                versionInfo.textContent = `Version: ${majorVersion}.${minorVersion}`;
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching version information:', error);
+        });
+
     // Determine the correct JSON file based on the selected language
     function getSongsUrls() {
         const language = languageDropdown.value;
