@@ -87,94 +87,83 @@ document.addEventListener('DOMContentLoaded', () => {
                 const content = encodeURIComponent(song.content);
 
                 const page = dropdownMenu.value === 'lyrics' ? 'lyrics.html' : 'image.html';
-                window.location.href = `${page}?${dropdownMenu.value === 'lyrics' ? `content=${content}&` : `image=${encodeURIComponent(imageUrl)}&`}title=${title}&number=${number}`;
+                window.location.href = `${page}?${dropdownMenu.value === 'lyrics' ? `content=${content}&` : `image=${encodeURIComponent(imageUrl)}&` }title=${title}&number=${number}`;
             });
             songList.appendChild(li);
         });
     }
 
     searchInput.addEventListener('input', () => {
-        let query = normalizeText(searchInput.value.toLowerCase());
+    let query = normalizeText(searchInput.value.toLowerCase());
 
-        // Automatically pad numbers to 3 digits
-        if (!isNaN(query) && query.length > 0) {
-            query = query.padStart(3, '0');
-        }
-        
-        console.log('Search query:', query);
+    // Automatically pad numbers to 3 digits
+    if (!isNaN(query) && query.length > 0) {
+        query = query.padStart(3, '0');
+    }
+    
+    console.log('Search query:', query);
 
-        // Find songs that match the search query directly
-        let filteredSongs = allSongs.filter(song => 
-            normalizeText(song.number).includes(query) || 
-            normalizeText(song.title).toLowerCase().includes(query)
-        );
+    // Find songs that match the search query directly
+    let filteredSongs = allSongs.filter(song => 
+        normalizeText(song.number).includes(query) || 
+        normalizeText(song.title).toLowerCase().includes(query)
+    );
 
-        console.log('Filtered songs:', filteredSongs);
+    console.log('Filtered songs:', filteredSongs);
 
-        // Initialize a set to avoid duplicate entries
-        const mappedSongs = new Set(filteredSongs);
+    // Initialize a set to avoid duplicate entries
+    const mappedSongs = new Set(filteredSongs);
 
-        // Handle mappings for each song in the filtered list
-        filteredSongs.forEach(song => {
-            // Check if the song is in the mapping based on its language
-            if (song.language === 'english') {
-                const englishMapping = songMapping.find(map => 
-                    Array.isArray(map.english) ? map.english.includes(song.number) : map.english === song.number
-                );
-                if (englishMapping) {
-                    const correspondingSpanishNumbers = Array.isArray(englishMapping.spanish) ? englishMapping.spanish : [englishMapping.spanish];
-                    correspondingSpanishNumbers.forEach(correspondingNumber => {
-                        const correspondingSong = allSongs.find(s => 
-                            s.number === correspondingNumber && s.language === 'spanish'
-                        );
-                        if (correspondingSong) {
-                            mappedSongs.add(correspondingSong);
-                        }
-                    });
-                }
-            } else if (song.language === 'spanish') {
-                const spanishMapping = songMapping.find(map => 
-                    Array.isArray(map.spanish) ? map.spanish.includes(song.number) : map.spanish === song.number
-                );
-                if (spanishMapping) {
-                    const correspondingEnglishNumbers = Array.isArray(spanishMapping.english) ? spanishMapping.english : [spanishMapping.english];
-                    correspondingEnglishNumbers.forEach(correspondingNumber => {
-                        const correspondingSong = allSongs.find(s => 
-                            s.number === correspondingNumber && s.language === 'english'
-                        );
-                        if (correspondingSong) {
-                            mappedSongs.add(correspondingSong);
-                        }
-                    });
-                }
+    // Handle mappings for each song in the filtered list
+    filteredSongs.forEach(song => {
+        // Check if the song is in the mapping based on its language
+        if (song.language === 'english') {
+            const englishMapping = songMapping.find(map => 
+                Array.isArray(map.english) ? map.english.includes(song.number) : map.english === song.number
+            );
+            if (englishMapping) {
+                const correspondingSpanishNumbers = Array.isArray(englishMapping.spanish) ? englishMapping.spanish : [englishMapping.spanish];
+                correspondingSpanishNumbers.forEach(correspondingNumber => {
+                    const correspondingSong = allSongs.find(s => 
+                        s.number === correspondingNumber && s.language === 'spanish'
+                    );
+                    if (correspondingSong) {
+                        mappedSongs.add(correspondingSong);
+                    }
+                });
             }
-        });
-
-        // Convert the set to an array and populate the list
-        populateList(Array.from(mappedSongs));
+        } else if (song.language === 'spanish') {
+            const spanishMapping = songMapping.find(map => 
+                Array.isArray(map.spanish) ? map.spanish.includes(song.number) : map.spanish === song.number
+            );
+            if (spanishMapping) {
+                const correspondingEnglishNumbers = Array.isArray(spanishMapping.english) ? spanishMapping.english : [spanishMapping.english];
+                correspondingEnglishNumbers.forEach(correspondingNumber => {
+                    const correspondingSong = allSongs.find(s => 
+                        s.number === correspondingNumber && s.language === 'english'
+                    );
+                    if (correspondingSong) {
+                        mappedSongs.add(correspondingSong);
+                    }
+                });
+            }
+        }
     });
+
+    // Convert the set to an array and populate the list
+    populateList(Array.from(mappedSongs));
+});
+
+
+
 
     // Helper function to normalize text by removing accents and punctuation
     function normalizeText(text) {
         return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\w\s]/gi, '');
     }
 
-    // Display the service worker version
-    function displayServiceWorkerVersion() {
-        const version = localStorage.getItem('serviceWorkerVersion');
-        if (version) {
-            const versionElement = document.getElementById('sw-version');
-            if (versionElement) {
-                versionElement.textContent = `Service Worker Version: ${version}`;
-            }
-        }
-    }
-
     // Load initial data
     Promise.all([loadSongs(), loadSongMapping()]);
-
-    // Display version information
-    displayServiceWorkerVersion();
 
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
