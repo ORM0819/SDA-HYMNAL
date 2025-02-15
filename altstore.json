@@ -1,0 +1,21 @@
+{
+  "name": "Ostin's Apps",
+  "identifier": "com.example.altstore",
+  "apps": [
+    {
+      "name": "SDA Hymnal",
+      "bundleIdentifier": "com.example.myapp",
+      "developerName": "Ostin Matus",
+      "subtitle": "An awesome app",
+      "version": "1.0.0",
+      "build": "1",
+      "size": 50000000,
+      "downloadURL": "https://example.com/myapp.ipa",
+      "localizedDescription": "This is my SDA Hymnal app.",
+      "iconURL": "https://ormt03.github.io/SDA-HYMNAL/Icons/SDA-Hymnal-512.png",
+      "beta": false,
+      "minimumOSVersion": "15.0",
+      "releaseNotes": "Initial release"
+    }
+  ]
+}
