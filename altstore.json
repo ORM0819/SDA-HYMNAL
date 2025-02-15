@@ -15,7 +15,8 @@
       "iconURL": "https://ormt03.github.io/SDA-HYMNAL/Icons/SDA-Hymnal-512.png",
       "beta": false,
       "minimumOSVersion": "15.8",
-      "releaseNotes": "Initial release"
+      "releaseNotes": "Initial release",
+      "versionDate": "2025-02-14T12:00:00Z"
     }
   ]
 }
